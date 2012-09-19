@@ -1,60 +1,82 @@
-<project name="Quoridor" default="build" basedir=".">
-  <property name = "src.dir" value = "src/"/>
-  <property name = "classes.dir" value = "bin/"/>
-  <property name = "tests.dir" value = "test/"/>
-  
-  <!-- Sets classpath for JUNIT and other JARS-->
-  <path id="classpath.tests">
-    <fileset dir="/home/student/gouldjb195/405/Quoridor/JARs/">
-      <include name="**/*.jar"/>
-    </fileset>
-    <pathelement location="${classes.dir}"/>
-  </path>
-  
-  <!-- INIT -->
-  <target name="init">
-    <mkdir dir = "${classes.dir}" />
-  </target>
-
-  <!-- Regular Compile -->
-  <target name = "build" depends = "init">
-    <javac srcdir = "${src.dir}" destdir = "${classes.dir}">
-    </javac>
-  </target>
-  
-  <!-- Run -->
-  <target name="run" depends="build">
-    <java classname="ui.FirstWindow">
-      <arg line="${args}"/>
-      <classpath>
-	      <pathelement location="${classes.dir}"/>
-      </classpath>
-    </java>
-  </target>
-
-  <!-- Compile junit tests -->
-  <target name="compile-tests" depends="init">
-    <javac srcdir = "${tests.dir}" destdir="${classes.dir}">
-      <classpath refid="classpath.tests"/>
-    </javac>
-  </target>
-
-  <!-- Runs tests -->
-  <target name = "tests" depends="compile-tests">
-     <junit fork="yes">
-      <classpath refid="classpath.tests"/>
-      <formatter type="brief" usefile="false" />
-      <test name="gui_test/WalkingSkeletonTest"/>
-    </junit>
-  </target>
-
-
-  <!-- Deletes bin directory-->
-  <target name = "clean">
-    <delete dir="${classes.dir}"/>
-  </target>
-  
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="Quoridor">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Quoridor.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="JARs/hamcrest-all-1.3.jar"/>
+        <pathelement location="JARs/hamcrest-core-1.1.jar"/>
+        <pathelement location="JARs/hamcrest-library-1.1.jar"/>
+        <pathelement location="JARs/junit-dep-4.10.jar"/>
+        <pathelement location="JARs/objenesis-1.0.jar"/>
+        <pathelement location="JARs/windowlicker-core-a256-src.jar"/>
+        <pathelement location="JARs/windowlicker-swing-a256.jar"/>
+        <pathelement location="JARs/windowlicker-core-DEV.jar"/>
+        <pathelement location="JARs/windowlicker-swing-DEV.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="test">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Quoridor.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+            <src path="test"/>
+            <classpath refid="Quoridor.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="WalkingSkeletonTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="gui_test.WalkingSkeletonTest" todir="${junit.output.dir}"/>
+            <classpath refid="Quoridor.classpath"/>
+        </junit>
+    </target>
+    <target name="firsttest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="gui_test.WalkingSkeletonTest" todir="${junit.output.dir}"/>
+            <classpath refid="Quoridor.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
 </project>
-
-
