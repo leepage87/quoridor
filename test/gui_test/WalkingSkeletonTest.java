@@ -28,7 +28,8 @@ public class WalkingSkeletonTest {
 	@Before
 	public void setUp() throws Exception {
 		FirstWindow.main();
-		driver = new JFrameDriver(new GesturePerformer(), new AWTEventQueueProber(), JFrameDriver.named(MAIN_WINDOW_TITLE), JFrameDriver.showingOnScreen());
+		driver = new JFrameDriver(new GesturePerformer(), new AWTEventQueueProber(), 
+				JFrameDriver.named(MAIN_WINDOW_TITLE), JFrameDriver.showingOnScreen());
 	}
 
 	@After

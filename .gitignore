@@ -1,2 +1,3 @@
 # Compiled source #
-bin/*
+##########
+bin/*.class
