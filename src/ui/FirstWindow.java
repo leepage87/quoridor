@@ -3,7 +3,17 @@
  */
 package ui;
 
+import static java.awt.BorderLayout.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  * A JFrame is a Java Frame...a rectangular region mapped onto the screen in
@@ -19,12 +29,31 @@ import javax.swing.JFrame;
  * @author blad
  * 
  */
-public class FirstWindow extends JFrame {
-	/**
-	 * The text displayed above the window when it is created; shared with the
-	 * test driver code
-	 */
+public class FirstWindow extends JFrame  implements ActionListener {
+
 	public final static String MAIN_WINDOW_TITLE = "FirstWindow";
+	
+	public final static String LABEL_NAME = "TheLabel";
+
+	// messages displayed by the label
+	public static final String INITIAL_MESSAGE = "One fish,";
+	public static final String[] MESSAGES = {"Two fish,", "Red fish,", "Blue fish."};
+	
+	public final static String BUTTON_NAME_PREFIX = "Button";
+	public final static String[] BUTTON_TEXTS = {"One", "Two", "Three"};
+	private JLabel label;
+	private List<JButton> buttons;
+	
+	private void initializeButtons() {
+		for (int i = 0; i < BUTTON_TEXTS.length; ++i) {
+			JButton button = new JButton(BUTTON_TEXTS[i]); // sets the text
+			button.setName(BUTTON_NAME_PREFIX+i);
+			button.addActionListener(this);
+			
+			buttons.add(button);
+			add(button);
+		}
+	}
 
 	/**
 	 * Create a new top-level window out of this type. The constructor calls the
@@ -42,7 +71,28 @@ public class FirstWindow extends JFrame {
 		setSize(640, 480);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		setLayout(new FlowLayout());
+		
+		label = new JLabel();
+		label.setName(LABEL_NAME);
+		label.setText(INITIAL_MESSAGE);
+		
+		add(label);
+				
+		buttons = new ArrayList<JButton>();
+		initializeButtons();
+		
 		setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent action) {
+		for (int i = 0; i < buttons.size(); ++i) {
+			if (action.getSource() == buttons.get(i)) {
+				label.setText(MESSAGES[i]);
+				break;
+			}
+		}
 	}
 	
 	/**
