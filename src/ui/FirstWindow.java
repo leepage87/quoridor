@@ -11,9 +11,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import java.awt.*;
+
 
 /**
  * A JFrame is a Java Frame...a rectangular region mapped onto the screen in
@@ -66,21 +68,24 @@ public class FirstWindow extends JFrame  implements ActionListener {
 	 */
 	public FirstWindow() {
 		super();
+		getContentPane().setBackground(new Color(0,139,69));
 		setName(MAIN_WINDOW_TITLE);
 		setTitle(MAIN_WINDOW_TITLE);
-		setSize(640, 480);
+		setSize(720, 720);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//setBackground(Color.BLUE);
+		setContentPane(new MyComponent());
 		
 		setLayout(new FlowLayout());
 		
-		label = new JLabel();
+/*		label = new JLabel();
 		label.setName(LABEL_NAME);
 		label.setText(INITIAL_MESSAGE);
 		
 		add(label);
 				
 		buttons = new ArrayList<JButton>();
-		initializeButtons();
+		initializeButtons();*/
 		
 		setVisible(true);
 	}
@@ -106,5 +111,22 @@ public class FirstWindow extends JFrame  implements ActionListener {
 	public static void main(String... args) {
 		FirstWindow window = new FirstWindow();
 	}
-
+	static class MyComponent extends JComponent {
+		public void paint (Graphics g) {
+			final int SIZE = 630;
+			g.setColor(new Color(0,139,69));
+			g.fillRect(0,0,SIZE,SIZE);
+			g.setColor(Color.BLACK);
+			for (int i = 0; i < 10; i++)
+			{
+				g.fillRect((SIZE*i/9)-5, 0, 10, SIZE);
+				g.fillRect(0,(SIZE*i/9)-5,SIZE,10);
+			}
+			g.setColor(Color.BLUE);
+			for (int i = 0; i < 10; i++)
+				for (int j = 0; j < 10; j++)
+					g.fillOval((SIZE*i/9)-60, (SIZE*j/9)-60, 50, 50);
+		}
+	}
 }
+
