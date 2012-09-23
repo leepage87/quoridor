@@ -90,6 +90,16 @@
             <classpath refid="Quoridor.classpath"/>
         </java>
     </target>
+    <target name="GameBoardPrototype">
+        <java classname="ui.GameBoardPrototype" failonerror="true" fork="yes">
+            <classpath refid="Quoridor.classpath"/>
+        </java>
+    </target>
+    <target name="GameBoardWithButtonsPrototype">
+        <java classname="ui.GameBoardWithButtonsPrototype" failonerror="true" fork="yes">
+            <classpath refid="Quoridor.classpath"/>
+        </java>
+    </target>
     <target name="junitreport">
         <junitreport todir="${junit.output.dir}">
             <fileset dir="${junit.output.dir}">
