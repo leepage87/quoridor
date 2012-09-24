@@ -1,7 +1,7 @@
 /**
  * 
  */
-package src;
+package ui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
