@@ -100,6 +100,11 @@
             <classpath refid="Quoridor.classpath"/>
         </java>
     </target>
+    <target name="MenuBarPrototype">
+        <java classname="ui.MenuBarPrototype" failonerror="true" fork="yes">
+            <classpath refid="Quoridor.classpath"/>
+        </java>
+    </target>
     <target name="junitreport">
         <junitreport todir="${junit.output.dir}">
             <fileset dir="${junit.output.dir}">
