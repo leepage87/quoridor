@@ -24,4 +24,7 @@ public class Pawn {
 	public String getLocation(){
 		return location;
 	}
+	public void move(String newLocation){
+		this.location = newLocation;
+	}
 }

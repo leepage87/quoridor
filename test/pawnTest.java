@@ -25,12 +25,18 @@ public class pawnTest {
 	  }  
 	
 	@Test
-	public void checkPawnName() {
+	public void checkPawnNameTest() {
 		testResults(pawn.getPlayerName(), PAWN_NAME);
 	}
 	@Test
-	public void checkPawnLocation(){
+	public void checkPawnLocationTest(){
 		testResults(pawn.getLocation(), DEFAULT_STARTING_LOCATION);
+	}
+	
+	@Test
+	public void movePawnLocationTest() {
+		pawn.move("E8");
+		testResults(pawn.getLocation(), "E8");
 	}
 	
 	private void testResults(String actual, String expected){
