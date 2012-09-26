@@ -1,9 +1,9 @@
-package test;
+package gui_test;
 
 import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static src.MenuBarPrototype.*;
+import static ui.MenuBarPrototype.*;
 
 import javax.swing.JButton;
 
@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import src.MenuBarPrototype;
+import ui.MenuBarPrototype;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.ComponentDriver;
