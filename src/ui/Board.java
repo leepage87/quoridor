@@ -22,17 +22,17 @@ public class Board {
     // Parameters: the number of players (2 or 4)
     // PostCondition: the board is empty and two or four players exist
     public static void setBoard(int players){
-	for(int i = 0; i < 17; i++){
-	    for(int j = 0; j < 17; j++){
-		grid[i][j] = 0;
-	    }
-	}
-	grid[0][8] = P1;
-	grid[16][8] = P2;
-	if(players == 4){
-	    grid[8][0] = P3;
-	    grid[8][16] = P4;
-	}
+    	for(int i = 0; i < 17; i++){
+    		for(int j = 0; j < 17; j++){
+    			grid[i][j] = 0;
+    		}
+    	}
+    	grid[0][8] = P1;
+    	grid[16][8] = P2;
+    	if(players == 4){
+    		grid[8][0] = P3;
+    		grid[8][16] = P4;
+		}
     }
 
     // Parameters: character to represent the direction moved and an int
@@ -43,7 +43,6 @@ public class Board {
 	int []here = playerPlace(Player);
 	int row = here[0];
 	int column = here[1];
-	System.out.println(row + " " + column);
 	if(direction == 'N'){ // TODO: check for edge of board
 		
 	    if(grid[row-1][column] != WALL){ // TODO: check pawn collision
@@ -82,8 +81,7 @@ public class Board {
 		    {
 		    	
 		    	if (grid[row][column] != 0) {
-		    		System.out.print(row + " " + column + " ");
-		    		System.out.println(grid[row][column]);}
+		    	}
 		    	if(grid[row][column] == Player)
 		    	{
 		    		location[0] = row;
@@ -108,6 +106,11 @@ public class Board {
 		return true;
 	}
 	return false;
+    }
+    
+    //This method is for testing purposes only
+    public static void moveToWin(){
+    	grid[16][0] = P1;
     }
 
     // Returns: if each player can still reach their winning row

@@ -1,3 +1,8 @@
+/**
+ * Sarah Weller
+ * teamOrangeBeard
+ */
+
 package test;
 
 import org.junit.Assert;
@@ -17,6 +22,11 @@ public class BoardTester {
 		grid = new int[17][17];
 	}
 	
+	@Test
+	public void checkBoardCreation(){
+		Board.createBoard(2);
+		Assert.assertNotNull(grid);
+	}
 	@Test
 	public void checkNorth(){
 		Board.createBoard(2);
@@ -70,24 +80,20 @@ public class BoardTester {
 		//Wall is not written yet**
 	}
 	
+	@Test
 	public void falseCheckWin(){
-		for (int i =0; i<16; i++){
-			grid[0][i] = 0;
-			grid[16][i] = 0;
-			grid[i][0] = 0;
-			grid[i][16] =0;
-		}
-		checkWinning(Board.winCheck(), false);
+		Board.createBoard(2);
+		Assert.assertFalse("Wins when not true",Board.winCheck());
 	}
 	
+	@Test
 	public void trueCheckWin(){
-		grid[16][0] = P1;
-		checkWinning(Board.winCheck(), true);
-	}
-
-	public void checkWinning(boolean actual, boolean expected){
+		Board.createBoard(2);
+		Board.moveToWin();
+		Assert.assertTrue("Doesn't win when in winning space",Board.winCheck());
 		
 	}
+
 	public void checkMovementOrder(){
 		//checks to make the moving player is moving on his turn
 	}
