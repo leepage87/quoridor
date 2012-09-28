@@ -5,7 +5,7 @@
  * Pawn.java - creates a pawn object
  */
 
-package pawn;
+package src.pawn;
 
 public class Pawn {
 	private String playerName;

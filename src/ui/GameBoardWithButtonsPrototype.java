@@ -1,4 +1,4 @@
-package ui;
+package src.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -37,7 +37,7 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 				tokenSquares[i][j].setRolloverIcon(playerOne);
 				tokenSquares[i][j].setSelectedIcon(playerOne);
 				add(tokenSquares[i][j]);
-				tokenSquares[i][j].addMouseListener(this);
+				//tokenSquares[i][j].addMouseListener(this);
 				
 				tokenSquares[i][j].setActionCommand("Appear");
 			}
@@ -98,7 +98,7 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 	
 	
 	public void mouseClicked(MouseEvent e) {
-	       e.getComponent().setIcon(playerOne);
+	       //e.getComponent().setIcon(playerOne);
 	       }
 	
 	

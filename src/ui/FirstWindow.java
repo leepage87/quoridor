@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ui;
+package src.ui;
 
 import static java.awt.BorderLayout.*;
 import java.awt.BorderLayout;
