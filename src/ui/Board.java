@@ -3,44 +3,46 @@ package ui;
  * Tim Simmons
  * teamOrangeBeard
  */
+package src.ui;
 
 public class Board {
 
-    final int P1 = 1;
-    final int P2 = 2;
-    final int P3 = 3;
-    final int P4 = 4;
-    final int WALL = 5;
+    final static int P1 = 1;
+    final static  int P2 = 2;
+    final static int P3 = 3;
+    final static int P4 = 4;
+    final static int WALL = 5;
 
-    int[][] grid;
+    static int[][] grid;
 
-    public Board(int players){
+    public static void createBoard(int players){
 	grid = new int[17][17];
 	setBoard(players);
     }
 
     // Parameters: the number of players (2 or 4)
     // PostCondition: the board is empty and two or four players exist
-    public void setBoard(int players){
-	for(int i = 0; i < 17; i++){
-	    for(int j = 0; j < 17; j++){
-		grid[i][j] = 0;
-	    }
-	}
-	grid[0][8] = P1;
 
-	grid[16][8] = P2;
-	if(players == 4){
-	    grid[8][0] = P3;
-	    grid[8][16] = P4;
-	}
+    public static void setBoard(int players){
+    	for(int i = 0; i < 17; i++){
+    		for(int j = 0; j < 17; j++){
+    			grid[i][j] = 0;
+    		}
+    	}
+    	grid[0][8] = P1;
+    	grid[16][8] = P2;
+    	if(players == 4){
+    		grid[8][0] = P3;
+    		grid[8][16] = P4;
+		}
     }
 
     // Parameters: character to represent the direction moved and an int
     //    to show which player is moving
     // PostCondition: the piece is moved if it was possible
-    public void movePiece(char direction, int Player){
-	int[] here = playerPlace(Player);
+    public static void movePiece(char direction, int Player){
+	//int[] here = {2,2};//playerPlace(Player);
+	int []here = playerPlace(Player);
 	int row = here[0];
 	int column = here[1];
 	if(direction == 'N'){ // TODO: check for edge of board
@@ -71,6 +73,7 @@ public class Board {
 
     // Parameters: the player being searched for
     // Returns: the x/y location of the Player
+
     public int[] playerPlace(int Player){
 	int[] location = new int[2];
 	for(int row = 0; row < 17; row++){
@@ -80,13 +83,11 @@ public class Board {
 		    location[1] = column;
 		    break;
 		}
-	    }
-	}
-	return location;
+		return location;
     }
 
     // Returns: if any player is in their winning row
-    public boolean winCheck(){
+    public static boolean winCheck(){
 	for(int i = 0; i < 17; i += 2){
 	    if(grid[16][i] == P1)
 		return true;
@@ -99,11 +100,16 @@ public class Board {
 	}
 	return false;
     }
+    
+    //This method is for testing purposes only
+    public static void moveToWin(){
+    	grid[16][0] = P1;
+    }
 
     // Returns: if each player can still reach their winning row
-    public boolean canWin(){
+    public static boolean canWin(){
 	for(int i = 0; i < 4; i++){
-	    boolean open = doSearch(i);
+	    boolean open = doSearch();
 	    if(open == false)
 		return false;
 	}
@@ -112,7 +118,9 @@ public class Board {
 
     // Paramters: an int representing a player
     // Returns: if the player can reach their win state
+
     private boolean doSearch(int i){
+
 	return true;
     }
 

@@ -1,4 +1,4 @@
-package ui;
+package src.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -97,7 +97,7 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 	
 	/*
 	public void mouseClicked(MouseEvent e) {
-	       e.getComponent().setIcon(playerOne);
+	       //e.getComponent().setIcon(playerOne);
 	       }
 	*/
 	/*

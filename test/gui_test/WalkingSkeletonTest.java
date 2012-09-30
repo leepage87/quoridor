@@ -1,6 +1,6 @@
-package gui_test;
+package test.gui_test;
 
-import static ui.FirstWindow.*;
+import static src.ui.FirstWindow.*;
 
 import javax.swing.JButton;
 
@@ -12,7 +12,7 @@ import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSp
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import ui.FirstWindow;
+import src.ui.FirstWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.ComponentDriver;
