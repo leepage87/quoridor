@@ -1,18 +1,24 @@
-package ui;
+package src.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JButton;
+import javax.swing.*;
 
-public class GameBoardWithButtonsPrototype extends JFrame 
+
+public class GameBoardWithButtonsPrototype extends JFrame implements ActionListener
 {
-	public GameBoardWithButtonsPrototype() {
+	Icon defaultIcon = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("default.gif"));
+	Icon playerOne = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player1.gif"));
+	
+	public GameBoardWithButtonsPrototype()  {
 		super();
-		getContentPane().setBackground(new Color(0,139,69));
+		//getContentPane().setBackground(new Color(55,99,109));
 		setSize(720, 720);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(null);
@@ -23,11 +29,22 @@ public class GameBoardWithButtonsPrototype extends JFrame
 			for (int j = 0; j < 9; j++)	{
 				tokenSquares[i][j] = new JButton();
 				tokenSquares[i][j].setBounds(SIZE*i/9 + 5, SIZE*j/9+5, 60,60);
-				tokenSquares[i][j].setBackground(Color.RED);
+				//tokenSquares[i][j].setBackground(new Color(0,99,109));
+				tokenSquares[i][j].setIcon(defaultIcon);
+				tokenSquares[i][j].setPressedIcon(playerOne);
 				tokenSquares[i][j].setVisible(true);
+				tokenSquares[i][j].setRolloverEnabled(true);
+				tokenSquares[i][j].setRolloverIcon(playerOne);
+				tokenSquares[i][j].setSelectedIcon(playerOne);
 				add(tokenSquares[i][j]);
+				//tokenSquares[i][j].addMouseListener(this);
+				
+				tokenSquares[i][j].setActionCommand("Appear");
 			}
 		}
+			/*tokenSquares[0][8].setIcon(player1Icon);
+			add(tokenSquares[0][8]);
+			tokenSquares[0][8].setVisible(true);*/
 		
 		JButton[][] vertwalls = new JButton[10][10];
 		for (int i = 1; i < 9; i++)	{
@@ -62,7 +79,7 @@ public class GameBoardWithButtonsPrototype extends JFrame
 		public void paint (Graphics g) 
 		{
 			final int SIZE = 630;
-			g.setColor(new Color(0,139,69));
+			g.setColor(new Color(0,109,99));
 			g.fillRect(0,0,SIZE,SIZE);
 			g.setColor(Color.BLACK);
 			for (int i = 0; i < 10; i++)
@@ -77,5 +94,19 @@ public class GameBoardWithButtonsPrototype extends JFrame
 			 * Button has icon/image that changes? Ask!
 			 */
 		}
+	}
+	
+	
+	public void mouseClicked(MouseEvent e) {
+	       //e.getComponent().setIcon(playerOne);
+	       }
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if ("Appear".equals(e.getActionCommand())) {
+			
+		}
+		
 	}
 }

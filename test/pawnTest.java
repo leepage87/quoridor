@@ -4,13 +4,13 @@
  * Quoridor Project
  * pawnTest.java - to test the pawn object
  */
-import static org.junit.Assert.*;
 
+package test;
+
+import static org.junit.Assert.*;
+import src.pawn.*;
 import org.junit.Before;
 import org.junit.Test;
-
-import pawn.Pawn;
-
 
 public class pawnTest {
 	
@@ -25,12 +25,18 @@ public class pawnTest {
 	  }  
 	
 	@Test
-	public void checkPawnName() {
+	public void checkPawnNameTest() {
 		testResults(pawn.getPlayerName(), PAWN_NAME);
 	}
 	@Test
-	public void checkPawnLocation(){
+	public void checkPawnLocationTest(){
 		testResults(pawn.getLocation(), DEFAULT_STARTING_LOCATION);
+	}
+	
+	@Test
+	public void movePawnLocationTest() {
+		pawn.move("E8");
+		testResults(pawn.getLocation(), "E8");
 	}
 	
 	private void testResults(String actual, String expected){

@@ -5,7 +5,7 @@
  * Pawn.java - creates a pawn object
  */
 
-package pawn;
+package src.pawn;
 
 public class Pawn {
 	private String playerName;
@@ -23,5 +23,8 @@ public class Pawn {
 	}
 	public String getLocation(){
 		return location;
+	}
+	public void move(String newLocation){
+		this.location = newLocation;
 	}
 }
