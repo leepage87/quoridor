@@ -1,3 +1,4 @@
+package ui;
 /**
  * Tim Simmons
  * teamOrangeBeard
@@ -23,14 +24,15 @@ public class Board {
     public void setBoard(int players){
 	for(int i = 0; i < 17; i++){
 	    for(int j = 0; j < 17; j++){
-		graph[i][j] = 0;
+		grid[i][j] = 0;
 	    }
 	}
-	graph[0][8] = P1;
-	graph[16][8] = P2;
+	grid[0][8] = P1;
+
+	grid[16][8] = P2;
 	if(players == 4){
-	    graph[8][0] = P3;
-	    graph[8][16] = P4;
+	    grid[8][0] = P3;
+	    grid[8][16] = P4;
 	}
     }
 
@@ -42,27 +44,27 @@ public class Board {
 	int row = here[0];
 	int column = here[1];
 	if(direction == 'N'){ // TODO: check for edge of board
-	    if(graph[row-1][column] != WALL){ // TODO: check pawn collision
-		graph[row][column] = 0;
-		graph[row-2][column] = Player;
+	    if(grid[row-1][column] != WALL){ // TODO: check pawn collision
+		grid[row][column] = 0;
+		grid[row-2][column] = Player;
 	    }
 	}
 	if(direction == 'S'){
-	    if(graph[row+1][column] != WALL){
-		graph[row][column] = 0;
-		graph[row+2][column] = Player;
+	    if(grid[row+1][column] != WALL){
+		grid[row][column] = 0;
+		grid[row+2][column] = Player;
 	    }
 	}
 	if(direction == 'E'){
-	    if(graph[row][column+1] != WALL){
-		graph[row][column] = 0;
-		graph[row][column+2] = Player;
+	    if(grid[row][column+1] != WALL){
+		grid[row][column] = 0;
+		grid[row][column+2] = Player;
 	    }
 	}
 	if(direction == 'W'){
-	    if(graph[row][column-1] != WALL){
-		graph[row][column] = 0;
-		graph[row][column-2] = Player;
+	    if(grid[row][column-1] != WALL){
+		grid[row][column] = 0;
+		grid[row][column-2] = Player;
 	    }
 	}
     }
@@ -73,7 +75,7 @@ public class Board {
 	int[] location = new int[2];
 	for(int row = 0; row < 17; row++){
 	    for(int column = 0; column < 17; column++){
-		if(graph[i][j] == Player){
+		if(grid[row][column] == Player){
 		    location[0] = row;
 		    location[1] = column;
 		    break;
@@ -86,13 +88,13 @@ public class Board {
     // Returns: if any player is in their winning row
     public boolean winCheck(){
 	for(int i = 0; i < 17; i += 2){
-	    if(graph[16][i] == P1)
+	    if(grid[16][i] == P1)
 		return true;
-	    if(graph[0][i] == P2)
+	    if(grid[0][i] == P2)
 		return true;
-	    if(graph[i][16] == P3)
+	    if(grid[i][16] == P3)
 		return true;
-	    if(graph[i][0] == P4)
+	    if(grid[i][0] == P4)
 		return true;
 	}
 	return false;
@@ -110,7 +112,7 @@ public class Board {
 
     // Paramters: an int representing a player
     // Returns: if the player can reach their win state
-    private boolean doSearch(){
+    private boolean doSearch(int i){
 	return true;
     }
 
