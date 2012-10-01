@@ -1,4 +1,4 @@
-
+package src.ui;
 /**
  * Tim Simmons
  * teamOrangeBeard
@@ -235,12 +235,12 @@ public class Board {
 
     // Returns: if each player can still reach their winning row
 
-    public static boolean canWin(){
-	for(int i = 0; i < 4; i++){
-	    boolean open = doSearch(i);
-	    if(open == false)
-
-		return false;
+    public boolean canWin(){
+	for(int i = 0; i < NUMPLAY + 1; i++)
+	{
+	    int[] nextMove = doSearch(i);
+	    if (nextMove[0] == -1)
+	    	return false;
 	}
 	return true;
     }
