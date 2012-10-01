@@ -154,6 +154,7 @@ public class Board {
 
     // Parameters: the player being searched for
     // Returns: the x/y location of the Player
+
     public int[] playerPlace(int Player){
 	int[] location = new int[2];
 	for(int row = 0; row < 17; row++){
@@ -166,6 +167,7 @@ public class Board {
 	    }
 	}
 	return location;
+
     }
 
     // Returns: if any player is in their winning row
@@ -232,11 +234,13 @@ public class Board {
     }
 
     // Returns: if each player can still reach their winning row
+
     public boolean canWin(){
-	for(int i = 1; i < NUMPLAY + 1; i++){
+	for(int i = 0; i < NUMPLAY + 1; i++)
+	{
 	    int[] nextMove = doSearch(i);
-	    if(nextMove[0] == -1)
-		return false;
+	    if (nextMove[0] == -1)
+	    	return false;
 	}
 	return true;
     }
@@ -324,35 +328,6 @@ public class Board {
 	}
     }
 
-    // Parameters: a location on the board
-    // Returns: all adjacent locations that are not blocked by walls
-    private ArrayList<int[]> getChildren(int[] place){
-	ArrayList<int[]> children = new ArrayList<int[]>();
-	int row = place[0];
-	int col = place[1];
-	int[] next = place;
-	if((row != 0) && (this.grid[row-1][col] != WALL)){
-	    next[0] = row-2;
-	    next[1] = col;
-	    children.add(next);
-	}
-	if((row != 16) && (this.grid[row+1][col] != WALL)){
-	    next[0] = row+2;
-	    next[1] = col;
-	    children.add(next);
-	}
-	if((col != 0) && (this.grid[row][col-1] != WALL)){
-	    next[0] = row;
-	    next[1] = col-2;
-	    children.add(next);
-	}
-	if((col != 16) && (this.grid[row][col+1] != WALL)){
-	    next[0] = row;
-	    next[1] = col+2;
-	    children.add(next);
-	}
-	return children;
-    }
 
     // Parameters: a list of all locations checked, the current location
     // Returns: if the current location has already been checked

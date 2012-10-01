@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+import src.ui.GameBoardWithButtonsPrototype;
+
 public class BoardButton extends JButton implements ActionListener {
 
 	private String name;
@@ -33,10 +35,6 @@ public class BoardButton extends JButton implements ActionListener {
 		button.setIcon(playerOne);
 		button.setVisible(true);
 		playerPresent = true;
-		for (long i = 0; i < 999999999; i++);
-		
-		
-		playerPresent = false;
 	}
 	
 	public void rolloverTests(){

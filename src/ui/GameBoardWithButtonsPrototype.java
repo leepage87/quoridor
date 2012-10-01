@@ -17,7 +17,6 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 	
 	public GameBoardWithButtonsPrototype()  {
 		super();
-		//getContentPane().setBackground(new Color(55,99,109));
 		setSize(720, 720);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(null);
@@ -28,30 +27,18 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 			for (int j = 0; j < 9; j++)	{
 				tokenSquares[i][j] = new BoardButton(""+i + j);
 				tokenSquares[i][j].setBounds(SIZE*i/9 + 5, SIZE*j/9+5, 60,60);
-				//tokenSquares[i][j].setBackground(new Color(0,99,109));
-				//tokenSquares[i][j].setIcon(defaultIcon);
-				//tokenSquares[i][j].setPressedIcon(playerOne);
-
-				
-				//tokenSquares[i][j].setSelectedIcon(playerOne);
 				add(tokenSquares[i][j]);
-				//tokenSquares[i][j].addMouseListener(this);
-				
-				//tokenSquares[i][j].setActionCommand("Appear");
 			}
 		}
-			/*tokenSquares[0][8].setIcon(player1Icon);
-			add(tokenSquares[0][8]);
-			tokenSquares[0][8].setVisible(true);*/
 		
 		JButton[][] vertwalls = new JButton[10][10];
 		for (int i = 1; i < 9; i++)	{
 			for (int j = 1; j < 10; j++)	{
 				vertwalls[i][j] = new BoardWall("" + i + j + "V");
 				vertwalls[i][j].setBounds(SIZE*i/9 - 5, SIZE*(j-1)/9 + 5, 10, 60);
-				//vertwalls[i][j].setBackground(Color.BLUE);
 				vertwalls[i][j].setVisible(true);
 				add(vertwalls[i][j]);
+				BoardWall.map.put("" + i + j + "V", (BoardWall)vertwalls[i][j]);
 			}
 		}
 		
@@ -63,15 +50,18 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 				//horzwalls[i][j].setBackground(Color.ORANGE);
 				horzwalls[i][j].setVisible(true);
 				add(horzwalls[i][j]);
+				BoardWall.map.put(""+ i + j + "H", (BoardWall) horzwalls[i][j]);
 			}
 		}
 		setVisible(true);
 		
 	}
+	
 	public static void main(String... args) 
 	{
 		GameBoardWithButtonsPrototype window = new GameBoardWithButtonsPrototype();
 	}
+	
 	static class MyComponent extends JComponent 
 	{
 		public void paint (Graphics g) 
@@ -85,12 +75,6 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 				g.fillRect((SIZE*i/9)-5, 0, 10, SIZE);
 				g.fillRect(0,(SIZE*i/9)-5,SIZE,10);
 			}
-			
-			/* NOTES:
-			 * use button.setEnabled() to turn walls/tokens on/off
-			 * Can buttons go *anywhere*? Ask Dr. Ladd
-			 * Button has icon/image that changes? Ask!
-			 */
 		}
 	}
 
