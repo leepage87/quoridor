@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path=""/>
-<<<<<<< HEAD
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/hamcrest-library-1.1.jar"/>
@@ -12,17 +10,6 @@
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/windowlicker-core-DEV.jar"/>
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/windowlicker-swing-a256.jar"/>
 	<classpathentry kind="lib" path="/home/student/pagel194/405/teamOrangeBeard/JARs/windowlicker-swing-DEV.jar"/>
-=======
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-all-1.3.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-core-1.1.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-library-1.1.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/junit-dep-4.10.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/objenesis-1.0.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-core-a256-src.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-core-DEV.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-swing-a256.jar"/>
-	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-swing-DEV.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
->>>>>>> 20165eeffb3264b6a79265196bd58b2365c43217
 	<classpathentry kind="output" path="bin"/>
 </classpath>
