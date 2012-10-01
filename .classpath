@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="./JARs/windowlicker-core-a256-src.jar"/>
 	<classpathentry kind="lib" path="./JARs/windowlicker-core-DEV.jar"/>
 	<classpathentry kind="lib" path="./JARs/windowlicker-swing-a256.jar"/>
-	<classpathentry kind="lib" path="./teamOrangeBeard/JARs/windowlicker-swing-DEV.jar"/>
+	<classpathentry kind="lib" path="./JARs/windowlicker-swing-DEV.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
