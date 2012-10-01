@@ -68,6 +68,7 @@ public class MenuBarPrototype extends JFrame implements ActionListener {
 		//ALT+F selects File menu
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(fileMenu);
+		menuBar.setName("MenuBar");
 		
 		//add "New Game" feature to File menu
 		menuItem = new JMenuItem("New Game",

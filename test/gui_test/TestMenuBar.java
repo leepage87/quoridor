@@ -46,7 +46,7 @@ public class TestMenuBar{
     
     @SuppressWarnings("unchecked")
     private JMenuDriver label(String name) {
-        return new JMenuDriver(driver, ComponentDriver.named(name));
+        return new JMenuDriver(driver, ComponentDriver.named("MenuBar"));
     }
     
 	@Test
