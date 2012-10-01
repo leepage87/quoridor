@@ -1,0 +1,60 @@
+<project name="Quoridor" default="build" basedir=".">
+  <property name = "src.dir" value = "src/"/>
+  <property name = "classes.dir" value = "bin/"/>
+  <property name = "tests.dir" value = "test/"/>
+  
+  <!-- Sets classpath for JUNIT and other JARS-->
+  <path id="classpath.tests">
+    <fileset dir="/home/student/gouldjb195/405/Quoridor/JARs/">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${classes.dir}"/>
+  </path>
+  
+  <!-- INIT -->
+  <target name="init">
+    <mkdir dir = "${classes.dir}" />
+  </target>
+
+  <!-- Regular Compile -->
+  <target name = "build" depends = "init">
+    <javac srcdir = "${src.dir}" destdir = "${classes.dir}">
+    </javac>
+  </target>
+  
+  <!-- Run -->
+  <target name="run" depends="build">
+    <java classname="ui.FirstWindow">
+      <arg line="${args}"/>
+      <classpath>
+	      <pathelement location="${classes.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- Compile junit tests -->
+  <target name="compile-tests" depends="init">
+    <javac srcdir = "${tests.dir}" destdir="${classes.dir}">
+      <classpath refid="classpath.tests"/>
+    </javac>
+  </target>
+
+  <!-- Runs tests -->
+  <target name = "tests" depends="compile-tests">
+     <junit fork="yes">
+      <classpath refid="classpath.tests"/>
+      <formatter type="brief" usefile="false" />
+      <test name="gui_test/WalkingSkeletonTest"/>
+    </junit>
+  </target>
+
+
+  <!-- Deletes bin directory-->
+  <target name = "clean">
+    <delete dir="${classes.dir}"/>
+  </target>
+  
+
+</project>
+
+

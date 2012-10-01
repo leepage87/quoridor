@@ -1,3 +1,4 @@
+package ui;
 /**
  * Tim Simmons
  * teamOrangeBeard
@@ -44,6 +45,7 @@ public class Board {
 
     // Parameters: the number of players (2 or 4)
     // PostCondition: the board is empty and two or four players exist
+
     private void setBoard(int players){
 	for(int i = 0; i < 17; i++){
 	    for(int j = 0; j < 17; j++){
@@ -86,6 +88,7 @@ public class Board {
 	    }
 	}
 	return check;
+
     }
 
     // Parameters: character to represent the direction moved and an int

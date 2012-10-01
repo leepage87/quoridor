@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+<<<<<<< HEAD
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+=======
 	<classpathentry kind="lib" path="/home/student/wellersi192/teamOrangeBeard/JARs/hamcrest-all-1.3.jar"/>
 	<classpathentry kind="lib" path="/home/student/wellersi192/teamOrangeBeard/JARs/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="/home/student/wellersi192/teamOrangeBeard/JARs/hamcrest-library-1.1.jar"/>
@@ -12,5 +15,18 @@
 	<classpathentry kind="lib" path="/home/student/wellersi192/teamOrangeBeard/JARs/windowlicker-swing-DEV.jar"/>
 	<classpathentry kind="lib" path="/home/student/wellersi192/teamOrangeBeard/JARs/windowlicker-swing-a256.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-all-1.3.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/junit-dep-4.10.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-core-a256-src.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-core-DEV.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-swing-a256.jar"/>
+	<classpathentry kind="lib" path="/home/student/gouldjb195/405/Quoridor/JARs/windowlicker-swing-DEV.jar"/>
+=======
+>>>>>>> 26bc60fd8f60943f97187785528e05e623072dc6
+>>>>>>> 0f4d877471875f9049229ea8741c43e2512aa2e4
 	<classpathentry kind="output" path="bin"/>
 </classpath>
