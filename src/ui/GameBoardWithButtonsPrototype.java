@@ -13,10 +13,12 @@ import javax.swing.*;
 
 public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionListener*/
 {
-
+	public final static String MAIN_WINDOW_TITLE = "Quoridor";
 	
 	public GameBoardWithButtonsPrototype()  {
 		super();
+		setName(MAIN_WINDOW_TITLE);
+		setTitle(MAIN_WINDOW_TITLE);
 		setSize(720, 720);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(null);
@@ -28,6 +30,7 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 				tokenSquares[i][j] = new BoardButton(""+i + j);
 				tokenSquares[i][j].setBounds(SIZE*i/9 + 5, SIZE*j/9+5, 60,60);
 				add(tokenSquares[i][j]);
+				tokenSquares[i][j].setName("Button"+i + "" +j);
 			}
 		}
 		
@@ -39,6 +42,7 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 				vertwalls[i][j].setVisible(true);
 				add(vertwalls[i][j]);
 				BoardWall.map.put("" + i + j + "V", (BoardWall)vertwalls[i][j]);
+				vertwalls[i][j].setName("VertWall" + i + j);
 			}
 		}
 		
@@ -47,10 +51,10 @@ public class GameBoardWithButtonsPrototype extends JFrame /*implements ActionLis
 			for (int j = 1; j < 10; j++) {
 				horzwalls[i][j] = new BoardWall("" + i + j + "H");
 				horzwalls[i][j].setBounds(SIZE*(j-1)/9 + 5, SIZE*i/9 - 5, 60, 10);
-				//horzwalls[i][j].setBackground(Color.ORANGE);
 				horzwalls[i][j].setVisible(true);
 				add(horzwalls[i][j]);
 				BoardWall.map.put(""+ i + j + "H", (BoardWall) horzwalls[i][j]);
+				horzwalls[i][j].setName("HorzWall" + i + j);
 			}
 		}
 		setVisible(true);

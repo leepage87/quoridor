@@ -28,10 +28,11 @@ public class BoardWall extends JButton implements ActionListener {
 	{
 		String oldname = name;
 		int temp;
-		if (oldname.charAt(1) == '9') 
-			temp = (int)(oldname.charAt(1)-'0')-1;
-		else
-			temp = (int)(oldname.charAt(1)-'0')+1;
+		//if (oldname.charAt(1) == '9')
+			//return null;
+			//temp = (int)(oldname.charAt(1)-'0')-1;
+		//else
+		temp = (int)(oldname.charAt(1)-'0')+1;
 		String newname = oldname.charAt(0) + Integer.toString(temp) + oldname.charAt(2);
 		BoardWall returnwall = getWall(newname);
 			
@@ -42,11 +43,16 @@ public class BoardWall extends JButton implements ActionListener {
 	public void actionPerformed(ActionEvent e) 
 	{
 		BoardWall wall = (BoardWall) me;
-		BoardWall next = wall.nextWall();
+		BoardWall next;
+		if (wall.name.charAt(1) != '9')
+			next = wall.nextWall();
+		else
+			next = null;
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
-		if ((!wall.wallPresent) && (!next.wallPresent)) {
-			wall.setWall();
-			next.setWall();
+		if (next != null)
+			if ((!wall.wallPresent) && (!next.wallPresent)) {
+				wall.setWall();
+				next.setWall();
 		}
 	}
 	
@@ -57,7 +63,7 @@ public class BoardWall extends JButton implements ActionListener {
 	
 	public void setWall() {
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
-		setRolloverEnabled(false);
+		//setRolloverEnabled(false);
 		setBackground(Color.BLUE);
 		wallPresent = true;
 	}
@@ -67,20 +73,41 @@ public class BoardWall extends JButton implements ActionListener {
 	
         public void mouseEntered(java.awt.event.MouseEvent evt) {
         	BoardWall wall = (BoardWall) me;
-        	BoardWall next = wall.nextWall();
-        	if ((wall.wallPresent == true) || (next.wallPresent == true))
-        		setRolloverEnabled(false);
+        	BoardWall next;
+        	if (wall.name.charAt(1) != '9') 
+        		next = wall.nextWall();
+        	else 
+        		next = null;
+        	if (next != null)
+        		if ((wall.wallPresent == true) || (next.wallPresent == true))
+        			;//setRolloverEnabled(false);
+        		else{
+        			setBackground(Color.GREEN);
+        			next.setBackground(Color.GREEN);
+        		}
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
             	BoardWall wall = (BoardWall) me;
-            	BoardWall next = wall.nextWall();
-            	if ((!wall.wallPresent) && (!next.wallPresent))
-            	{
-            		setBackground(Color.BLACK);
-            		setRolloverEnabled(true);
-            		
+            	BoardWall next;
+            	if (wall.name.charAt(1) !=9) {
+            		next = wall.nextWall();
             	}
-
+            	else
+            		next = null;
+            	if (next != null)
+            	{
+            		if ((wall.wallPresent == true) || (next.wallPresent == true)) {
+            			setRolloverEnabled(false);
+            			next.setRolloverEnabled(false);
+            		}
+            		else
+            		{
+            			setBackground(Color.BLACK);
+            			setRolloverEnabled(true);
+            			next.setBackground(Color.BLACK);
+            		
+            		}	
+            	}
             }
             });
 	}
@@ -97,8 +124,13 @@ public class BoardWall extends JButton implements ActionListener {
 		this.name = name;
 		me = this;
 
-		this.setRolloverEnabled(true);
-		addActionListener(this);
+		if (this.name.charAt(1) != '9') {
+			this.setRolloverEnabled(true);
+			addActionListener(this);
+		}
+		else
+			this.setRolloverEnabled(false);
+		
 		rolloverTests();
 
 	        	

@@ -17,6 +17,7 @@ import com.objogate.wl.swing.driver.ComponentDriver;
 import com.objogate.wl.swing.driver.JButtonDriver;
 import com.objogate.wl.swing.driver.JFrameDriver;
 import com.objogate.wl.swing.driver.JLabelDriver;
+import com.objogate.wl.swing.driver.JMenuBarDriver;
 import com.objogate.wl.swing.driver.JMenuDriver;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
@@ -38,20 +39,20 @@ public class TestMenuBar{
 	public void tearDown() throws Exception {
 		driver.dispose();
 	}
-	
+	/*
     @SuppressWarnings("unchecked")
     private JButtonDriver button(String name) {
         return new JButtonDriver(driver, JButton.class, ComponentDriver.named(name));
-    }
+    }*/
     
     @SuppressWarnings("unchecked")
-    private JMenuDriver label(String name) {
-        return new JMenuDriver(driver, ComponentDriver.named("MenuBar"));
+    private JMenuBarDriver label(String name) {
+        return new JMenuBarDriver(driver, ComponentDriver.named("MenuBar"));
     }
     
 	@Test
 	public void fileMenuExists() {
-		JMenuDriver label = label("File");
+		JMenuBarDriver label = label("");
 		
 		label.hasText(equalTo("File"));
 	}
