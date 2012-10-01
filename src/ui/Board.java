@@ -1,4 +1,4 @@
-package ui;
+package src.ui;
 /**
  * Tim Simmons
  * teamOrangeBeard

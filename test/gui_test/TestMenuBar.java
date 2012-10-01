@@ -19,6 +19,7 @@ import com.objogate.wl.swing.driver.JFrameDriver;
 import com.objogate.wl.swing.driver.JLabelDriver;
 import com.objogate.wl.swing.driver.JMenuDriver;
 import com.objogate.wl.swing.gesture.GesturePerformer;
+
 import src.ui.*;
 import src.ui.FirstWindow.*;
 public class TestMenuBar{
