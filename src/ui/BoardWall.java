@@ -1,4 +1,4 @@
-package ui;
+package src.ui;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -9,14 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import java.util.*;
 
 public class BoardWall extends JButton implements ActionListener {
+	
+	static HashMap<String, BoardWall> map = new HashMap<String, BoardWall>();
 
 	private String name;
 	private boolean wallPresent;
-
-	
-
 	
 	public String getLocalName() {
 		return name;
@@ -24,53 +24,61 @@ public class BoardWall extends JButton implements ActionListener {
 
 	private JComponent me;
 	
+	public BoardWall nextWall () 
+	{
+		String oldname = name;
+		int temp;
+		if (oldname.charAt(1) == '9') 
+			temp = (int)(oldname.charAt(1)-'0')-1;
+		else
+			temp = (int)(oldname.charAt(1)-'0')+1;
+		String newname = oldname.charAt(0) + Integer.toString(temp) + oldname.charAt(2);
+		BoardWall returnwall = getWall(newname);
+			
+		return returnwall;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		BoardWall wall = (BoardWall) me;
+		BoardWall next = wall.nextWall();
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
-		wall.setBackground(Color.BLUE);
-		wall.setRolloverEnabled(false);
-		wallPresent = true;
-		if ((wall.name.charAt(2) == 'H') && (wall.name.charAt(0) == '8'))
-		{
-			String oldname = wall.name;
-			int temp = (int)(oldname.charAt(0))-1;
-			String newname = Integer.toString(temp) + oldname.charAt(1) + oldname.charAt(2);
-			setWall(getWall(newname));
+		if ((!wall.wallPresent) && (!next.wallPresent)) {
+			wall.setWall();
+			next.setWall();
 		}
-		else if (wall.name.charAt(2) == 'H')
-			;//tell wall to the right to draw
-		if ((wall.name.charAt(2) == 'V') && (wall.name.charAt(1) == '8'))
-			;//tell wall above to draw
-		else
-			;//tell wall below to draw
 	}
 	
 	public BoardWall getWall (String str) {
-		// get the wall button corresponding to this string
-		return null;
+		BoardWall returnwall = map.get(str);
+		return returnwall;
 	}
 	
-	public void setWall(BoardWall wall) {
+	public void setWall() {
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
-		wall.setBackground(Color.BLUE);
-		wall.setRolloverEnabled(false);
-		wall.wallPresent = true;
+		setRolloverEnabled(false);
+		setBackground(Color.BLUE);
+		wallPresent = true;
 	}
 	
 	public void rolloverTests(){
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 	
         public void mouseEntered(java.awt.event.MouseEvent evt) {
-        	if(wallPresent == true)
+        	BoardWall wall = (BoardWall) me;
+        	BoardWall next = wall.nextWall();
+        	if ((wall.wallPresent == true) || (next.wallPresent == true))
         		setRolloverEnabled(false);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-            	if (wallPresent == false)
+            	BoardWall wall = (BoardWall) me;
+            	BoardWall next = wall.nextWall();
+            	if ((!wall.wallPresent) && (!next.wallPresent))
             	{
-            		setRolloverEnabled(true);
             		setBackground(Color.BLACK);
+            		setRolloverEnabled(true);
+            		
             	}
 
             }
@@ -83,6 +91,7 @@ public class BoardWall extends JButton implements ActionListener {
 	
 
 	BoardWall(String name) {
+		
 		wallPresent = false;
 		setBackground(Color.BLACK);
 		this.name = name;

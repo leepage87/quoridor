@@ -1,4 +1,4 @@
-package ui;
+package src.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+
+import src.ui.GameBoardWithButtonsPrototype;
 
 public class BoardButton extends JButton implements ActionListener {
 
@@ -33,10 +35,6 @@ public class BoardButton extends JButton implements ActionListener {
 		button.setIcon(playerOne);
 		button.setVisible(true);
 		playerPresent = true;
-		for (long i = 0; i < 999999999; i++);
-		
-		
-		playerPresent = false;
 	}
 	
 	public void rolloverTests(){

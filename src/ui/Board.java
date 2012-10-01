@@ -1,4 +1,4 @@
-package ui;
+
 /**
  * Tim Simmons
  * teamOrangeBeard
@@ -74,15 +74,21 @@ public class Board {
     // Parameters: the player being searched for
     // Returns: the x/y location of the Player
 
-    public int[] playerPlace(int Player){
-	int[] location = new int[2];
-	for(int row = 0; row < 17; row++){
-	    for(int column = 0; column < 17; column++){
-		if(grid[row][column] == Player){
-		    location[0] = row;
-		    location[1] = column;
-		    break;
-		}
+    public static int[] playerPlace(int Player)
+    {
+    	int[] location = new int[2];
+    	for(int row = 0; row < 17; row++)
+    	{
+    		for(int column = 0; column < 17; column++)
+    		{
+    			if(grid[row][column] == Player)
+    			{
+    				location[0] = row;
+    				location[1] = column;
+    				break;
+    			}
+    		}
+    	}
 		return location;
     }
 
@@ -109,7 +115,7 @@ public class Board {
     // Returns: if each player can still reach their winning row
     public static boolean canWin(){
 	for(int i = 0; i < 4; i++){
-	    boolean open = doSearch();
+	    boolean open = doSearch(i);
 	    if(open == false)
 		return false;
 	}
@@ -119,7 +125,7 @@ public class Board {
     // Paramters: an int representing a player
     // Returns: if the player can reach their win state
 
-    private boolean doSearch(int i){
+    private static boolean doSearch(int i){
 
 	return true;
     }
