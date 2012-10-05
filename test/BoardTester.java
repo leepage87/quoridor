@@ -12,10 +12,11 @@ import src.ui.Board;
 
 public class BoardTester {
 	
-	static int grid[][]; 
-	final static int P1 = 1;
-	final static int P2 = 2;
-	static char direction;
+	Board x = new Board(2);
+	
+	int grid[][]; 
+	char direction;
+	final int WALL = 5;
 	
 	@Before
 	public void initialize(){
@@ -24,81 +25,126 @@ public class BoardTester {
 	
 	@Test
 	public void checkBoardCreation(){
-		Board.createBoard(2);
+		x.setBoard(2);
 		Assert.assertNotNull(grid);
 	}
+	
 	@Test
 	public void checkNorth(){
-		Board.createBoard(2);
+		x.setBoard(2);
 		direction = 'N';
-		Board.movePiece(direction, P2);
+		x.movePiece(direction, 2);
 		int[] expected = new int[2];
 		expected[0]=14;
 		expected[1]=8;
-		testResults(Board.playerPlace(P2), expected);
+		testResults(x.playerPlace(2), expected);
 		//resetPosition();
 	}
 	@Test
 	public void checkSouth(){
-		Board.createBoard(2);
+		x.setBoard(2);
 		direction = 'S';
-		Board.movePiece(direction, P1);
+		x.movePiece(direction, 1);
 		int[] expected = new int[2];
 		expected[0]=2;
 		expected[1]=8;
-		testResults(Board.playerPlace(P1), expected);
+		testResults(x.playerPlace(1), expected);
 		//resetPosition();
 	}
 	@Test
 	public void checkEast(){
-		Board.createBoard(2);
+		x.setBoard(2);
 		direction = 'E';
-		Board.movePiece(direction, P1);
+		x.movePiece(direction, 1);
 		int[] expected = new int[2];
 		expected[0]=0;
 		expected[1]=10;
-		testResults(Board.playerPlace(P1), expected);
+		testResults(x.playerPlace(1), expected);
 		//resetPosition();
 	}
 	@Test
 	public void checkWest(){
-		Board.createBoard(2);
+		x.setBoard(2);
 		direction = 'W';
-		Board.movePiece(direction, P1);
+		x.movePiece(direction, 1);
 		int[] expected = new int[2];
 		expected[0]=0;
 		expected[1]=6;
-		testResults(Board.playerPlace(P1), expected);
+		testResults(x.playerPlace(1), expected);
 		//resetPosition();
 	}
 	
+//	@Test
 	public void testResults(int[] actual, int[] expected){
 		Assert.assertArrayEquals(expected, actual);
 	}
 	
-	public void checkWall(){
-		//Wall is not written yet**
-	}
-	
 	@Test
 	public void falseCheckWin(){
-		Board.createBoard(2);
-		Assert.assertFalse("Wins when not true",Board.winCheck());
+		x.setBoard(2);
+		Assert.assertFalse("Wins when not true",x.winCheck(2, x.playerPlace(2)));
 	}
 	
 	@Test
 	public void trueCheckWin(){
-		Board.createBoard(2);
-		Board.moveToWin();
-		Assert.assertTrue("Doesn't win when in winning space",Board.winCheck());
+		x.setBoard(2);
+		x.moveToWin(2);
+		int [] place = x.playerPlace(2);
+		Assert.assertTrue("Doesn't win when in winning space", x.winCheck(2, place));
 		
 	}
+	
+	@Test
+	public void checkWall(){
+		x.setBoard(2);
+		x.setWall();
+		Assert.assertTrue("Did not come back with wall", x.wallCollision('S', 1));
+	}
 
-	public void checkMovementOrder(){
-		//checks to make the moving player is moving on his turn
+	@Test
+	public void checkForAnotherPiece(){
+		x.setBoard(2);
+		x.placePiece();
+		Assert.assertTrue("Did not find the piece", x.pieceCollision('S', 1));
 	}
 	
-	public void checkLegalWall(){
-		//checks wall placement is legal
+	@Test
+	public void ableToPlaceWall(){
+		int [] testWall = new int[3] ;
+		testWall[0] = 0;
+		testWall[1] = 4;
+		testWall[2] = 1;
+		Assert.assertTrue("Wall was not placed", x.canPlaceWall(testWall));
+	}
+	
+	@Test
+	public void notAbleToPlaceWall(){
+		x.placeTestWall();
+		int [] testWall = new int[3];
+		testWall[0] = 0;
+		testWall[1] = 4;
+		testWall[2] = 1;
+		Assert.assertFalse("Wall not found", x.canPlaceWall(testWall));
+	}
+
+	@Test
+	public void actuallyPlacesWall(){
+		x.setBoard(2);
+		int [] testWall = new int[3] ;
+		testWall[0] = 0;
+		testWall[1] = 4;
+		testWall[2] = 1;
+		x.placeWall(testWall);
+		Assert.assertFalse("Wall not Placed", x.canPlaceWall(testWall));
+	}
+	
+	@Test
+	public void searchTest(){
+		int [] actual = new int[2];
+		actual = x.doSearch(1);
+		int [] expected = new int[2];
+		expected[0] = 2;
+		expected[1] = 8;
+		testResults(actual, expected);
 	}
 }
