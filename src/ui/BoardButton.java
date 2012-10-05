@@ -15,7 +15,7 @@ public class BoardButton extends JButton implements ActionListener {
 
 	private String name;
 	private boolean playerPresent;
-	Icon playerOne = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player1.gif"));
+	Icon playerOne = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player1.png"));
 	Icon legalMove = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("legalMove.png"));
 	Icon defaultIcon = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("default.gif"));
 	

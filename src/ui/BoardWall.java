@@ -64,7 +64,7 @@ public class BoardWall extends JButton implements ActionListener {
 	public void setWall() {
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
 		//setRolloverEnabled(false);
-		setBackground(Color.BLUE);
+		setBackground(Color.ORANGE);
 		wallPresent = true;
 	}
 	

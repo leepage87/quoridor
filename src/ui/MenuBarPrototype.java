@@ -11,52 +11,26 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
-/**
- * A JFrame is a Java Frame...a rectangular region mapped onto the screen in
- * some way. It could be considered a "window" except that in terms of screen
- * widgets (widget is the generic term for things that display on the screen:
- * buttons, menus, checkboxes, and, yes, frames) a window is only the largest,
- * top-level widget and there can be multiple frames within any single
- * top-level.
- * 
- * This class demonstrates how to create a window, add a label, and test that
- * the window and the label appear using the WindowLicker toolkit.
- * 
- * @author blad
- * 
- */
 public class MenuBarPrototype extends JFrame implements ActionListener {
-	/**
-	 * The text displayed above the window when it is created; shared with the
-	 * test driver code
-	 */
 	
 	
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
+	private JPanel contentPane;
 
 
-	/**
-	 * Create a new top-level window out of this type. The constructor calls the
-	 * super constructor, sets the name, title, size, and what happens when the
-	 * window closes, and then makes the window visible on the screen.
-	 * 
-	 * In order for WindowLicker to find the window, the window must be visible
-	 * and have a name that WL knows (assuming you use JFrameDriver.named to
-	 * find the window).
-	 */
 	public MenuBarPrototype() {
 		super();
 		makeMenuBar();
-		setName(MAIN_WINDOW_TITLE);
-		setTitle(MAIN_WINDOW_TITLE);
-		setSize(640, 480);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		getContentPane().setBackground(new Color(0,109,99)); 		
+		//setName(MAIN_WINDOW_TITLE);
+		//setTitle(MAIN_WINDOW_TITLE);
+		//setSize(640, 480);
+		//setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//getContentPane().setBackground(new Color(0,109,99)); 		
 		setVisible(true);
 		
 	}
 	
-	private void makeMenuBar() {
+	public JMenuBar makeMenuBar() {
 		JMenuBar menuBar;
 		JMenu fileMenu;
 		JMenuItem menuItem;
@@ -99,6 +73,7 @@ public class MenuBarPrototype extends JFrame implements ActionListener {
 		fileMenu.add(menuItem);
 		//add the menu bar to the frame
 		setJMenuBar(menuBar);
+		return menuBar;
 		
 	    
 	  
@@ -108,21 +83,35 @@ public class MenuBarPrototype extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 	    if ("Quit".equals(e.getActionCommand())) {
 	    	System.exit(0);
-	    } else {
-	    	//new game
+	    } else if ("About".equals(e.getActionCommand())) {
+	    	JOptionPane.showMessageDialog(contentPane, "Programming by: Lee Page, Jonathan Gould," +
+	    			"\nSarah Weller, and Timothy Simmons\n\nCIS 405 - Sofware Engineering - Fall 2012", "Quoridor", 	JOptionPane.INFORMATION_MESSAGE);
+	    } else if ("Instructions".equals(e.getActionCommand())){
+	    	String [] options = {"Open Rules", "Close"};
+	    	int n = JOptionPane.showOptionDialog(contentPane,
+	    		    "Click square to move your player, if the move" +
+	    		    "\nis legal the square will be highlighted.\n" +
+	    		    "Click the black lines to place a wall.\n" +
+	    		    "Walls are placed from left to right or top\n" +
+	    		    "to bottom.",
+	    		    "How to Play",
+	    		    JOptionPane.YES_NO_OPTION,
+	    		    JOptionPane.QUESTION_MESSAGE,
+	    		    null,     //do not use a custom Icon
+	    		    options,  //the titles of buttons
+	    		    options[0]); //default button title
+	    	if (n == JOptionPane.YES_OPTION){
+	    		OpenBrowser.openURL("http://en.wikipedia.org/wiki/Quoridor#Rules_of_the_game");
+	    	}
 	    }
 	} 
 
 	/**
-	 * The main function. Remember: main is just a name for a function. It is
-	 * also the name of the function searched for by Java when running a class;
-	 * that does not preclude calling the function directly. This is an example
-	 * of dependency injection.
-	 * 
 	 * @param args
 	 */
+	/*
 	public static void main(String... args) {
 		MenuBarPrototype window = new MenuBarPrototype();
-	}
+	}*/
 
 }
