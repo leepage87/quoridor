@@ -17,6 +17,12 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
 	private JPanel contentPane;
 	
+	final int SIZE = 630; // width/height of game board
+	final int DOWNOFFSET = 20; // distance to draw board from top of window
+	final int RIGHTOFFSET = 20; // distance to draw board from left side of window
+	final int WALLLENGTH = SIZE * 2/21;
+	final int WALLWIDTH = SIZE/9 - WALLLENGTH;
+	
 	public GameBoardWithButtonsPrototype()  {
 		super();
 		JMenuBar menu = makeMenuBar();
@@ -24,44 +30,42 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 		add(menu);
 		setName(MAIN_WINDOW_TITLE);
 		setTitle(MAIN_WINDOW_TITLE);
-		setSize(720, 720);
-		//setBackground(Color.BLACK);
+		setSize(SIZE + 2*RIGHTOFFSET, SIZE + 2*DOWNOFFSET+50);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(null);
-		final int SIZE = 630;
-		//setContentPane(new MyComponent());
+		
 		JButton[][] tokenSquares = new JButton[9][9];
-		for (int i = 0; i < 9; i++)	{
-			for (int j = 0; j < 9; j++)	{
-				tokenSquares[i][j] = new BoardButton(""+i + j);
-				tokenSquares[i][j].setBounds(SIZE*i/9 + 5, SIZE*j/9+55, 60,60);
-				add(tokenSquares[i][j]);
-				tokenSquares[i][j].setName("Button"+i + "" +j);
+		for (int across = 0; across < 9; across++)	{
+			for (int down = 0; down < 9; down++)	{
+				tokenSquares[across][down] = new BoardButton(""+across + down);
+				tokenSquares[across][down].setBounds(SIZE*across/9 + WALLWIDTH/2, SIZE*down/9+DOWNOFFSET + WALLWIDTH/2, WALLLENGTH,WALLLENGTH);
+				add(tokenSquares[across][down]);
+				tokenSquares[across][down].setName("Button"+across + "" +down);
 			}
 		}
 		
 		JButton[][] vertwalls = new JButton[10][10];
-		for (int i = 1; i < 9; i++)	{
-			for (int j = 1; j < 10; j++)	{
-				vertwalls[i][j] = new BoardWall("" + i + j + "V");
-				vertwalls[i][j].setBounds(SIZE*i/9 - 5, SIZE*(j-1)/9 +55, 10, 60);
-				vertwalls[i][j].setVisible(true);
-				add(vertwalls[i][j]);
-				BoardWall.map.put("" + i + j + "V", (BoardWall)vertwalls[i][j]);
-				vertwalls[i][j].setName("VertWall" + i + j);
+		for (int across = 1; across < 9; across++)	{
+			for (int down = 1; down < 10; down++)	{
+				vertwalls[across][down] = new BoardWall("" + across + down + "V");
+				vertwalls[across][down].setBounds(SIZE*across/9 - WALLWIDTH/2, SIZE*(down-1)/9 +DOWNOFFSET+WALLWIDTH/2, WALLWIDTH, WALLLENGTH);
+				vertwalls[across][down].setVisible(true);
+				add(vertwalls[across][down]);
+				BoardWall.map.put("" + across + down + "V", (BoardWall)vertwalls[across][down]);
+				vertwalls[across][down].setName("VertWall" + across + down);
 			}
 		}
 		
 		JButton[][] horzwalls = new BoardWall[10][10];
-		for (int i = 1; i < 9; i++) {
-			for (int j = 1; j < 10; j++) {
-				horzwalls[i][j] = new BoardWall("" + i + j + "H");
-				horzwalls[i][j].setRolloverEnabled(false);
-				horzwalls[i][j].setBounds(SIZE*(j-1)/9 + 5, SIZE*i/9 +45, 60, 10);
-				horzwalls[i][j].setVisible(true);
-				add(horzwalls[i][j]);
-				BoardWall.map.put(""+ i + j + "H", (BoardWall) horzwalls[i][j]);
-				horzwalls[i][j].setName("HorzWall" + i + j);
+		for (int down = 1; down < 9; down++) {
+			for (int across = 1; across < 10; across++) {
+				horzwalls[down][across] = new BoardWall("" + down + across + "H");
+				horzwalls[down][across].setRolloverEnabled(false);
+				horzwalls[down][across].setBounds(SIZE*(across-1)/9 + WALLWIDTH/2, SIZE*down/9 +DOWNOFFSET - WALLWIDTH/2, WALLLENGTH, WALLWIDTH);
+				horzwalls[down][across].setVisible(true);
+				add(horzwalls[down][across]);
+				BoardWall.map.put(""+ down + across + "H", (BoardWall) horzwalls[down][across]);
+				horzwalls[down][across].setName("HorzWall" + down + across);
 			}
 		}
 		setVisible(true);
@@ -73,21 +77,6 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 		GameBoardWithButtonsPrototype window = new GameBoardWithButtonsPrototype();
 	}
 	
-	static class MyComponent extends JComponent 
-	{
-		public void paint (Graphics g) 
-		{
-			final int SIZE = 630;
-			g.setColor(new Color(0,109,99));
-			g.fillRect(5,0,SIZE,SIZE);
-			g.setColor(Color.BLACK);
-			for (int i = 0; i < 10; i++)
-			{
-				g.fillRect((SIZE*i/9)-5, 0, 10, SIZE);
-				g.fillRect(0,(SIZE*i/9)-5,SIZE,10);
-			}
-		}
-	}
 
 	
 	/*
