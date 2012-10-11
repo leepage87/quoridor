@@ -160,7 +160,7 @@ public class GameBoardWithButtonsPrototype extends JFrame implements ActionListe
 	    if ("Quit".equals(e.getActionCommand())) {
 	    	System.exit(0);
 	    } else if ("About".equals(e.getActionCommand())) {
-	    	JOptionPane.showMessageDialog(contentPane, "Programming by: Lee Page, Jonathan Gould," +
+	    	JOptionPane.showMessageDialog(contentPane, "Programming by: \nLee Page, Jonathan \"the Beard\" Gould," +
 	    			"\nSarah Weller, and Timothy Simmons\n\nCIS 405 - Sofware Engineering - Fall 2012", "Quoridor", 	JOptionPane.INFORMATION_MESSAGE);
 	    } else if ("Instructions".equals(e.getActionCommand())){
 	    	String [] options = {"Open Rules", "Close"};
