@@ -6,33 +6,58 @@ package src.ui;
  */
 
 public class PlayQuor{
-
-	public static void main(String[] args){
+	
+	public static boolean clicked = false;
+	public static String nextMove = "";
+	public static int turn;
+	public static void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
 		Board b = new Board(numPlay);
+		GameBoardWithButtons gui = new GameBoardWithButtons(b);
 		// Create/assign AI to a number of Players
 		boolean won = false;
-		int turn = 1;
+		turn = 1;
 		while(!won){
 			takeTurn(b, turn, false);
 			turn = (turn%numPlay) + 1;
+			System.out.println(turn);
 			won = b.haveWon();
 		}
 	}
 
-	public static void takeTurn(Board b, int turn, boolean moveOnly){
+	public static void takeTurn(Board b, int turn, boolean moveOnly) throws InterruptedException{
 		/*
 	  Get placeWall/movePiece from Player/AI, in int[] form
 	      movePiece: gives int to get the char from
 	      placeWall: gives int/int/int (row, column, direction)
 		 */
+		while (!clicked){
+			;
+		}
+		Thread.sleep(0);
+		if (nextMove.charAt(0) == 'B') {
+			for (int col = 0; col < 17; col+=2)
+			{
+				for (int row = 0; row < 17; row +=2)
+				{
+					if (b.grid[col][row] == turn)
+					{
+						b.grid[col][row] = 0;
+						System.out.println(row + " " + col + " " + turn);
+						BoardButton.setPlayerPresent(false, col, row);
+					}
+				}
+			}
+			b.grid[2*((int)(nextMove.charAt(1))-'0')][2*((int)(nextMove.charAt(2))-'0')] = turn;
+		}
+		clicked = false;
 
 	}
 
 	// Parameters: the board, the player whose turn it is, the direction
 	//    that the player chose to move
 	// PostCondition: the player's piece is moved, if it was legal
-	public static void movePiece(Board b, int turn, char direction){
+	public static void movePiece(Board b, int turn, char direction) throws InterruptedException{
 		if(!b.wallCollision(direction, turn)){
 			if(!b.pieceCollision(direction, turn)){
 				b.movePiece(direction, turn);
@@ -55,7 +80,7 @@ public class PlayQuor{
 	// Parameters: the board, the player whose turn it is, the direction
 	//    that the player chose to move (which is onto another player)
 	// PostCondition: the player's piece is moved and he moves again
-	public static void doubleMove(Board b, int turn, char direction){
+	public static void doubleMove(Board b, int turn, char direction) throws InterruptedException{
 		int[] startSpot = b.playerPlace(turn);
 		int row = startSpot[0];
 		int col = startSpot[1];

@@ -51,11 +51,13 @@ public class Board {
                 grid[i][j] = 0;
             }
         }
-        grid[0][8] = 1;
-        grid[16][8] = 2;
+        
+        
+        grid[8][0] = 1;
+        grid[8][16] = 2;
         if(players == 4){
-            grid[8][0] = 3;
-            grid[8][16] = 4;
+        	grid[0][8] = 3;
+        	grid[16][8] = 4;
         }
     }
 
