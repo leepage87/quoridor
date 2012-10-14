@@ -35,7 +35,7 @@ public class PlayQuor{
 			;
 		}
 		Thread.sleep(0);
-		if (nextMove.charAt(0) == 'B') {
+		if (nextMove.charAt(0) == 'B') {//its a player move
 			for (int col = 0; col < 17; col+=2)
 			{
 				for (int row = 0; row < 17; row +=2)
@@ -49,7 +49,30 @@ public class PlayQuor{
 				}
 			}
 			b.grid[2*((int)(nextMove.charAt(1))-'0')][2*((int)(nextMove.charAt(2))-'0')] = turn;
+		}else{//its a wall
+			int y = 2*(int)(nextMove.charAt(1) - '0')-1;
+			int x = 2*((int)(nextMove.charAt(0) - '0')-1);
+			
+			if (nextMove.charAt(2) == 'V'){//its a vertical wall
+				System.out.println("V Next move: " + nextMove);
+				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][2*((int)nextMove.charAt(1) - '0')-2] = 5;
+				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][1+2*((int)nextMove.charAt(1) - '0')-2] = 5;
+				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][2+2*((int)nextMove.charAt(1) - '0')-2] = 5;
+			}else{//its a horizontal wall
+				System.out.println("H Next move: " + nextMove);
+				b.grid[x][y] = 5;
+				b.grid[x+1][y] = 5;
+				b.grid[x+2][y] = 5;
+			}
+			for (int row = 0; row < 17; row ++) {
+				for(int col = 0; col < 17; col++) {
+					System.out.print(b.grid[col][row] + " ");
+				}
+				System.out.println();
+			}
+			
 		}
+		
 		clicked = false;
 
 	}

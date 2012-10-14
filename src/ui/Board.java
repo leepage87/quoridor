@@ -108,6 +108,7 @@ public class Board {
     public void setWall(){
     	grid[1][8]=5;
     }
+    
     // Parameters: character to represent the direction moved and an int
     //    to show which player is moving
     // Returns: if moving that direction causes a collision with a wall
@@ -167,17 +168,17 @@ public class Board {
     
     public void moveToWin(int player){
     	if(player == 1){
-    		grid[16][8] = 1;
-    		grid[0][8]=0;
-    	}else if(player == 2){
-    		grid[0][8] = 2;
-    		grid[16][8]=0;
-    	}else if(player == 3){
-    		grid[8][16] = 3;
+    		grid[8][16] = 1;
     		grid[8][0]=0;
-    	}else if(player == 4){
-    		grid[8][0] = 4;
+    	}else if(player == 2){
+    		grid[8][0] = 2;
     		grid[8][16]=0;
+    	}else if(player == 3){
+    		grid[16][8] = 3;
+    		grid[0][8]=0;
+    	}else if(player == 4){
+    		grid[0][8] = 4;
+    		grid[16][8]=0;
     	}else{
     		System.out.println("Error");
     	}
@@ -330,8 +331,8 @@ public class Board {
 	//    where on the board the player is
 	// Returns: if the player is in their winning row/column
 	public boolean winCheck(int Player, int[] place){
-		int row = place[0];
-		int col = place[1];
+		int row = place[1];
+		int col = place[0];
 		if(Player==1 && row==16)
 			return true;
 		if(Player==2 && row==0)

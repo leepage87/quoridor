@@ -26,16 +26,21 @@ public class BoardWall extends JButton implements ActionListener {
 	
 	public BoardWall nextWall () 
 	{
+		BoardWall returnwall;
 		String oldname = name;
 		int temp;
-		//if (oldname.charAt(1) == '9')
-			//return null;
-			//temp = (int)(oldname.charAt(1)-'0')-1;
-		//else
-		temp = (int)(oldname.charAt(1)-'0')+1;
-		String newname = oldname.charAt(0) + Integer.toString(temp) + oldname.charAt(2);
-		BoardWall returnwall = getWall(newname);
-			
+		String newname;
+		if (oldname.charAt(2) == 'V'){//its a vertical wall
+			temp = (int)(oldname.charAt(1)-'0')+1;
+			newname = oldname.charAt(0) + Integer.toString(temp) + oldname.charAt(2);
+			returnwall = getWall(newname);
+		}else{//its a horizontal wall
+			//System.out.println("first wall"+ oldname);
+			temp = (int)(oldname.charAt(0)-'0')+1;
+			newname = Integer.toString(temp) + oldname.charAt(1) + oldname.charAt(2);
+			returnwall = getWall(newname);
+		}
+		//System.out.println(newname);
 		return returnwall;
 	}
 	
@@ -53,7 +58,10 @@ public class BoardWall extends JButton implements ActionListener {
 			if ((!wall.wallPresent) && (!next.wallPresent)) {
 				wall.setWall();
 				next.setWall();
+				PlayQuor.nextMove = wall.name;
+				PlayQuor.clicked = true;
 		}
+		
 	}
 	
 	public BoardWall getWall (String str) {
@@ -74,10 +82,8 @@ public class BoardWall extends JButton implements ActionListener {
         public void mouseEntered(java.awt.event.MouseEvent evt) {
         	BoardWall wall = (BoardWall) me;
         	BoardWall next;
-        	if (wall.name.charAt(1) != '9') 
-        		next = wall.nextWall();
-        	else 
-        		next = null;
+        	//if (wall.name.charAt(1) != '9') 
+        	next = wall.nextWall();
         	if (next != null)
         		if ((wall.wallPresent == true) || (next.wallPresent == true))
         			;//setRolloverEnabled(false);
