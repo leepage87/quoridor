@@ -37,7 +37,7 @@ public class BoardButton extends JButton implements ActionListener {
 		BoardButton button = (BoardButton) me;
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
 		button.setRolloverEnabled(false);
-		if (PlayQuor.turn == 1)
+		if (PlayQuor.turn == 1) 
 			button.setIcon(GameBoardWithButtons.playerOne);
 		if (PlayQuor.turn == 2)
 			button.setIcon(GameBoardWithButtons.playerTwo);

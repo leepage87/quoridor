@@ -47,7 +47,7 @@ public class Board {
         }
         for(int i = 0; i < 17; i++){
             for(int j = 0; j < 17; j++){
-                System.out.print(grid[i][j] + " ");
+                System.out.print(grid[j][i] + " ");
             }
             System.out.println();
         }
@@ -93,19 +93,19 @@ public class Board {
         int column = here[1];
         if(direction == 'N'){ // TODO: check for edge of board
             grid[row][column] = 0;
-            grid[row-2][column] = Player;
+            grid[row][column-2] = Player;
         }
         if(direction == 'S'){
             grid[row][column] = 0;
-            grid[row+2][column] = Player;
+            grid[row][column+2] = Player;
         }
         if(direction == 'E'){
             grid[row][column] = 0;
-            grid[row][column+2] = Player;
+            grid[row+2][column] = Player;
         }
         if(direction == 'W'){
             grid[row][column] = 0;
-            grid[row][column-2] = Player;
+            grid[row-2][column] = Player;
         }
     }
 

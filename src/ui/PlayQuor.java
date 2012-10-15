@@ -50,18 +50,18 @@ public class PlayQuor{
 						int newRow = (int)(nextMove.charAt(2) - '0');
 						System.out.println("OldMove is: " + oldMove);
 						System.out.println("oldCol " + oldCol + " oldRow " + oldRow + " newCol: "+newCol + " newRow: " + newRow);
-						if(oldCol == newCol && oldRow > newRow){
-							System.out.println("WE GO NORTH");
-							movePiece(b, turn, 'N');
-						}if(oldCol == newCol && oldRow < newRow){
-							System.out.println("WE GO SOUTH");
-							movePiece(b, turn, 'S');
-						}if(oldCol > newCol && oldRow == newRow){
-							System.out.println("WE GO W");
+						if(oldCol > newCol && oldRow == newRow){
+							System.out.println("WE GO w");
 							movePiece(b, turn, 'W');
 						}if(oldCol < newCol && oldRow == newRow){
 							System.out.println("WE GO E");
 							movePiece(b, turn, 'E');
+						}if(oldCol == newCol && oldRow > newRow){
+							System.out.println("WE GO N");
+							movePiece(b, turn, 'N');
+						}if(oldCol == newCol && oldRow < newRow){
+							System.out.println("WE GO S");
+							movePiece(b, turn, 'S');
 						}
 						//b.grid[col][row] = 0;
 						System.out.println("TURN: " + turn);
@@ -72,7 +72,7 @@ public class PlayQuor{
 		}
 		for (int col = 0; col < 17; col ++) {
 			for(int row = 0; row < 17; row++) {
-				System.out.print(b.grid[col][row] + " ");
+				System.out.print(b.grid[row][col] + " ");
 			}
 			System.out.println();
 		}
