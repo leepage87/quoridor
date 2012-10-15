@@ -29,7 +29,6 @@ public class Board {
     public Board(Board b){
         this.grid = b.grid;
         this.NUMPLAY = b.NUMPLAY;
-
     }
 
     // Parameters: the number of players (2 or 4)
