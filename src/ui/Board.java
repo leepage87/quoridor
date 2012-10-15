@@ -45,6 +45,12 @@ public class Board {
         	grid[0][8] = 3;
         	grid[16][8] = 4;
         }
+        for(int i = 0; i < 17; i++){
+            for(int j = 0; j < 17; j++){
+                System.out.print(grid[j][i] + " ");
+            }
+            System.out.println();
+        }
     }
 
     // Parameters: a board

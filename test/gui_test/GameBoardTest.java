@@ -58,7 +58,16 @@ public class GameBoardTest {
 	public void windowUpWithTitle() {
 		driver.hasTitle(MAIN_WINDOW_TITLE);
 	}
-	
+	@Test
+	public void playerOneMovementTest() {
+
+			String buttonName = "Button"+ 4 + "" +1;
+			JButtonDriver button = button(buttonName);
+			button.click();
+			
+
+	}
+	/*
 	@Test
 	public void windowContainsButtons() {
 		for (int i = 0; i < 9; ++i) {
@@ -69,7 +78,7 @@ public class GameBoardTest {
 			}
 		}
 	}
-	 
+	 */
 	/*@Test
 	public void windowContainsVerticalWalls() {
 		for (int i = 1; i < 9; i++)	{
