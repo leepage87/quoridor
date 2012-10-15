@@ -83,23 +83,49 @@ public class Board {
     public void movePiece(char direction, int Player){
         int[] here = playerPlace(Player);
         int row = here[0];
-        int column = here[1];
-        if(direction == 'N'){ // TODO: check for edge of board
-            grid[row][column] = 0;
-            grid[row-2][column] = Player;
+        int col = here[1];
+        if(direction == 'N'){
+            grid[row][col] = 0;
+            grid[row-2][col] = Player;
         }
         if(direction == 'S'){
-            grid[row][column] = 0;
-            grid[row+2][column] = Player;
+            grid[row][col] = 0;
+            grid[row+2][col] = Player;
         }
         if(direction == 'E'){
-            grid[row][column] = 0;
-            grid[row][column+2] = Player;
+            grid[row][col] = 0;
+            grid[row][col+2] = Player;
         }
         if(direction == 'W'){
-            grid[row][column] = 0;
-            grid[row][column-2] = Player;
+            grid[row][col] = 0;
+            grid[row][col-2] = Player;
         }
+    }
+
+    // Parameters: character to represent the direction moved and an int
+    //    to show which player is moving
+    // Returns: if the move is legal
+    public boolean canMovePiece(char direction, int Player){
+        int[] here = playerPlace(Player);
+        int row = here[0];
+        int col = here[1];
+        if(direction == 'N'){
+	    if((here[0] == 0) || (grid[row-1][col] == 5))
+		return false;
+        }
+        if(direction == 'S'){
+	    if((here[0] == 16) || (grid[row+1][col] == 5))
+		return false;
+        }
+        if(direction == 'E'){
+	    if((here[1] == 16) || (grid[row][col+1] == 5))
+		return false;
+        }
+        if(direction == 'W'){
+	    if((here[1] == 0) || (grid[row][col-1] == 5))
+		return false;
+        }
+	return true;
     }
 
     // Parameters: an int[3] where the first and second numbers give the
@@ -134,24 +160,6 @@ public class Board {
 	if(theWall[2]==1 && (grid[row][col-1]!=0 || grid[row][col+1]!=0))
 	    return false;
 	return true;
-    }
-
-    // Parameters: character to represent the direction moved and an int
-    //    to show which player is moving
-    // Returns: if moving that direction causes a collision with a wall
-    public boolean wallCollision(char direction, int Player){
-        int[] here = playerPlace(Player);
-        int row = here[0];
-        int column = here[1];
-        if(direction == 'N' && grid[row-1][column] != 0)
-            return true;
-        if(direction == 'S' && grid[row+1][column] != 0)
-            return true;
-        if(direction == 'E' && grid[row][column+1] != 0)
-            return true;
-        if(direction == 'W' && grid[row][column-1] != 0)
-            return true;
-        return false;
     }
 
     // Parameters: character to represent the direction moved and an int
