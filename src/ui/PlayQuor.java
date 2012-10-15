@@ -6,9 +6,10 @@ package src.ui;
  */
 
 public class PlayQuor{
-	
+
 	public static boolean clicked = false;
 	public static String nextMove = "";
+	public static String oldMove = "";
 	public static int turn;
 	public static void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
@@ -42,37 +43,40 @@ public class PlayQuor{
 				{
 					if (b.grid[col][row] == turn)
 					{
-						b.grid[col][row] = 0;
-						System.out.println(row + " " + col + " " + turn);
+						oldMove = "" + col/2 + row/2;
+						int oldCol = (int)(oldMove.charAt(0) -'0');
+						int oldRow = (int)(oldMove.charAt(1)-'0');
+						int newCol = (int)(nextMove.charAt(1) - '0');
+						int newRow = (int)(nextMove.charAt(2) - '0');
+						System.out.println("OldMove is: " + oldMove);
+						System.out.println("oldCol " + oldCol + " oldRow " + oldRow + " newCol: "+newCol + " newRow: " + newRow);
+						if(oldCol == newCol && oldRow > newRow){
+							System.out.println("WE GO NORTH");
+							movePiece(b, turn, 'N');
+						}if(oldCol == newCol && oldRow < newRow){
+							System.out.println("WE GO SOUTH");
+							movePiece(b, turn, 'S');
+						}if(oldCol > newCol && oldRow == newRow){
+							System.out.println("WE GO W");
+							movePiece(b, turn, 'W');
+						}if(oldCol < newCol && oldRow == newRow){
+							System.out.println("WE GO E");
+							movePiece(b, turn, 'E');
+						}
+						//b.grid[col][row] = 0;
+						System.out.println("TURN: " + turn);
 						BoardButton.setPlayerPresent(false, col, row);
 					}
 				}
 			}
-			b.grid[2*((int)(nextMove.charAt(1))-'0')][2*((int)(nextMove.charAt(2))-'0')] = turn;
-		}else{//its a wall
-			int y = 2*(int)(nextMove.charAt(1) - '0')-1;
-			int x = 2*((int)(nextMove.charAt(0) - '0')-1);
-			
-			if (nextMove.charAt(2) == 'V'){//its a vertical wall
-				System.out.println("V Next move: " + nextMove);
-				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][2*((int)nextMove.charAt(1) - '0')-2] = 5;
-				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][1+2*((int)nextMove.charAt(1) - '0')-2] = 5;
-				b.grid[2*(int)(nextMove.charAt(0) - '0')-1][2+2*((int)nextMove.charAt(1) - '0')-2] = 5;
-			}else{//its a horizontal wall
-				System.out.println("H Next move: " + nextMove);
-				b.grid[x][y] = 5;
-				b.grid[x+1][y] = 5;
-				b.grid[x+2][y] = 5;
-			}
-			for (int row = 0; row < 17; row ++) {
-				for(int col = 0; col < 17; col++) {
-					System.out.print(b.grid[col][row] + " ");
-				}
-				System.out.println();
-			}
-			
 		}
-		
+		for (int col = 0; col < 17; col ++) {
+			for(int row = 0; row < 17; row++) {
+				System.out.print(b.grid[col][row] + " ");
+			}
+			System.out.println();
+		}
+
 		clicked = false;
 
 	}
@@ -81,7 +85,9 @@ public class PlayQuor{
 	//    that the player chose to move
 	// PostCondition: the player's piece is moved, if it was legal
 	public static void movePiece(Board b, int turn, char direction) throws InterruptedException{
+		System.out.println("Hey we in PQ.movepiece");
 		if(!b.wallCollision(direction, turn)){
+			System.out.println("pass 1st if");
 			if(!b.pieceCollision(direction, turn)){
 				b.movePiece(direction, turn);
 			}else{

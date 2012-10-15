@@ -59,6 +59,12 @@ public class Board {
         	grid[0][8] = 3;
         	grid[16][8] = 4;
         }
+        for(int i = 0; i < 17; i++){
+            for(int j = 0; j < 17; j++){
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
 	/*
@@ -82,6 +88,7 @@ public class Board {
     //    to show which player is moving
     // PostCondition: the piece is moved if it was possible
     public void movePiece(char direction, int Player){
+    	System.out.println("Hey we in b.movepiece");
         int[] here = playerPlace(Player);
         int row = here[0];
         int column = here[1];

@@ -13,24 +13,24 @@ import javax.swing.JOptionPane;
 import src.ui.GameBoardWithButtonsPrototype;
 
 public class BoardButton extends JButton implements ActionListener {
-	
+
 	static HashMap<String, BoardButton> map = new HashMap<String, BoardButton>();
 
 	private String name;
 	private static boolean playerPresent;
 
-	
+
 	public BoardButton getButton (String str) {
 		BoardButton returnButton = map.get(str);
 		return returnButton;
 	}
-	
+
 	public String getLocalName() {
 		return name;
 	}
 
 	private JComponent me;
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -51,32 +51,32 @@ public class BoardButton extends JButton implements ActionListener {
 		PlayQuor.nextMove = button.name;
 
 	}
-	
+
 	public void rolloverTests(){
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
-	
-        public void mouseEntered(java.awt.event.MouseEvent evt) {
-        	if(playerPresent == true)
-        		setRolloverEnabled(false);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-            	if (playerPresent == false)
-            		setRolloverEnabled(false);
 
-            }
-            });
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				if(playerPresent == true)
+					setRolloverEnabled(false);
+			}
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				if (playerPresent == false)
+					setRolloverEnabled(false);
+
+			}
+		});
 	}
-	
+
 	public static void setPlayerPresent(boolean setting, int col, int row){
 		map.get("B"+col/2+row/2).playerPresent = setting;
 		map.get("B"+col/2+row/2).setIcon(GameBoardWithButtons.defaultIcon);
-		
-		
-		
-	}
-	
 
- BoardButton(String name) {
+
+
+	}
+
+
+	BoardButton(String name) {
 		playerPresent = false;
 		this.setIcon(GameBoardWithButtons.defaultIcon);
 		this.name = name;
@@ -87,7 +87,7 @@ public class BoardButton extends JButton implements ActionListener {
 		addActionListener(this);
 		//rolloverTests();
 
-	        	
-	    }
+
 	}
+}
 
