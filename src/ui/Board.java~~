@@ -13,6 +13,10 @@ public class Board {
     final int WALL = 5;
     int[][] grid;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     // Parameters: the number of players (2 or 4)
     // Creates: a board object
     public Board(int players){
@@ -22,6 +26,15 @@ public class Board {
             NUMPLAY = 4;
         else
             NUMPLAY = 2;
+<<<<<<< HEAD
+=======
+        /*
+        this.wallSpace = new int[8][8];
+        this.vWalls = new int[9][8];
+        this.hWalls = new int[8][9];
+        fillAllWalls();
+        */
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     }
 
     // Parameters: a board
@@ -29,6 +42,14 @@ public class Board {
     public Board(Board b){
         this.grid = b.grid;
         this.NUMPLAY = b.NUMPLAY;
+<<<<<<< HEAD
+=======
+        /*
+        this.wallSpace = b.wallSpace;
+        this.vWalls = b.vWalls;
+        this.hWalls = b.hWalls;
+        */
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     }
 
     // Parameters: the number of players (2 or 4)
@@ -39,20 +60,20 @@ public class Board {
                 grid[i][j] = 0;
             }
         }
+<<<<<<< HEAD
+=======
+        
+        
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
         grid[8][0] = 1;
         grid[8][16] = 2;
         if(players == 4){
         	grid[0][8] = 3;
         	grid[16][8] = 4;
         }
-        for(int i = 0; i < 17; i++){
-            for(int j = 0; j < 17; j++){
-                System.out.print(grid[i][j] + " ");
-            }
-            System.out.println();
-        }
     }
 
+<<<<<<< HEAD
     // Parameters: a board
     // Returns: if this board is identical to the other board
     public boolean equals(Board b){
@@ -82,12 +103,29 @@ public class Board {
         }
         return location;
     }
+=======
+	/*
+    // PostCondition: wallSpace, vWalls, and hWalls are all full of zeros
+    private void fillAllWalls(){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                wallSpace[i][j] = 0;
+                vWalls[i][j] = 0;
+                hWalls[i][j] = 0;
+            }
+        }
+        for(int k = 0; k < 8; k++){
+                vWalls[9][k] = 0;
+                hWalls[k][9] = 0;
+        }
+    }
+	 */
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
 
     // Parameters: character to represent the direction moved and an int
     //    to show which player is moving
     // PostCondition: the piece is moved if it was possible
     public void movePiece(char direction, int Player){
-    	System.out.println("Hey we in b.movepiece");
         int[] here = playerPlace(Player);
         int row = here[0];
         int column = here[1];
@@ -109,6 +147,7 @@ public class Board {
         }
     }
 
+<<<<<<< HEAD
     // Parameters: an int[3] where the first and second numbers give the
     //    center of the new wall and the third number gives the
     //    direction the wall will face
@@ -143,6 +182,14 @@ public class Board {
 	return true;
     }
 
+=======
+
+    //Testing purposes only
+    public void setWall(){
+    	grid[1][8]=5;
+    }
+    
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     // Parameters: character to represent the direction moved and an int
     //    to show which player is moving
     // Returns: if moving that direction causes a collision with a wall
@@ -161,6 +208,12 @@ public class Board {
         return false;
     }
 
+<<<<<<< HEAD
+=======
+    public void placePiece(){
+    	grid[2][8] = 2;
+    }
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     // Parameters: character to represent the direction moved and an int
     //    to show which player is moving
     // Returns: if moving that direction causes a collision with a player
@@ -179,6 +232,7 @@ public class Board {
         return false;
     }
 
+<<<<<<< HEAD
     // Returns: if each player can still reach their winning row
     public boolean canWin(){
 	for(int i = 1; i < NUMPLAY + 1; i++){
@@ -220,6 +274,46 @@ public class Board {
     // Returns: the best position to move to next
     public int[] bestMove(int Player){
 	return doSearch(Player);
+=======
+    // Parameters: the player being searched for
+    // Returns: the x/y location of the Player
+    public int[] playerPlace(int Player){
+
+        int[] location = new int[2];
+        for(int row = 0; row < 17; row++){
+            for(int column = 0; column < 17; column++){
+                if(grid[row][column] == Player){
+                    location[0] = row;
+                    location[1] = column;
+                    break;
+                }
+            }
+        }
+        return location;
+    }
+
+    
+    public void moveToWin(int player){
+    	if(player == 1){
+    		grid[8][16] = 1;
+    		grid[8][0]=0;
+    	}else if(player == 2){
+    		grid[8][0] = 2;
+    		grid[8][16]=0;
+    	}else if(player == 3){
+    		grid[16][8] = 3;
+    		grid[0][8]=0;
+    	}else if(player == 4){
+    		grid[0][8] = 4;
+    		grid[16][8]=0;
+    	}else{
+    		System.out.println("Error");
+    	}
+    }
+
+    public void placeTestWall(){
+    	grid[1][9] = 5;
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
     }
 
     // Parameters: an int representing a player
@@ -350,6 +444,7 @@ public class Board {
         return children;
     }
 
+<<<<<<< HEAD
     // Parameters: a list of all locations checked, the current location
     // Returns: if the current location has already been checked
     public boolean hasSeen(ArrayList<int[]> checked, int[] child){
@@ -393,5 +488,112 @@ public class Board {
     public void placeTestWall(){
     	grid[1][9] = 5;
     }
+=======
+
+	// Returns: if any player is in their winning row
+	public boolean haveWon(){
+		for(int i = 1; i < NUMPLAY + 1; i++){
+			int[] place = playerPlace(i);
+			if(winCheck(i, place))
+				return true;
+		}
+		return false;
+	}
+
+	// Parameters: an int representing a player and an int[] to show
+	//    where on the board the player is
+	// Returns: if the player is in their winning row/column
+	public boolean winCheck(int Player, int[] place){
+		int row = place[1];
+		int col = place[0];
+		if(Player==1 && row==16)
+			return true;
+		if(Player==2 && row==0)
+			return true;
+		if(Player==3 && col==16)
+			return true;
+		if(Player==4 && col==0)
+			return true;
+		return false;
+	}
+
+
+	// Returns: if each player can still reach their winning row
+	public boolean canWin(){
+		for(int i = 1; i < NUMPLAY + 1; i++){
+			int[] nextMove = doSearch(i);
+			if(nextMove[0] == -1)
+				return false;
+		}
+		return true;
+	}
+
+	// Parameters: an int representing a player
+	// Returns: the best position to move to next
+	public int[] bestMove(int Player){
+		return doSearch(Player);
+	}
+
+
+	// Parameters: a list of all locations checked, the current location
+	// Returns: if the current location has already been checked
+	public boolean hasSeen(ArrayList<int[]> checked, int[] child){
+		for(int i = checked.size()-1; i > 0; i--){
+			int[] next = checked.get(i);
+			if(child[0]==next[0] && child[1]==next[1])
+				return true;
+		}
+		return false;
+	}
+
+	// Parameters: a board
+	// Returns: if this board is identical to the other board
+	public boolean equals(Board b){
+		boolean check = true;
+		for(int i = 0; i < 17; i++){
+			for(int j = 0; j < 17; j++){
+				if(grid[i][j] != b.grid[i][j])
+					check = false;
+			}
+		}
+		return check;
+	}
+
+	// Parameters: an int[3] where the first and second numbers give the
+	//    center of the new wall and the third number gives the
+	//    direction the wall will face
+	// Returns: if the wall can be placed there
+	public boolean canPlaceWall(int[] theWall){
+		int row = 2*theWall[0] + 1;
+		int col = 2*theWall[1] + 1;
+		if(grid[row][col] != 0)
+			return false;
+		if(theWall[2]==0 && (grid[row-1][col]!=0 || grid[row+1][col]!=0))
+			return false;
+		if(theWall[2]==1 && (grid[row][col-1]!=0 || grid[row][col+1]!=0))
+			return false;
+		return true;
+	}
+
+	// Parameters: an int[3] where the first and second numbers give the
+	//    center of the new wall and the third number gives the
+	//    direction the wall will face
+	// PostCondition: a new wall is placed
+	public void placeWall(int[] theWall){
+		int row = 2*theWall[0] + 1;
+		int col = 2*theWall[1] + 1;
+		if(theWall[2] == 0){
+			grid[row][col] = WALL;
+			grid[row-1][col] = WALL;
+			grid[row+1][col] = WALL;
+			// GUI mod?
+		}else{
+			grid[row][col] = WALL;
+			grid[row][col-1] = WALL;
+			grid[row][col+1] = WALL;
+			// GUI mod?
+		}
+	}
+>>>>>>> 166064e5f37460f8baf37b69b148cc9f86f5719a
 
 }
