@@ -68,7 +68,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 				vertwalls[across][down].setVisible(true);
 				add(vertwalls[across][down]);
 				BoardWall.map.put("" + across + down + "V", (BoardWall)vertwalls[across][down]);
-				vertwalls[across][down].setName("VertWall" + across + down);
+				vertwalls[across][down].setName("V" + across + down);
 			}
 		}
 		
@@ -81,7 +81,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 				horzwalls[across][down].setVisible(true);
 				add(horzwalls[across][down]);
 				BoardWall.map.put("" + across + down + "H", (BoardWall) horzwalls[across][down]);
-				horzwalls[across][down].setName("HorzWall" + across + down);
+				horzwalls[across][down].setName("H" + across + down);
 			}
 		}
 		

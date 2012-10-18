@@ -65,10 +65,22 @@ public class PlayQuor{
 						}
 						//b.grid[col][row] = 0;
 						System.out.println("TURN: " + turn);
-						BoardButton.setPlayerPresent(false, col, row);
 					}
 				}
 			}
+		}else{//its a wall
+			int gridCol = (int)(nextMove.charAt(0) - '0')-1;
+			int gridRow = (int)(nextMove.charAt(1) - '0')-1;
+			System.out.println("nextmove" + nextMove);
+			System.out.println("gridCol " + gridCol + " gridRow " + gridRow);
+			int[] theWall = {gridCol, gridRow, 0};
+			if (nextMove.charAt(2) == 'H'){
+				placeWall(b, turn, theWall);
+			}else{//its a vertical wall
+				theWall[2] = 1;
+				placeWall(b, turn, theWall);
+			}
+
 		}
 		for (int col = 0; col < 17; col ++) {
 			for(int row = 0; row < 17; row++) {
@@ -86,7 +98,7 @@ public class PlayQuor{
 	// PostCondition: the player's piece is moved, if it was legal
 	public static void movePiece(Board b, int turn, char direction) throws InterruptedException{
 		System.out.println("Hey we in PQ.movepiece");
-		if(!b.wallCollision(direction, turn)){
+		if(b.canMovePiece(direction, turn)){
 			System.out.println("pass 1st if");
 			if(!b.pieceCollision(direction, turn)){
 				b.movePiece(direction, turn);
