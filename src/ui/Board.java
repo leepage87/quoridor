@@ -49,7 +49,7 @@ public class Board {
 		}
 		for(int i = 0; i < 17; i++){
 			for(int j = 0; j < 17; j++){
-				System.out.print(grid[i][j] + " ");
+				System.out.print(grid[j][i] + " ");
 			}
 			System.out.println();
 		}
@@ -192,6 +192,7 @@ public class Board {
 			return false;
 		if(theWall[2]==1 && (grid[col][row-1]!=0 || grid[col][row+1]!=0))
 			return false;
+		System.out.println("We made it here.");
 		return true;
 	}
 

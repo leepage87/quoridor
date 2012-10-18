@@ -56,8 +56,8 @@ public class BoardWall extends JButton implements ActionListener {
 		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
 		if (next != null)
 			if ((!wall.wallPresent) && (!next.wallPresent)) {
-				wall.setWall();
-				next.setWall();
+				//wall.setWall();
+				//next.setWall();
 				PlayQuor.nextMove = wall.name;
 				PlayQuor.clicked = true;
 		}
