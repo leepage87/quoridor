@@ -14,6 +14,7 @@ public class Board {
 	final int NUMPLAY;
 	final int WALL = 5;
 	int[][] grid;
+	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>();
 
 	// Parameters: the number of players (2 or 4)
 	// Creates: a board object
@@ -94,7 +95,7 @@ public class Board {
 		int col = here[0];
 		int row = here[1];
 		
-		HashMap<Integer, Icon> map = new HashMap<Integer, Icon>();
+		
 		map.put(1, GameBoardWithButtons.playerOne);
 		map.put(2, GameBoardWithButtons.playerTwo);
 		map.put(3, GameBoardWithButtons.playerThree);

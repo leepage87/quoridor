@@ -203,6 +203,8 @@ public class PlayQuor{
             takeTurn(b, true);
         }
         b.grid[spot[0]][spot[1]] = otherPlayer;
+        //"B"+ across + down
+        BoardButton.map.get("B"+spot[0]/2+spot[1]/2).setIcon(Board.map.get(otherPlayer));
     }
 
 
