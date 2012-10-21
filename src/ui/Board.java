@@ -193,7 +193,10 @@ public class Board {
 			return false;
 		if(theWall[2]==1 && (grid[col][row-1]!=0 || grid[col][row+1]!=0))
 			return false;
-		System.out.println("We made it here.");
+		Board tempB = new Board(this);
+		tempB.placeWall(theWall);
+		if(!canWin())
+		    return false;
 		return true;
 	}
 
