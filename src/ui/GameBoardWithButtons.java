@@ -22,7 +22,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	static Icon legalMove = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("legalMove.png"));
 	static Icon defaultIcon = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("default.gif"));
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
-	private JPanel contentPane;
+	public static JPanel contentPane;
 	
 	final int SIZE = 630; // width/height of game board
 	final int DOWNOFFSET = 20; // distance to draw board from top of window

@@ -54,12 +54,6 @@ public class Board {
 			grid[0][8] = 3;
 			grid[16][8] = 4;
 		}
-		for(int i = 0; i < 17; i++){
-			for(int j = 0; j < 17; j++){
-				System.out.print(grid[j][i] + " ");
-			}
-			System.out.println();
-		}
 	}
 
 	// Parameters: a board
@@ -75,6 +69,7 @@ public class Board {
 		return check;
 	}
 
+	// Returns: the board in String form
 	public String toString(){
 		String s = "";
 		for(int i = 0; i < 17; i++){
@@ -107,12 +102,10 @@ public class Board {
 	//    to show which player is moving
 	// PostCondition: the piece is moved if it was possible
 	public void movePiece(char direction, int Player){
-		System.out.println("DIRECTION: "+ direction);
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
-		
-		
+				
 		map.put(1, GameBoardWithButtons.playerOne);
 		map.put(2, GameBoardWithButtons.playerTwo);
 		map.put(3, GameBoardWithButtons.playerThree);
@@ -216,7 +209,6 @@ public class Board {
 		    return false;
 		return true;
 	}
-
 
 	// Parameters: character to represent the direction moved and an int
 	//    to show which player is moving

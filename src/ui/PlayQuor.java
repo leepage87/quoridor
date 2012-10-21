@@ -1,5 +1,7 @@
 package src.ui;
 
+import javax.swing.JOptionPane;
+
 /**
  * Tim Simmons
  * teamOrangeBeard
@@ -53,38 +55,32 @@ public class PlayQuor{
                         int oldRow = (int)(oldMove.charAt(1)-'0');
                         int newCol = (int)(nextMove.charAt(1) - '0');
                         int newRow = (int)(nextMove.charAt(2) - '0');
-                        System.out.println("Squiggle");
-                        System.out.println(oldCol + " " + oldRow + " " + newCol + " " + newRow);
                         if(newCol == oldCol -1 && oldRow == newRow){
-                            System.out.println("WE GO w");
                             if(!movePiece(b, 'W')){
                                 clicked = false;
                                 return false;
                             }
                             getOut = true;
                         }else if(newCol == oldCol +1 && oldRow == newRow){
-                            System.out.println("WE GO E");
                             if(!movePiece(b, 'E')){
                                 clicked = false;
                                 return false;
                             }
                             getOut = true;
                         }else if(oldCol == newCol && newRow == oldRow -1){
-                            System.out.println("WE GO N");
                             if(!movePiece(b, 'N')){
                                 clicked = false;
                                 return false;
                             }
                             getOut = true;
                         }else if(oldCol == newCol && newRow == oldRow +1){
-                            System.out.println("WE GO S");
                             if(!movePiece(b, 'S')){
                                 clicked = false;
                                 return false;
                             }
                             getOut = true;
                         }else{//cheater
-                            System.out.println("CHEATER");
+                        	JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Not adjacent square");
                             clicked = false;
                             return false;
                         }
@@ -110,20 +106,13 @@ public class PlayQuor{
             }
             if (!fairWall)
             {
-                System.out.println("illegal wall placement");
+            	JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Wall");
                 clicked = false;
                 return false;
             }
                 
         }
-        System.out.println("no uh no ehhhh");
-        for (int col = 0; col < 17; col ++) {
-            for(int row = 0; row < 17; row++) {
-                System.out.print(b.grid[row][col] + " ");
-            }
-            System.out.println();
-        }
-
+        System.out.println(b);
         clicked = false;
         return true;
 
@@ -133,9 +122,7 @@ public class PlayQuor{
     //    that the player chose to move
     // PostCondition: the player's piece is moved, if it was legal
     public static boolean movePiece(Board b, char direction) throws InterruptedException{
-        System.out.println("Hey we in PQ.movepiece");
         if(b.canMovePiece(direction, turn)){
-            System.out.println("pass 1st if");
             if(!b.pieceCollision(direction, turn)){
                 b.movePiece(direction, turn);
             }else{
@@ -158,7 +145,6 @@ public class PlayQuor{
 
             if (b.canPlaceWall(theWall))
             {
-                System.out.println("here is good ");
                 b.placeWall(theWall);
 
                 if (theWall[2] == 0)
@@ -174,10 +160,9 @@ public class PlayQuor{
             }
             else
             {
-                System.out.println("WTF");
+                //System.out.println("WTF");
                 return false;
             }
-        System.out.println("here is good too");
         return true;
     }
 
