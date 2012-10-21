@@ -30,7 +30,13 @@ public class Board {
 	// Parameters: a board
 	// Creates: a board object that is a duplicate of the board given
 	public Board(Board b){
-		this.grid = b.grid;
+		int[][] tempGrid = new int[17][17];
+		for(int i = 0; i < 17; i++){
+			for(int j = 0; j < 17; j++){
+				tempGrid[i][j] = b.grid[i][j];
+			}
+		}
+		this.grid = tempGrid;
 		this.NUMPLAY = b.NUMPLAY;
 	}
 
@@ -69,6 +75,17 @@ public class Board {
 		return check;
 	}
 
+	public String toString(){
+		String s = "";
+		for(int i = 0; i < 17; i++){
+			for(int j = 0; j < 17; j++){
+				s += (grid[j][i] + " ");
+			}
+			s += "\n";
+		}
+		return s;
+	}
+		
 	// Parameters: the player being searched for
 	// Returns: the x/y location of the Player
 	public int[] playerPlace(int Player){
@@ -193,9 +210,9 @@ public class Board {
 			return false;
 		if(theWall[2]==1 && (grid[col][row-1]!=0 || grid[col][row+1]!=0))
 			return false;
-		Board tempB = new Board(this);
+		Board tempB = new Board(this);		
 		tempB.placeWall(theWall);
-		if(!canWin())
+		if(!tempB.canWin())
 		    return false;
 		return true;
 	}

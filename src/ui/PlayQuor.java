@@ -101,8 +101,9 @@ public class PlayQuor{
 
             int[] theWall = {gridCol, gridRow, 0};
             boolean fairWall = false;
+            
             if (nextMove.charAt(2) == 'H'){
-                fairWall = placeWall(b, theWall);
+            	fairWall = placeWall(b, theWall);
             }else{//its a vertical wall
                 theWall[2] = 1;
                 fairWall = placeWall(b, theWall);
