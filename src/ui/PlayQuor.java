@@ -31,6 +31,8 @@ public class PlayQuor{
 			turn = (turn%numPlay) + 1;
 			won = b.haveWon();
 		}
+		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + (turn+3)%4 + " Won!");
+		
 	}	
 
 	public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
@@ -123,7 +125,7 @@ public class PlayQuor{
 			return true;
 		}
 		else {
-			JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Wall");
+			//JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Move");
 			return false;
 		}
 	}

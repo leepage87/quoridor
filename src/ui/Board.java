@@ -153,6 +153,8 @@ public class Board {
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
+		if(direction == 'X')
+			return false;
 		if(direction == 'N'){
 			if((here[1] == 0) || (grid[col][row-1] == 5))
 				return false;
