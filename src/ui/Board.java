@@ -101,7 +101,7 @@ public class Board {
 	// Parameters: character to represent the direction moved and an int
 	//    to show which player is moving
 	// PostCondition: the piece is moved if it was possible
-	public void movePiece(char direction, int Player){
+	public void movePieceBoard(char direction, int Player){
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
@@ -176,7 +176,7 @@ public class Board {
 	//    center of the new wall and the third number gives the
 	//    direction the wall will face
 	// PostCondition: a new wall is placed
-	public void placeWall(int[] theWall){
+	public void placeWallBoard(int[] theWall){
 		int col = 2*theWall[0] + 1;
 		int row = 2*theWall[1] + 1;
 		if(theWall[2] == 0){
@@ -204,7 +204,7 @@ public class Board {
 		if(theWall[2]==1 && (grid[col][row-1]!=0 || grid[col][row+1]!=0))
 			return false;
 		Board tempB = new Board(this);		
-		tempB.placeWall(theWall);
+		tempB.placeWallBoard(theWall);
 		if(!tempB.canWin())
 		    return false;
 		return true;
