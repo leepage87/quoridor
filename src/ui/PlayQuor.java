@@ -19,19 +19,9 @@ public class PlayQuor{
 	public static void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
 		Board b = new Board(numPlay);
-<<<<<<< HEAD
 		for(int i = 0; i < numPlay; i++)
 			playerWalls[i] = 20/numPlay;
-		GameBoardWithButtons gui = new GameBoardWithButtons(b);
-=======
-		if(numPlay == 2){
-			playerWalls[0] = 10;
-			playerWalls[1] = 10;
-		} else
-			for(int i = 0; i < numPlay; i++)
-				playerWalls[i] = 5;
 		GameBoardWithButtons gui = new GameBoardWithButtons(b, numPlay);
->>>>>>> 3f428f1393413d8ddfcfe882188392031b80f73e
 		// Create/assign AI to a number of Players
 		boolean won = false;
 		turn = 0;
