@@ -278,13 +278,14 @@ public class Board {
 	// Returns: the best move, or -1/-1 if winning is impossible
 	public int[] doSearch(int Player){
 		ArrayList<int[]> checked = new ArrayList<int[]>();
-		int[] location = new int[4];
+		int[] location = new int[5];
 		int[] startPlace = playerPlace(Player);
 		location[0] = startPlace[0];
 		location[1] = startPlace[1];
 		location[2] = -1;
 		location[3] = -1;
-		int [] place = new int[4];
+		location[4] = 0;
+		int [] place = new int[5];
 		Queue<int[]> toSearch = new LinkedList<int[]>();
 		ArrayList<int[]> firstChildren = getFirstChildren(location);
 		for(int j = 0; j < firstChildren.size(); j++){
@@ -310,9 +311,10 @@ public class Board {
 				}
 			}
 		}
-		int[] answer = new int[2];
+		int[] answer = new int[3];
 		answer[0] = location[2];
 		answer[1] = location[3];
+		answer[2] = location[4];
 		return answer;
 	}
 
@@ -325,35 +327,39 @@ public class Board {
 		int col = location[0];
 		int row = location[1];
 		if((col != 0) && (this.grid[col-1][row] != WALL)){
-			int[] next1 = new int[4]; 
+			int[] next1 = new int[5]; 
 			next1[0] = col-2;
 			next1[1] = row;
 			next1[2] = col-2;
 			next1[3] = row;
+			next1[4] = 1;
 			children.add(next1);
 		}
 		if((col != 16) && (this.grid[col+1][row] != WALL)){
-			int[] next2 = new int[4];
+			int[] next2 = new int[5];
 			next2[0] = col+2;
 			next2[1] = row;
 			next2[2] = col+2;
 			next2[3] = row;
+			next2[4] = 1;
 			children.add(next2);
 		}
 		if((row != 0) && (this.grid[col][row-1] != WALL)){
-			int[] next3 = new int[4];
+			int[] next3 = new int[5];
 			next3[0] = col;
 			next3[1] = row-2;
 			next3[2] = col;
 			next3[3] = row-2;
+			next3[4] = 1;
 			children.add(next3);
 		}
 		if((row != 16) && (this.grid[col][row+1] != WALL)){
-			int[] next4 = new int[4];
+			int[] next4 = new int[5];
 			next4[0] = col;
 			next4[1] = row+2;
 			next4[2] = col;
 			next4[3] = row+2;
+			next4[4] = 1;
 			children.add(next4);
 		}
 
@@ -368,35 +374,39 @@ public class Board {
 		int col = place[0];
 		int row = place[1];
 		if((col != 0) && (this.grid[col-1][row] != WALL)){
-			int[] next1 = new int[4];
+			int[] next1 = new int[5];
 			next1[0] = col-2;
 			next1[1] = row;
 			next1[2] = place[2];
 			next1[3] = place[3];
+			next1[4] = place[4]+1;
 			children.add(next1);
 		}
 		if((col != 16) && (this.grid[col+1][row] != WALL)){
-			int[] next2 = new int[4];
+			int[] next2 = new int[5];
 			next2[0] = col+2;
 			next2[1] = row;
 			next2[2] = place[2];
 			next2[3] = place[3];
+			next2[4] = place[4]+1;
 			children.add(next2);
 		}
 		if((row != 0) && (this.grid[col][row-1] != WALL)){
-			int[] next3 = new int[4];
+			int[] next3 = new int[5];
 			next3[0] = col;
 			next3[1] = row-2;
 			next3[2] = place[2];
 			next3[3] = place[3];
+			next3[4] = place[4]+1;
 			children.add(next3);
 		}
 		if((row != 16) && (this.grid[col][row+1] != WALL)){
-			int[] next4 = new int[4];
+			int[] next4 = new int[5];
 			next4[0] = col;
 			next4[1] = row+2;
 			next4[2] = place[2];
 			next4[3] = place[3];
+			next4[4] = place[4]+1;
 			children.add(next4);
 		}
 		return children;
