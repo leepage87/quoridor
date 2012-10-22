@@ -374,7 +374,7 @@ public class Board {
 		int col = place[0];
 		int row = place[1];
 		if((col != 0) && (this.grid[col-1][row] != WALL)){
-			int[] next1 = new int[4];
+			int[] next1 = new int[5];
 			next1[0] = col-2;
 			next1[1] = row;
 			next1[2] = place[2];
@@ -383,7 +383,7 @@ public class Board {
 			children.add(next1);
 		}
 		if((col != 16) && (this.grid[col+1][row] != WALL)){
-			int[] next2 = new int[4];
+			int[] next2 = new int[5];
 			next2[0] = col+2;
 			next2[1] = row;
 			next2[2] = place[2];
@@ -392,7 +392,7 @@ public class Board {
 			children.add(next2);
 		}
 		if((row != 0) && (this.grid[col][row-1] != WALL)){
-			int[] next3 = new int[4];
+			int[] next3 = new int[5];
 			next3[0] = col;
 			next3[1] = row-2;
 			next3[2] = place[2];
@@ -401,7 +401,7 @@ public class Board {
 			children.add(next3);
 		}
 		if((row != 16) && (this.grid[col][row+1] != WALL)){
-			int[] next4 = new int[4];
+			int[] next4 = new int[5];
 			next4[0] = col;
 			next4[1] = row+2;
 			next4[2] = place[2];
