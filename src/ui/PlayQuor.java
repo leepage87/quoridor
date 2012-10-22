@@ -19,26 +19,23 @@ public class PlayQuor{
 	public static void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
 		Board b = new Board(numPlay);
-		if(numPlay == 2){
-			playerWalls[0] = 10;
-			playerWalls[1] = 10;
-		} else
-			for(int i = 0; i < numPlay; i++)
-				playerWalls[i] = 5;
+		for(int i = 0; i < numPlay; i++)
+			playerWalls[i] = 20/numPlay;
 		GameBoardWithButtons gui = new GameBoardWithButtons(b);
 		// Create/assign AI to a number of Players
 		boolean won = false;
-		turn = 1;
+		turn = 0;
 		while(!won){
+			turn = (turn%numPlay) + 1;
 			System.out.println("TURN: " + turn);
 			System.out.println(b);
 			boolean fairMove = false;
 			while(!fairMove)
 				fairMove = takeTurn(b, false);
-			turn = (turn%numPlay) + 1;
 			won = b.haveWon();
 		}
-		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + (turn+3)%4 + " Won!");
+		System.out.println(b);
+		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
 
 	}	
 
@@ -127,7 +124,7 @@ public class PlayQuor{
 			if(!b.pieceCollision(direction, turn)){
 				b.movePieceBoard(direction, turn);
 			}else{
-				doubleMove(b, direction, extraMove);
+				return doubleMove(b, direction, extraMove);
 			}
 			return true;
 		}
@@ -167,7 +164,7 @@ public class PlayQuor{
 	// Parameters: the board, the player whose turn it is, the direction
 	//    that the player chose to move (which is onto another player)
 	// PostCondition: the player's piece is moved and he moves again
-	public static void doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
+	public static boolean doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
 		int[] startSpot = b.playerPlace(turn);
 		int col = startSpot[0];
 		int row = startSpot[1];
@@ -181,15 +178,20 @@ public class PlayQuor{
 		else otherPlayer = b.grid[col-2][row];
 		int[] spot = b.playerPlace(otherPlayer);
 		b.movePieceBoard(direction, turn);
-		if(extraMove)
+		if(extraMove){
 			BoardButton.map.get("B"+pieceHolder[0]/2+pieceHolder[1]/2).setIcon(Board.map.get(pieceHolder[2]));
+			b.grid[pieceHolder[0]][pieceHolder[1]] = pieceHolder[2];
+		}
 		pieceHolder[0] = spot[0];
 		pieceHolder[1] = spot[1];
 		pieceHolder[2] = otherPlayer;
-		while((b.grid[spot[0]][spot[1]] ==  turn) || b.grid[col][row] == turn)
+		while(b.grid[spot[0]][spot[1]] ==  turn)
 			takeTurn(b, true);
 		b.grid[spot[0]][spot[1]] = otherPlayer;
 		BoardButton.map.get("B"+spot[0]/2+spot[1]/2).setIcon(Board.map.get(otherPlayer));
+		if(b.grid[col][row] == turn)
+			return false;
+		return true;
 	}
 
 

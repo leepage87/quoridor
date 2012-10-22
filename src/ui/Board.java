@@ -84,8 +84,9 @@ public class Board {
 	// Parameters: the player being searched for
 	// Returns: the x/y location of the Player
 	public int[] playerPlace(int Player){
-		
 		int[] location = new int[2];
+		location[0] = -1;
+		location[1] = -1;
 		for(int col = 0; col < 17; col++){
 			for(int row = 0; row < 17; row++){
 				if(grid[col][row] == Player){
