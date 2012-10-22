@@ -14,10 +14,17 @@ public class PlayQuor{
 	public static String oldMove = "";
 	public static int turn;
 	private static int[] pieceHolder = new int[3];
+	private static int[] playerWalls = new int[4];
 
 	public static void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
 		Board b = new Board(numPlay);
+		if(numPlay == 2){
+			playerWalls[0] = 10;
+			playerWalls[1] = 10;
+		} else
+			for(int i = 0; i < numPlay; i++)
+				playerWalls[i] = 5;
 		GameBoardWithButtons gui = new GameBoardWithButtons(b);
 		// Create/assign AI to a number of Players
 		boolean won = false;
@@ -32,7 +39,7 @@ public class PlayQuor{
 			won = b.haveWon();
 		}
 		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + (turn+3)%4 + " Won!");
-		
+
 	}	
 
 	public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
@@ -72,7 +79,7 @@ public class PlayQuor{
 				if(getOut)
 					break;
 			}
-		}else if (!extraMove){//its a wall
+		}else if (!extraMove && (playerWalls[turn-1] > 0)){//its a wall
 			int gridCol = (int)(nextMove.charAt(0) - '0')-1;
 			int gridRow = (int)(nextMove.charAt(1) - '0')-1;
 			int[] theWall = {gridCol, gridRow, 0};
@@ -140,7 +147,7 @@ public class PlayQuor{
 			if (b.canPlaceWall(theWall))
 			{
 				b.placeWallBoard(theWall);
-
+				playerWalls[turn-1]--;
 				if (theWall[2] == 0)
 					wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
 				else//its a 1, meaning vertical
