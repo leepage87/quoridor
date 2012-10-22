@@ -17,30 +17,48 @@ public class PlayQuor{
 	private static int[] playerWalls = new int[4];
 
 	public static void main(String[] args) throws InterruptedException{
-		int numPlay = 4; // Number of Players
-		Board b = new Board(numPlay);
-		for(int i = 0; i < numPlay; i++)
-			playerWalls[i] = 20/numPlay;
-		GameBoardWithButtons gui = new GameBoardWithButtons(b, numPlay);
-		// Create/assign AI to a number of Players
-		boolean won = false;
-		turn = 0;
-		while(!won){
-			turn = (turn%numPlay) + 1;
-			System.out.println("TURN: " + turn);
-			GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
-			for (int i = 0; i < numPlay; i++)
-				GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
+		String[] options = {"Two player game", "Four player game","Never mind, I'm done playing today."};
+		GameBoardWithButtons gui = null;
+
+		while (true){
+			int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+					"How many players want to play today?","Welcome to Quoridor!",
+					JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+			int numPlay = 0;
+			if (n == 0)
+				numPlay = 2;
+			else if (n == 1)
+				numPlay = 4;
+			else if (n == 2)
+				System.exit(0);
+			Board b = new Board(numPlay);
+			for(int i = 0; i < numPlay; i++)
+				playerWalls[i] = 20/numPlay;
+			if (gui != null)
+				gui.dispose();
+			gui = new GameBoardWithButtons(b, numPlay);
+			// Create/assign AI to a number of Players
+			boolean won = false;
+			turn = 0;
+			while(!won){
+				turn = (turn%numPlay) + 1;
+				System.out.println("TURN: " + turn);
+				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
+				for (int i = 0; i < numPlay; i++)
+					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
+				System.out.println(b);
+				boolean fairMove = false;
+				while(!fairMove)
+					fairMove = takeTurn(b, false);
+				won = b.haveWon();
+			}
 			System.out.println(b);
-			boolean fairMove = false;
-			while(!fairMove)
-				fairMove = takeTurn(b, false);
-			won = b.haveWon();
+			JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
 		}
-		System.out.println(b);
-		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
 
 	}	
+	
+
 
 	public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
 		/*

@@ -1,18 +1,14 @@
 package src.ui;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 import javax.swing.*;
 
 
+@SuppressWarnings("serial")
 public class GameBoardWithButtons extends JFrame implements ActionListener
 {
 	
@@ -49,13 +45,13 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 		add(whoseTurn);
 		
 		
-		for (int i = 0; i < numPlay; i++){
-			JLabel wallEntry = new JLabel("P" + numPlay + ": " + 20/numPlay + " walls");
+		for (int i = 0; i < 4; i++){
+			JLabel wallEntry = new JLabel();
 			wallEntry.setBounds(180 + 100*i, 640, 100, 40);
 			pWalls.add(wallEntry);
 			
 		}
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < numPlay; i++)
 			add(pWalls.get(i));
 		
 		
@@ -141,6 +137,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	}
 	*/
 	
+
 	public JMenuBar makeMenuBar() {
 		JMenuBar menuBar;
 		JMenu fileMenu;
@@ -215,6 +212,17 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	    	if (n == JOptionPane.YES_OPTION){
 	    		OpenBrowser.openURL("http://en.wikipedia.org/wiki/Quoridor#Rules_of_the_game");
 	    	}
+	    	
+	    }else if ("New".equals(e.getActionCommand())){
+	    	String[] args = new String[1];
+	    	try {
+	    		this.dispose();
+	    		//look into resetting the board and repainting? the gui
+				PlayQuor.main(args);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	    }
 	} 
 	
