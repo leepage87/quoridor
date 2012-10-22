@@ -8,7 +8,7 @@ public class AI{
 
 	
 	   final int WALL = 5;
-	   int[] move = new int[4];
+	   int[] move = new int[5];
 	   Board AIboard;
 
 	 public AI(Board b){
@@ -32,7 +32,7 @@ public class AI{
 			return move;
 	}
 		
-	public void wallPlacementSearch(int player, int opponent){
+	public ArrayList<Board> wallPlacementSearch(int player, int opponent){
 		ArrayList<Board> moves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
@@ -52,15 +52,21 @@ public class AI{
 					moves.add(tempB);
 				}
 			}	
-		}
-		
-		
-		
-		
-		
+		}return moves;
 	}
-}	
-
+	
+	
+	//Testing purposes
+		public Board placeWall(){
+			Board temp = new Board(AIboard);
+			int [] placement = new int[3];
+			placement[0] = 1;
+			placement[1] = 5;
+			placement[3] = 0;
+			temp.placeWallBoard(placement);
+			return temp;
+		}	
+}
 	
 
 
