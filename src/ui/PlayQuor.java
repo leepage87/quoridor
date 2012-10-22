@@ -14,26 +14,51 @@ public class PlayQuor{
 	public static String oldMove = "";
 	public static int turn;
 	private static int[] pieceHolder = new int[3];
+	private static int[] playerWalls = new int[4];
 
 	public static void main(String[] args) throws InterruptedException{
-		int numPlay = 4; // Number of Players
-		Board b = new Board(numPlay);
-		GameBoardWithButtons gui = new GameBoardWithButtons(b);
-		// Create/assign AI to a number of Players
-		boolean won = false;
-		turn = 1;
-		while(!won){
-			System.out.println("TURN: " + turn);
+		String[] options = {"Two player game", "Four player game","Never mind, I'm done playing today."};
+		GameBoardWithButtons gui = null;
+
+		while (true){
+			int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+					"How many players want to play today?","Welcome to Quoridor!",
+					JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+			int numPlay = 0;
+			if (n == 0)
+				numPlay = 2;
+			else if (n == 1)
+				numPlay = 4;
+			else if (n == 2)
+				System.exit(0);
+			Board b = new Board(numPlay);
+			for(int i = 0; i < numPlay; i++)
+				playerWalls[i] = 20/numPlay;
+			if (gui != null)
+				gui.dispose();
+			gui = new GameBoardWithButtons(b, numPlay);
+			// Create/assign AI to a number of Players
+			boolean won = false;
+			turn = 0;
+			while(!won){
+				turn = (turn%numPlay) + 1;
+				System.out.println("TURN: " + turn);
+				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
+				for (int i = 0; i < numPlay; i++)
+					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
+				System.out.println(b);
+				boolean fairMove = false;
+				while(!fairMove)
+					fairMove = takeTurn(b, false);
+				won = b.haveWon();
+			}
 			System.out.println(b);
-			boolean fairMove = false;
-			while(!fairMove)
-				fairMove = takeTurn(b, false);
-			turn = (turn%numPlay) + 1;
-			won = b.haveWon();
+			JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
 		}
-		JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + (turn+3)%4 + " Won!");
-		
+
 	}	
+	
+
 
 	public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
 		/*
@@ -60,7 +85,7 @@ public class PlayQuor{
 						int newCol = (int)(nextMove.charAt(1) - '0');
 						int newRow = (int)(nextMove.charAt(2) - '0');
 						char direction = getDirection(oldCol, oldRow, newCol, newRow);
-						if(!movePiecePQ(b, direction)){
+						if(!movePiecePQ(b, direction, extraMove)){
 							clicked = false;
 							return false;
 						}
@@ -115,12 +140,12 @@ public class PlayQuor{
 	// Parameters: the board, the player whose turn it is, the direction
 	//    that the player chose to move
 	// PostCondition: the player's piece is moved, if it was legal
-	public static boolean movePiecePQ(Board b, char direction) throws InterruptedException{
+	public static boolean movePiecePQ(Board b, char direction, boolean extraMove) throws InterruptedException{
 		if(b.canMovePiece(direction, turn)){
 			if(!b.pieceCollision(direction, turn)){
 				b.movePieceBoard(direction, turn);
 			}else{
-				doubleMove(b, direction);
+				return doubleMove(b, direction, extraMove);
 			}
 			return true;
 		}
@@ -137,10 +162,10 @@ public class PlayQuor{
 	public static boolean placeWallPQ(Board b, int[] theWall){
 		String wallName;
 		for(int i = 0; i < theWall.length; i++)
-			if (b.canPlaceWall(theWall))
+			if ((playerWalls[turn-1] > 0) && b.canPlaceWall(theWall))
 			{
 				b.placeWallBoard(theWall);
-
+				playerWalls[turn-1]--;
 				if (theWall[2] == 0)
 					wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
 				else//its a 1, meaning vertical
@@ -160,8 +185,7 @@ public class PlayQuor{
 	// Parameters: the board, the player whose turn it is, the direction
 	//    that the player chose to move (which is onto another player)
 	// PostCondition: the player's piece is moved and he moves again
-	public static void doubleMove(Board b, char direction) throws InterruptedException{
-
+	public static boolean doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
 		int[] startSpot = b.playerPlace(turn);
 		int col = startSpot[0];
 		int row = startSpot[1];
@@ -174,14 +198,21 @@ public class PlayQuor{
 			otherPlayer = b.grid[col+2][row];
 		else otherPlayer = b.grid[col-2][row];
 		int[] spot = b.playerPlace(otherPlayer);
+		b.movePieceBoard(direction, turn);
+		if(extraMove){
+			BoardButton.map.get("B"+pieceHolder[0]/2+pieceHolder[1]/2).setIcon(Board.map.get(pieceHolder[2]));
+			b.grid[pieceHolder[0]][pieceHolder[1]] = pieceHolder[2];
+		}
 		pieceHolder[0] = spot[0];
 		pieceHolder[1] = spot[1];
 		pieceHolder[2] = otherPlayer;
-		b.movePieceBoard(direction, turn);
 		while(b.grid[spot[0]][spot[1]] ==  turn)
 			takeTurn(b, true);
 		b.grid[spot[0]][spot[1]] = otherPlayer;
 		BoardButton.map.get("B"+spot[0]/2+spot[1]/2).setIcon(Board.map.get(otherPlayer));
+		if(b.grid[col][row] == turn)
+			return false;
+		return true;
 	}
 
 
