@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -23,6 +24,8 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	static Icon defaultIcon = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("default.gif"));
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
 	public static JPanel contentPane;
+	public static JLabel whoseTurn;
+	public static ArrayList<JLabel> pWalls = new ArrayList<JLabel>();
 	
 	final int SIZE = 630; // width/height of game board
 	final int DOWNOFFSET = 20; // distance to draw board from top of window
@@ -30,7 +33,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	final int WALLLENGTH = SIZE * 2/21;
 	final int WALLWIDTH = SIZE/9 - WALLLENGTH;
 	
-	public GameBoardWithButtons(Board b)  {
+	public GameBoardWithButtons(Board b, int numPlay)  {
 		super();
 		JMenuBar menu = makeMenuBar();
 		menu.setVisible(true);
@@ -40,6 +43,21 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 		setSize(SIZE + 2*RIGHTOFFSET, SIZE + 2*DOWNOFFSET+50);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(null);
+		
+		whoseTurn = new JLabel();
+		whoseTurn.setBounds(30, 640, 150, 40);
+		add(whoseTurn);
+		
+		
+		for (int i = 0; i < numPlay; i++){
+			JLabel wallEntry = new JLabel("P" + numPlay + ": " + 20/numPlay + " walls");
+			wallEntry.setBounds(180 + 100*i, 640, 100, 40);
+			pWalls.add(wallEntry);
+			
+		}
+		for (int i = 0; i < 4; i++)
+			add(pWalls.get(i));
+		
 		
 		JButton[][] tokenSquares = new JButton[9][9];
 		for (int across = 0; across < 9; across++)	{

@@ -25,12 +25,15 @@ public class PlayQuor{
 		} else
 			for(int i = 0; i < numPlay; i++)
 				playerWalls[i] = 5;
-		GameBoardWithButtons gui = new GameBoardWithButtons(b);
+		GameBoardWithButtons gui = new GameBoardWithButtons(b, numPlay);
 		// Create/assign AI to a number of Players
 		boolean won = false;
 		turn = 1;
 		while(!won){
 			System.out.println("TURN: " + turn);
+			GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
+			for (int i = 0; i < numPlay; i++)
+				GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
 			System.out.println(b);
 			boolean fairMove = false;
 			while(!fairMove)
