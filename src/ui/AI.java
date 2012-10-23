@@ -33,7 +33,7 @@ public class AI{
 	}
 		
 	public ArrayList<Board> wallPlacementSearch(int player, int opponent){
-		ArrayList<Board> moves = new ArrayList<Board>();
+		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
 				int[] theWall = new int[3];
@@ -43,16 +43,16 @@ public class AI{
 				if(AIboard.canPlaceWall(theWall)){
 					Board tempB = new Board(AIboard);
 					tempB.placeWallBoard(theWall);
-					moves.add(tempB);
+					posMoves.add(tempB);
 				}
 				theWall[2] = 1;
 				if(AIboard.canPlaceWall(theWall)){
 					Board tempB = new Board(AIboard);
 					tempB.placeWallBoard(theWall);
-					moves.add(tempB);
+					posMoves.add(tempB);
 				}
 			}	
-		}return moves;
+		}return posMoves;
 	}
 	
 	

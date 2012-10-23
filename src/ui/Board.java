@@ -1,6 +1,6 @@
 
 /**
- * Tim Simmons
+ * Tim, Lee, Sara, Jon
  * teamOrangeBeard
  */
 package src.ui;
