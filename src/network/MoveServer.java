@@ -31,9 +31,7 @@ class MoveServer extends Thread {
         char opCode;
         String fromGameClient;
         while (true){
-
             try {
-
                 inFromClient = new Scanner(connection.getInputStream());
                 outToClient = new PrintStream(connection.getOutputStream());
                 // Acknowledge connection from gameDisplay
@@ -43,17 +41,26 @@ class MoveServer extends Thread {
                 if (fromGameClient.contains("HI")){
                     //"HI <PlayerNo> <NumberOfPlayers>"
                     outToClient.println("HI");
+                    /*
+                     * 
+                     * Debug code for that random newline char
+                     * 
+                     *
+                    System.out.println(hi.indexOf('\n'));
+                    */
                     //get playerNo and NumberOfPlayers
                     PlayerNo = fromGameClient.charAt(3)-'0';
                     NumberOfPlayers = fromGameClient.charAt(5)- '0';
                     System.out.println("MoveServer> I am player number: " + PlayerNo + " and there are " + NumberOfPlayers + " playing.");
                     //Board gameBoard = new Board(NumberOfPlayers);
-
+                }
+                else {
+                    System.err.println("???????????");
                 }
 
 
-
                 do {
+                    System.out.println("MoveServer> top of DO method");
                     fromGameClient = inFromClient.nextLine();
                     if (fromGameClient.contains("MOVE?")){
                         System.out.println("MoveServer> Received 'MOVE?' from client, issuing move");
@@ -65,19 +72,30 @@ class MoveServer extends Thread {
                         newCol = 1;
                         opCode = 'M';
 
-                        //send move to client
-                        
-                        
                         String nextMove = "MOVE! " + PlayerNo + " " + opCode + " " + oldRow + " "
                                 + oldCol + " " + newRow + " " + newCol;
-                        outToClient.println(nextMove);
-                        
-                        /* ORIGINAL
-                         *
-                        outToClient.println("MOVE! " + PlayerNo + " " + opCode + " " + oldRow + " "
-                                + oldCol + " " + newRow + " " + newCol);
+                        /*
+                         * Debug code for that random newline char
+
+                        if (nextMove.charAt(0) == '\n'){
+                            System.out.println("beginning of move!");
+                        }
+                        System.out.println(nextMove.indexOf('\n'));
+                        *
                         */
+                        //send move to client
+                        outToClient.println(nextMove);
                         System.out.println("MoveServer> Move sent was: " + nextMove);
+                        fromGameClient = inFromClient.nextLine();
+                        if(fromGameClient.equals(nextMove)){
+                            System.out.println("MoveServer> Move has been accepted, making the move now");
+                            //TODO: make player move
+                        }else if (fromGameClient.contains("REMOVE!")){
+                            System.out.println("Move was illegal, kicked out of game");
+                            System.exit(0);
+                        }
+                        
+                        
                         
                     }else if (fromGameClient.contains("MOVE!")){
                         opCode = fromGameClient.charAt(8);
