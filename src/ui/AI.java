@@ -31,14 +31,31 @@ public class AI{
 				move = AIboard.bestMove(player);
 			return move;
 	}
-
+	
+	
+	// Parameters: the player whose turn it is
+	// PostCondition: the best move is made
+	public void aiMove(int turn){ //TODO: look turns ahead. Recursive in findBestMove?
+		Board myMove = new Board(AIboard);
+		Board currentBoard = new Board(AIboard);
+		int tempTurn = turn;
+		for(int i = 0; i < 1; i++){
+			int enemy = findEnemy(turn, currentBoard);
+			currentBoard = findBestMove(turn, enemy, currentBoard);
+			if(i == 0)
+				myMove = currentBoard;
+			tempTurn = (tempTurn%4)+1;
+		}
+		AIboard = myMove;
+	}
+	
 	// Parameters: the player whose turn it is and the enemy closest to winning
 	// Returns: the board after making the best possible move
-	private Board findBestMove(int turn, int enemy){
-		ArrayList<Board> posMoves = wallPlacementSearch();
+	private Board findBestMove(int turn, int enemy, Board b){
+		ArrayList<Board> posMoves = wallPlacementSearch(b);
 		for(int i = 0; i < 4; i++){
-			Board nextStep = oneStep(turn, i);
-			if(nextStep != AIboard)
+			Board nextStep = oneStep(turn, i, b);
+			if(nextStep != b)
 				posMoves.add(nextStep);
 		}
 		Board finalMove = new Board(posMoves.get(0));
@@ -59,33 +76,33 @@ public class AI{
 		
 	// Parameters: the player
 	// Returns: the enemy who is closest to winning
-	private int findEnemy(int turn){
-		if(AIboard.NUMPLAY == 2)
+	private int findEnemy(int turn, Board b){
+		if(b.NUMPLAY == 2)
 			return (turn%2)+1;
 		int enemy = (turn%4)+1;
 		for(int i = 1; i < 5; i++)
-			if((i!= turn) && (AIboard.bestMove(i)[2] < AIboard.bestMove(enemy)[2]))
+			if((i!= turn) && (b.bestMove(i)[2] < b.bestMove(enemy)[2]))
 				enemy = i;
 		return enemy;
 	}
 	
 	// Parameters: the player and an int representing a direction
 	// Returns: the board after moving the player in the chosen direction, if possible
-	private Board oneStep(int turn, int dir){
-		Board temp = new Board(AIboard);
-		if((dir == 0) && AIboard.canMovePiece('N', turn))
+	private Board oneStep(int turn, int dir, Board b){
+		Board temp = new Board(b);
+		if((dir == 0) && b.canMovePiece('N', turn))
 			temp.movePieceBoard('N', turn);
-		else if((dir == 1) && AIboard.canMovePiece('S', turn))
+		else if((dir == 1) && b.canMovePiece('S', turn))
 			temp.movePieceBoard('S', turn);
-		else if((dir == 2) && AIboard.canMovePiece('E', turn))
+		else if((dir == 2) && b.canMovePiece('E', turn))
 			temp.movePieceBoard('E', turn);
-		else if((dir == 3) && AIboard.canMovePiece('W', turn))
+		else if((dir == 3) && b.canMovePiece('W', turn))
 			temp.movePieceBoard('W', turn);
 		return temp;
 	}
 	
 	// Returns: an ArrayList of one board for every possible wall placement
-	private ArrayList<Board> wallPlacementSearch(){
+	private ArrayList<Board> wallPlacementSearch(Board b){
 		// TODO: account for the possibility of running out of walls; link to PlayQuor?
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
@@ -94,14 +111,14 @@ public class AI{
 				theWall[0] = i;
 				theWall[1] = j;
 				theWall[2] = 0;
-				if(AIboard.canPlaceWall(theWall)){
-					Board tempB = new Board(AIboard);
+				if(b.canPlaceWall(theWall)){
+					Board tempB = new Board(b);
 					tempB.placeWallBoard(theWall);
 					posMoves.add(tempB);
 				}
 				theWall[2] = 1;
-				if(AIboard.canPlaceWall(theWall)){
-					Board tempB = new Board(AIboard);
+				if(b.canPlaceWall(theWall)){
+					Board tempB = new Board(b);
 					tempB.placeWallBoard(theWall);
 					posMoves.add(tempB);
 				}
