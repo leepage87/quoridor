@@ -3,7 +3,7 @@ package src.ui;
 import javax.swing.JOptionPane;
 
 /**
- * Tim Simmons
+ * Tim, Lee, Sara, Jon
  * teamOrangeBeard
  */
 
