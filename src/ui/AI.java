@@ -76,7 +76,7 @@ public class AI{
 		
 	// Parameters: the player
 	// Returns: the enemy who is closest to winning
-	private int findEnemy(int turn, Board b){
+	public int findEnemy(int turn, Board b){
 		if(b.NUMPLAY == 2)
 			return (turn%2)+1;
 		int enemy = (turn%4)+1;
@@ -88,7 +88,7 @@ public class AI{
 	
 	// Parameters: the player and an int representing a direction
 	// Returns: the board after moving the player in the chosen direction, if possible
-	private Board oneStep(int turn, int dir, Board b){
+	public Board oneStep(int turn, int dir, Board b){
 		Board temp = new Board(b);
 		if((dir == 0) && b.canMovePiece('N', turn))
 			temp.movePieceBoard('N', turn);
@@ -102,7 +102,7 @@ public class AI{
 	}
 	
 	// Returns: an ArrayList of one board for every possible wall placement
-	private ArrayList<Board> wallPlacementSearch(Board b){
+	public ArrayList<Board> wallPlacementSearch(Board b){
 		// TODO: account for the possibility of running out of walls; link to PlayQuor?
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
@@ -131,8 +131,7 @@ public class AI{
 			Board temp = new Board(AIboard);
 			int [] placement = new int[3];
 			placement[0] = 1;
-			placement[1] = 5;
-			placement[3] = 0;
+			placement[1] = 1;
 			temp.placeWallBoard(placement);
 			return temp;
 		}	
