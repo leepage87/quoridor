@@ -46,7 +46,7 @@ public class AiTest {
 		@Test
 		public void wallTest(){
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = AIboard.wallPlacementSearch(1, 2);
+			testMoves = AIboard.wallPlacementSearch(b);
 			int sizeArray = testMoves.size();
 			Assert.assertTrue(sizeArray==128);
 			
@@ -54,12 +54,35 @@ public class AiTest {
 		@Test
 		public void placedWall(){
 			//TODO get this working
-			temp.placeWall();
+			initialize();
+			temp = new AI(temp.placeWall());
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = temp.wallPlacementSearch(1, 2);
+			testMoves = temp.wallPlacementSearch(b);
 			int sizeArray = testMoves.size();
-			Assert.assertTrue(sizeArray==126);
+			Assert.assertTrue(sizeArray==128);
 		
+		}
+		
+		@Test
+		public void findEnemyTest(){
+			int test=0;
+			test = AIboard.findEnemy(1, b);
+			int[] actual = new int[2];
+			int [] given = new int[2];
+			AIboard.currentLoc(2);
+			AIboard.currentLoc(test);
+			Assert.assertArrayEquals(given, actual);
+		}
+		
+		@Test
+		public void oneStepTestNorth(){
+			temp = new AI(AIboard.oneStep(1, 1, b));
+			int [] given = new int[2];
+			given = temp.currentLoc(1);
+			int [] test = new int[2];
+			test[0] = 8;
+			test[1] = 2;
+			Assert.assertArrayEquals(given, test);
 		}
 
 }
