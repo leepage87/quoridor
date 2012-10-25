@@ -88,7 +88,7 @@ public class AI{
 	
 	// Parameters: the player and an int representing a direction
 	// Returns: the board after moving the player in the chosen direction, if possible
-	private Board oneStep(int turn, int dir, Board b){
+	private Board oneStep(int turn, int dir, Board b){ //TODO: account for multiMoves
 		Board temp = new Board(b);
 		if((dir == 0) && b.canMovePiece('N', turn))
 			temp.movePieceBoard('N', turn);

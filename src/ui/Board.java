@@ -175,6 +175,106 @@ public class Board {
 		return true;
 	}
 
+
+	// Parameters: character to represent the direction moved and an int
+	//    to show which player is moving
+	// Returns: if moving that direction causes a collision with a player
+	public boolean pieceCollision(char direction, int Player){
+		int[] place = playerPlace(Player);
+		return pieceCollision(direction, place);
+	}
+	
+	// Parameters: character representing the direction moved and a location
+	// Returns: if moving that direction from the location causes a collision with a player
+	private boolean pieceCollision(char direction, int[] place) {
+		int col = place[0];
+		int row = place[1];
+		if(direction == 'N' && grid[col][row-2] != 0)
+			return true;
+		if(direction == 'S' && grid[col][row+2] != 0)
+			return true;
+		if(direction == 'W' && grid[col-2][row] != 0)
+			return true;
+		if(direction == 'E' && grid[col+2][row] != 0)
+			return true;
+		return false;
+	}
+	
+	// Parameters: the location the AI wants to move to and the Player
+	// Returns: if that movement is legal
+	public boolean aiCanMove(int[] dest, int Player){
+		if(grid[dest[0]][dest[1]] != 0)
+			return false;
+		ArrayList<int[]> history = new ArrayList<int[]>();
+		return aiCanMove(dest, Player, history);
+	}
+
+	// Parameters: a location on the board, the player, and a list of locations already searched
+	// Returns: if it is possible for the Player to move to the given location
+	public boolean aiCanMove(int[] place, int Player, ArrayList<int[]> history){
+		int[] home = playerPlace(Player);
+		if((home[0] == place[0]-2) && (home[1] == place[1]) && (grid[place[0]-1][place[1]] != 5))
+			return true;
+		if((home[0] == place[0]+2) && (home[1] == place[1]) && (grid[place[0]+1][place[1]] != 5))
+			return true;
+		if((home[0] == place[0]) && (home[1] == place[1]+2) && (grid[place[0]][place[1]+1] != 5))
+			return true;
+		if((home[0] == place[0]) && (home[1] == place[1]-2) && (grid[place[0]][place[1]-1] != 5))
+			return true;
+		return aiDoubleMove(place, Player, history);	
+	}
+		
+	// Parameters: a location on the board, the player, and a list of locations already searched
+	// Returns: if it is possible for the Player to move to the given location
+	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
+		if(pieceCollision('N', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0]-2;
+			newPlace[1] = place[1];
+			if(!history.contains(newPlace)){
+			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+			newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('S', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0]+2;
+			newPlace[1] = place[1];
+			if(!history.contains(newPlace)){
+			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+			newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('E', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]+2;
+			if(!history.contains(newPlace)){
+			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+			newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('W', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]-2;
+			if(!history.contains(newPlace)){
+			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+			newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
+		}
+		return false;
+	}
+
+	// Parameters: the location the AI wants to move to and the Player
+	// PostCondition: the Player is moved to the destination
+	public void quickMove(int[] dest, int Player){
+		int[] here = playerPlace(Player);
+		this.grid[dest[0]][dest[1]] = Player;
+		this.grid[here[0]][here[1]] = 0;
+	}
+	
 	// Parameters: an int[3] where the first and second numbers give the
 	//    center of the new wall and the third number gives the
 	//    direction the wall will face
@@ -211,24 +311,6 @@ public class Board {
 		if(!tempB.canWin())
 		    return false;
 		return true;
-	}
-
-	// Parameters: character to represent the direction moved and an int
-	//    to show which player is moving
-	// Returns: if moving that direction causes a collision with a player
-	public boolean pieceCollision(char direction, int Player){
-		int[] here = playerPlace(Player);
-		int col = here[0];
-		int row = here[1];
-		if(direction == 'N' && grid[col][row-2] != 0)
-			return true;
-		if(direction == 'S' && grid[col][row+2] != 0)
-			return true;
-		if(direction == 'W' && grid[col-2][row] != 0)
-			return true;
-		if(direction == 'E' && grid[col+2][row] != 0)
-			return true;
-		return false;
 	}
 
 	// Returns: if each player can still reach their winning col
