@@ -1,6 +1,7 @@
 package src.ui;
 
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -61,15 +62,16 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 				tokenSquares[across][down] = new BoardButton("B"+across + down);
 				tokenSquares[across][down].setBounds(SIZE*across/9 + WALLWIDTH/2, SIZE*down/9+DOWNOFFSET + WALLWIDTH/2, WALLLENGTH,WALLLENGTH);
 				add(tokenSquares[across][down]);
-				tokenSquares[across][down].setName("Button"+across + "" +down);
+				tokenSquares[across][down].setName("B"+across + "" +down);
+				//System.out.println("B"+across + down);
 				BoardButton.map.put("B"+ across + down, (BoardButton)tokenSquares[across][down]);
-				if (b.grid[2*across][2*down] == 1)
+				if (b.grid[across*2][down*2] == 1)
 					tokenSquares[across][down].setIcon(playerOne);
-				else if (b.grid[2*across][2*down] == 2)
+				else if (b.grid[across*2][down*2] == 2)
 					tokenSquares[across][down].setIcon(playerTwo);
-				else if (b.grid[2*across][2*down] == 3)
+				else if (b.grid[across*2][down*2] == 3)
 					tokenSquares[across][down].setIcon(playerThree);
-				else if (b.grid[2*across][2*down] == 4)
+				else if (b.grid[across*2][down*2] == 4)
 					tokenSquares[across][down].setIcon(playerFour);
 			}
 		}
@@ -142,7 +144,6 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 		JMenuBar menuBar;
 		JMenu fileMenu;
 		JMenuItem menuItem;
-		
 		//Making the menu bar
 		menuBar = new JMenuBar();
 		//Adding the "File" menu to menuBar
@@ -197,12 +198,21 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	    			"\nSarah Weller, and Timothy Simmons\n\nCIS 405 - Sofware Engineering - Fall 2012", "Quoridor", 	JOptionPane.INFORMATION_MESSAGE);
 	    } else if ("Instructions".equals(e.getActionCommand())){
 	    	String [] options = {"Open Rules", "Close"};
+	    	JLabel customFontText = new JLabel();
+	    	customFontText.setFont (new Font ( "Default", Font.BOLD, 16) );  
+	    	customFontText.setText("<html><body>Click a square to move your player. If the move " +
+	    		    "is legal the square will be highlighted. <br /><br />" +
+	    		    "Click the black lines to place a wall. " +
+	    		    "Walls are placed from left to right or top " +
+	    		    "to bottom.<br /><br />" + 
+	    		    "You may perform a \"double jump\" - that is, " + 
+	    		    "if your pawn is adjacent horizontally or vertically <br />" +
+	    		    "to another pawn, you may move to any squares to which " + 
+	    		    "that pawn can move. To perform this <br />maneuver, move your " + 
+	    		    "pawn onto the adjacent pawn, then move it again to the desired destination.<br /><br />" + 
+	    		    "This game contains no ponies. We apologize for the inconvenience.<br /></body></html>");
 	    	int n = JOptionPane.showOptionDialog(contentPane,
-	    		    "Click square to move your player, if the move" +
-	    		    "\nis legal the square will be highlighted.\n" +
-	    		    "Click the black lines to place a wall.\n" +
-	    		    "Walls are placed from left to right or top\n" +
-	    		    "to bottom.",
+	    			customFontText,
 	    		    "How to Play",
 	    		    JOptionPane.YES_NO_OPTION,
 	    		    JOptionPane.QUESTION_MESSAGE,
@@ -212,19 +222,18 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	    	if (n == JOptionPane.YES_OPTION){
 	    		OpenBrowser.openURL("http://en.wikipedia.org/wiki/Quoridor#Rules_of_the_game");
 	    	}
-	    	
+
 	    }else if ("New".equals(e.getActionCommand())){
-	    	String[] args = new String[1];
-	    	try {
-	    		this.dispose();
-	    		//look into resetting the board and repainting? the gui
-				PlayQuor.main(args);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+	    	String[] options = {"Yes","No"};
+	    	int n = JOptionPane.showOptionDialog(this.contentPane, 
+	    			"Restart the game and lose all progress?","Are you sure?",
+	    			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+	    	if (n == 0)
+	    		PlayQuor.breaker = 2;
+
 	    }
-	} 
-	
-	
-}
+	}
+} 
+
+
+
