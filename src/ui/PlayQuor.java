@@ -15,6 +15,7 @@ public class PlayQuor{
 	public static int turn;
 	private static int[] pieceHolder = new int[3];
 	private static int[] playerWalls = new int[4];
+	public static int breaker = 0;
 
 	public static void main(String[] args) throws InterruptedException{
 		String[] options = {"Two player game", "Four player game","Never mind, I'm done playing today."};
@@ -40,7 +41,7 @@ public class PlayQuor{
 			// Create/assign AI to a number of Players
 			boolean won = false;
 			turn = 0;
-			while(!won){
+			while(breaker == 0){
 				turn = (turn%numPlay) + 1;
 				System.out.println("TURN: " + turn);
 				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
@@ -51,6 +52,8 @@ public class PlayQuor{
 				while(!fairMove)
 					fairMove = takeTurn(b, false);
 				won = b.haveWon();
+				if (won)
+					breaker = 1;
 			}
 			System.out.println(b);
 			JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
@@ -67,6 +70,8 @@ public class PlayQuor{
 	      placeWall: gives int/int/int (row, column, direction)
 		 */
 		while (!clicked){
+			if (breaker == 2)
+				return false;
 			;
 		}
 		Thread.sleep(0);
