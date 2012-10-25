@@ -278,11 +278,11 @@ public class Board {
 		grid[dCol][dRow] = Player;
 		grid[hCol][hRow] = 0;
 		// GUI may not work
-		
+	/*	
 		BoardButton.map.get("B" + hCol/2 + hRow/2).setIcon(GameBoardWithButtons.defaultIcon);
 		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setIcon(map.get(Player));
 		BoardButton.map.get("B" + hCol/2 + (hRow/2)).setPlayerPresent(false, hCol/2, hRow/2);
-		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setPlayerPresent(true, dCol/2, (dRow)/2);
+		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setPlayerPresent(true, dCol/2, (dRow)/2);*/
 	}
 	
 	// Parameters: an int[3] where the first and second numbers give the
