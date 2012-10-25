@@ -232,8 +232,8 @@ public class Board {
 			newPlace[0] = place[0]-2;
 			newPlace[1] = place[1];
 			if(!history.contains(newPlace)){
-			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-			newHistory.add(place);
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('S', place)){
@@ -241,8 +241,8 @@ public class Board {
 			newPlace[0] = place[0]+2;
 			newPlace[1] = place[1];
 			if(!history.contains(newPlace)){
-			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-			newHistory.add(place);
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('E', place)){
@@ -250,8 +250,8 @@ public class Board {
 			newPlace[0] = place[0];
 			newPlace[1] = place[1]+2;
 			if(!history.contains(newPlace)){
-			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-			newHistory.add(place);
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('W', place)){
@@ -259,8 +259,8 @@ public class Board {
 			newPlace[0] = place[0];
 			newPlace[1] = place[1]-2;
 			if(!history.contains(newPlace)){
-			ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-			newHistory.add(place);
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}
@@ -270,9 +270,19 @@ public class Board {
 	// Parameters: the location the AI wants to move to and the Player
 	// PostCondition: the Player is moved to the destination
 	public void quickMove(int[] dest, int Player){
+		int dCol = dest[0];
+		int dRow = dest[1];
 		int[] here = playerPlace(Player);
-		this.grid[dest[0]][dest[1]] = Player;
-		this.grid[here[0]][here[1]] = 0;
+		int hCol = here[0];
+		int hRow = here[1];
+		grid[dCol][dRow] = Player;
+		grid[hCol][hRow] = 0;
+		// GUI may not work
+		
+		BoardButton.map.get("B" + hCol/2 + hRow/2).setIcon(GameBoardWithButtons.defaultIcon);
+		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setIcon(map.get(Player));
+		BoardButton.map.get("B" + hCol/2 + (hRow/2)).setPlayerPresent(false, hCol/2, hRow/2);
+		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setPlayerPresent(true, dCol/2, (dRow)/2);
 	}
 	
 	// Parameters: an int[3] where the first and second numbers give the
