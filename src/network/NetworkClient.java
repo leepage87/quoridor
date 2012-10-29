@@ -13,16 +13,17 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
+import src.ui.Board;
 import src.ui.BoardButton;
 
 
 public class NetworkClient {
     //TODO: GET REAL PORT
     final static int REMOTE_PORT = 4050;
-    static String Player0Address;
-    static String Player1Address;
-    static String Player2Address;
-    static String Player3Address;
+    public static String player0Address;
+    public static String player1Address;
+    public static String player2Address;
+    public static String player3Address;
     static Socket player0Socket;
     static Socket player1Socket;
     static Socket player2Socket;
@@ -35,65 +36,56 @@ public class NetworkClient {
     static Scanner inFromPlayer1;
     static Scanner inFromPlayer2;
     static Scanner inFromPlayer3;
-
-    //TODO: turn is unnecessary once integrated with PlayQuor
-    static int turn = 0;
-
-
+    public static String fromPlayer;
+    static int turn;
+    private static int numberOfPlayers;
     static HashMap<Integer, Scanner> networkInputMap = new HashMap<Integer, Scanner>();
     static HashMap<Integer, PrintStream> networkOutputMap = new HashMap<Integer, PrintStream>();
-
-    //TODO: this is unnecessary once integrated with PlayQuor
-    private static int numberOfPlayers = 2;
-
-    //TODO: remove main and turn this bitch into a NetworkClient object
-    public static void main(String [] args) throws Exception{
-        syncWithPlayers();
+  
 
 
 
-        //TODO: FIX gameOver
-        boolean gameOver = false;
-        String nextMove;
-        while(!gameOver){//while a player hasn't won, ask for moves and relay info
-            System.out.println("NetworkClient> Requesting a move from " + turn);
-            nextMove = getMove();
-
-
-            //TODO: get a isLegal? method to check if the move rec'd is legal
-            /*if(nextMove.isLegal()){
-                 //issue move to all players using broadcastMove()
-            }else{
-                 //REMOVE! player from game   
-            }*/
-            broadcastMove(nextMove);
-
-            //TODO: fix gameOver
-            //gameOver = true;
-        }
-
-
-
-        //close all the sockets
-        player0Socket.close();
-        player1Socket.close();
-        //player2Socket.close();
-        //player3Socket.close();
+    public NetworkClient(){
 
     }
 
+    /**
+     * Creates a NetworkClient object for two players
+     * 
+     **/
+    public NetworkClient(String player0Address, String player1Address){
+        this.player0Address = player0Address;
+        this.player1Address = player1Address;
+        this.numberOfPlayers = 2;
 
-    private static void syncWithPlayers() throws UnknownHostException, IOException {
+    }
+    
+    /**
+     * Creates a NetworkClient object for four players
+     * 
+     **/
+    public NetworkClient(String player0Address, String player1Address, String player2Address, String player3Address){
+        this.player0Address = player0Address;
+        this.player1Address = player1Address;
+        this.player2Address = player2Address;
+        this.player3Address = player3Address;
+        this.numberOfPlayers = 4;
+
+    }
+
+    /**
+     * syncWithPlayers - sends initial message to each player, waits for a response
+     * @throws UnknownHostException
+     * @throws IOException
+     */
+    public void syncWithPlayers() throws UnknownHostException, IOException {
         //TODO: CHANGE ALL PLAYER ADDRESSES TO USER INPUT
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("NetworkClient> Please enter a host to contact player 0: ");
-        Player0Address = sc.next();
-        player0Socket = new Socket(Player0Address, REMOTE_PORT);
 
-        System.out.print("NetworkClient> Please enter a host to contact player 1: ");
-        Player1Address = sc.next();
-        player1Socket = new Socket(Player1Address, REMOTE_PORT);
+        player0Socket = new Socket(player0Address, REMOTE_PORT);
+
+        player1Socket = new Socket(player1Address, REMOTE_PORT);
 
         networkOutputMap.put(0,outToPlayer0 = new PrintStream(player0Socket.getOutputStream()));
         networkOutputMap.put(1, outToPlayer1 = new PrintStream(player1Socket.getOutputStream()));
@@ -102,11 +94,8 @@ public class NetworkClient {
         networkInputMap.put(1, inFromPlayer1 = new Scanner(player1Socket.getInputStream()));
 
         if(numberOfPlayers == 4){
-
-            Player2Address = "localhost";
-            Player3Address = "localhost";
-            player2Socket = new Socket(Player2Address, REMOTE_PORT);
-            player3Socket = new Socket(Player3Address, REMOTE_PORT);
+            player2Socket = new Socket(player2Address, REMOTE_PORT);
+            player3Socket = new Socket(player3Address, REMOTE_PORT);
 
             networkOutputMap.put(2, outToPlayer2 = new PrintStream(player2Socket.getOutputStream()));          
             networkOutputMap.put(3, outToPlayer3 = new PrintStream(player3Socket.getOutputStream()));
@@ -118,7 +107,6 @@ public class NetworkClient {
 
 
         if (numberOfPlayers == 2){
-            System.out.println("NetworkClient> Sending 'HI 0 2' to player 0");
             outToPlayer0.println("HI 0 2");
             outToPlayer1.println("HI 1 2");
         }else{//NumberOfPlayers == 4
@@ -127,7 +115,7 @@ public class NetworkClient {
             outToPlayer2.println("HI 2 4");
             outToPlayer3.println("HI 3 4");
         }
-        String fromPlayer;
+
         for (int i = 0; i < 2; i++){
             fromPlayer = networkInputMap.get(i).nextLine();
 
@@ -161,7 +149,7 @@ public class NetworkClient {
      * broadcastMove: broadcasts the last legal move made to all players
      * @param nextMove: the last legal move made
      */
-    private static void broadcastMove(String nextMove) { 
+    public static void broadcastMove(String nextMove) { 
 
         //TODO: test this with multiple players
         networkOutputMap.get(0).println(nextMove);
@@ -176,20 +164,36 @@ public class NetworkClient {
 
 
     /**
-     * getMove(): this method gets a move from the player whos turn it is
+     * getMove(): this method gets a move from the player whose turn it is
      * @return: returns the move taken from the player
      */
-    private static String getMove(){
+    public static String getMove(int player){
+        turn = player-1;
         networkOutputMap.get(turn).println("MOVE?");
-        String fromPlayer = networkInputMap.get(turn).nextLine();
+        fromPlayer = networkInputMap.get(turn).nextLine();
 
-        System.out.println("the first fromPlayer nextLine: " + fromPlayer);
-
+        /*
         System.out.println("NetworkClient> Player " + turn + " has responded with a move: "+
                 fromPlayer);
-
+         */
         return fromPlayer;
     }
+
+    /**
+     * closes all sockets
+     * @throws IOException
+     */
+
+    public void kill() throws IOException{
+        //close all the sockets
+        player0Socket.close();
+        player1Socket.close();
+        if(numberOfPlayers == 4){
+            player2Socket.close();
+            player3Socket.close();
+        }
+    }
+
 }
 
 /*
@@ -197,20 +201,20 @@ public class NetworkClient {
  * 
  * 
  * 
- 
-  
-  
+
+
+
   String address = JOptionPane.showInputDialog("Input player addresses separated by spaces", "ex. hostname0 hostname1");
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
  * 
  * 
  * 

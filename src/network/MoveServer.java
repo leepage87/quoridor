@@ -14,7 +14,7 @@ import java.util.*;
 
 
 
-class MoveServer extends Thread {
+public class MoveServer extends Thread {
     int PlayerNo;
     int NumberOfPlayers;
     Socket connection;
@@ -60,7 +60,7 @@ class MoveServer extends Thread {
 
 
                 do {
-                    System.out.println("MoveServer> top of DO method");
+                    //System.out.println("MoveServer> top of DO method");
                     fromGameClient = inFromClient.nextLine();
                     if (fromGameClient.contains("MOVE?")){
                         System.out.println("MoveServer> Received 'MOVE?' from client, issuing move");
@@ -74,6 +74,8 @@ class MoveServer extends Thread {
 
                         String nextMove = "MOVE! " + PlayerNo + " " + opCode + " " + oldRow + " "
                                 + oldCol + " " + newRow + " " + newCol;
+                        
+                        
                         /*
                          * Debug code for that random newline char
 
