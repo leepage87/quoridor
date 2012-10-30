@@ -39,6 +39,7 @@ public class PlayQuor{
 				gui.dispose();
 			gui = new GameBoardWithButtons(b, numPlay);
 			// Create/assign AI to a number of Players
+			breaker = 0;
 			boolean won = false;
 			turn = 0;
 			while(breaker == 0){
@@ -51,12 +52,15 @@ public class PlayQuor{
 				boolean fairMove = false;
 				while(!fairMove)
 					fairMove = takeTurn(b, false);
+				if (breaker == 2)
+					break;
 				won = b.haveWon();
 				if (won)
 					breaker = 1;
 			}
 			System.out.println(b);
-			JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
+			if (breaker == 1)
+				JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
 		}
 
 	}	
@@ -71,8 +75,10 @@ public class PlayQuor{
 		 */
 		while (!clicked){
 			if (breaker == 2)
-				return false;
-			;
+			{
+				System.out.println("DISFHSD");
+				return true;
+			}
 		}
 		Thread.sleep(0);
 		if (nextMove.charAt(0) == 'B') {//its a player move
