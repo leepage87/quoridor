@@ -45,56 +45,39 @@ public class PlayQuor{
 			
 			// create a new back end board with desired number of players
 			Board b = new Board(numPlay);
-<<<<<<< HEAD
 			
 			// Give each player the appropriate number of walls
 			for(int i = 0; i < numPlay; i++)
-				playerWalls[i] = 20/numPlay;
+				b.playerWalls[i] = 20/numPlay;
 			
 			// if GUI is not null, a game has just ended and its data must be thrown out.
-=======
->>>>>>> 41d59b90983b3393f0c23c7480b9c53b33bbae05
 			if (gui != null)
 				gui.dispose();
 			
 			// Create brand new gui with board and number of players
 			gui = new GameBoardWithButtons(b, numPlay);
-<<<<<<< HEAD
 			
 			// TODO: Create/assign AI to a number of Players
 			
 			// set/reset control variables breaker, won, and turn
-=======
+			breaker = 0;
+			boolean won = false;
+			turn = 0;
 			// Create/assign AI to a number of Players
 			isAI[1] = 1;
 			isAI[2] = 1;
 			isAI[3] = 1;
-			//
->>>>>>> 41d59b90983b3393f0c23c7480b9c53b33bbae05
-			breaker = 0;
-			boolean won = false;
-			turn = 0;
 			
 			// Loop containing each game. If breaker becomes 1 or 2, the game has ended.
 			while(breaker == 0){
 				turn = (turn%numPlay) + 1; // update turn
-				//System.out.println("TURN: " + turn);
 				
 				// initialize GUI button indicating turn
 				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
 				
 				// initialize GUI buttons indicating how many walls each player has left
 				for (int i = 0; i < numPlay; i++)
-<<<<<<< HEAD
-					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
-				
-				//System.out.println(b);
-				
-				/* Does nothing until method takeTurn returns a legal move by the player.  */
-=======
 					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
-				System.out.println(b);
->>>>>>> 41d59b90983b3393f0c23c7480b9c53b33bbae05
 				boolean fairMove = false;
 				while(!fairMove)
 					fairMove = takeTurn(b, false);
@@ -108,8 +91,6 @@ public class PlayQuor{
 				if (won)
 					breaker = 1;
 			}
-			//System.out.println(b);
-			
 			// if somebody won, say so
 			if (breaker == 1)
 				JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
@@ -128,17 +109,15 @@ public class PlayQuor{
 	      Waits for mouse click (as notified by GUI); receives move data from GUI; 
 	      tests some aspects of move's legality. 
 		 */
-<<<<<<< HEAD
 		
-		/* Waits for click. If while in this loop, player decides to start a new game,
-		 * breaker is set and control returns to main. */
-=======
 		if(isAI[turn-1] == 1){
 			AI a = new AI(b);
 			a.aiMove(turn);
 			return true;
 		}
->>>>>>> 41d59b90983b3393f0c23c7480b9c53b33bbae05
+		/* Waits for click. If while in this loop, player decides to start a new game,
+		 * breaker is set and control returns to main. */
+
 		while (!clicked){
 			if (breaker == 2)
 				return true;
@@ -246,14 +225,13 @@ public class PlayQuor{
 	 * PostCondition: the wall is placed, if it was legal*/
 	public static boolean placeWallPQ(Board b, int[] theWall){
 		String wallName;
-<<<<<<< HEAD
 		//for(int i = 0; i < theWall.length; i++) (does not seem to do anything useful)
 		
 		/* if the player has walls left to play, and the back end says a wall can go here ... */
-		if ((playerWalls[turn-1] > 0) && b.canPlaceWall(theWall)) 
+		if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall)) 
 		{
 			b.placeWallBoard(theWall); // place it with the back end (NOT GUI YET)
-			playerWalls[turn-1]--; // decrement player's number of walls
+			b.playerWalls[turn-1]--; // decrement player's number of walls
 			
 			
 			/* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */
@@ -267,27 +245,7 @@ public class PlayQuor{
 		}
 		else // else if there are no more walls to play or if the back end has a problem with it ..
 			return false; // return false for not a legal move
-=======
-		for(int i = 0; i < theWall.length; i++)
-			if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall))
-			{
-				b.placeWallBoard(theWall);
-				b.playerWalls[turn-1]--;
-				if (theWall[2] == 0)
-					wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
-				else//its a 1, meaning vertical
-					wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "V";    
-				BoardWall.map.get(wallName).setWall();
-				BoardWall.map.get(wallName).nextWall().setWall();
-				return true;
-			}
-			else
-			{
-				//System.out.println("WTF");
-				return false;
-			}
-		return true;
->>>>>>> 41d59b90983b3393f0c23c7480b9c53b33bbae05
+
 	}
 
 	// Parameters: the board, the player whose turn it is, the direction
