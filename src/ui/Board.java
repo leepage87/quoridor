@@ -237,8 +237,6 @@ public class Board {
 			if(!history.contains(newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
-//				System.out.println(newPlace[0] + " " + newPlace[1]);
-//				System.out.println();
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('S', place)){
