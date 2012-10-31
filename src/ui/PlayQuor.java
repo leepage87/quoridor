@@ -14,8 +14,8 @@ public class PlayQuor{
 	public static String oldMove = "";
 	public static int turn;
 	private static int[] pieceHolder = new int[3];
-	private static int[] playerWalls = new int[4];
 	public static int breaker = 0;
+	public static int[] isAI = new int[4];
 
 	public static void main(String[] args) throws InterruptedException{
 		String[] options = {"Two player game", "Four player game","Never mind, I'm done playing today."};
@@ -33,12 +33,14 @@ public class PlayQuor{
 			else if (n == 2)
 				System.exit(0);
 			Board b = new Board(numPlay);
-			for(int i = 0; i < numPlay; i++)
-				playerWalls[i] = 20/numPlay;
 			if (gui != null)
 				gui.dispose();
 			gui = new GameBoardWithButtons(b, numPlay);
 			// Create/assign AI to a number of Players
+			isAI[1] = 1;
+			isAI[2] = 1;
+			isAI[3] = 1;
+			//
 			breaker = 0;
 			boolean won = false;
 			turn = 0;
@@ -47,7 +49,7 @@ public class PlayQuor{
 				System.out.println("TURN: " + turn);
 				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
 				for (int i = 0; i < numPlay; i++)
-					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
+					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
 				System.out.println(b);
 				boolean fairMove = false;
 				while(!fairMove)
@@ -73,6 +75,11 @@ public class PlayQuor{
 	      movePiece: gives int to get the char from
 	      placeWall: gives int/int/int (row, column, direction)
 		 */
+		if(isAI[turn-1] == 1){
+			AI a = new AI(b);
+			a.aiMove(turn);
+			return true;
+		}
 		while (!clicked){
 			if (breaker == 2)
 			{
@@ -173,10 +180,10 @@ public class PlayQuor{
 	public static boolean placeWallPQ(Board b, int[] theWall){
 		String wallName;
 		for(int i = 0; i < theWall.length; i++)
-			if ((playerWalls[turn-1] > 0) && b.canPlaceWall(theWall))
+			if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall))
 			{
 				b.placeWallBoard(theWall);
-				playerWalls[turn-1]--;
+				b.playerWalls[turn-1]--;
 				if (theWall[2] == 0)
 					wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
 				else//its a 1, meaning vertical

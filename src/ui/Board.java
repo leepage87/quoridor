@@ -12,6 +12,7 @@ import javax.swing.Icon;
 public class Board {
 
 	final int NUMPLAY;
+	int[] playerWalls = new int[4];
 	final int WALL = 5;
 	int[][] grid;
 	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>();
@@ -25,6 +26,8 @@ public class Board {
 			NUMPLAY = 4;
 		else
 			NUMPLAY = 2;
+		for(int i = 0; i < NUMPLAY; i++)
+			playerWalls[i] = 20/NUMPLAY;
 	}
 
 	// Parameters: a board
@@ -189,13 +192,13 @@ public class Board {
 	private boolean pieceCollision(char direction, int[] place) {
 		int col = place[0];
 		int row = place[1];
-		if(direction == 'N' && grid[col][row-2] != 0)
+		if(direction == 'N' && row != 0 && grid[col][row-2] != 0)
 			return true;
-		if(direction == 'S' && grid[col][row+2] != 0)
+		if(direction == 'S' && row != 16 && grid[col][row+2] != 0)
 			return true;
-		if(direction == 'W' && grid[col-2][row] != 0)
+		if(direction == 'W' && col != 0 && grid[col-2][row] != 0)
 			return true;
-		if(direction == 'E' && grid[col+2][row] != 0)
+		if(direction == 'E' && col != 16 && grid[col+2][row] != 0)
 			return true;
 		return false;
 	}

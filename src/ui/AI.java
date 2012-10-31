@@ -13,7 +13,7 @@ public class AI{
 
 	 public AI(Board b){
          AIboard = b;
-   }
+	 }
 
 	public void AIMove(int player){
 	     moves(currentLoc(player), player);
@@ -52,7 +52,9 @@ public class AI{
 	// Parameters: the player whose turn it is and the enemy closest to winning
 	// Returns: the board after making the best possible move
 	public Board findBestMove(int turn, int enemy, Board b){
-		ArrayList<Board> posMoves = wallPlacementSearch(b);
+		ArrayList<Board> posMoves = new ArrayList<Board>();
+		if(b.playerWalls[turn] != 0)
+			posMoves = wallPlacementSearch(b);
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
 					int[] destination = new int[2];
@@ -74,9 +76,12 @@ public class AI{
 	// Parameters: the player whose turn it is, the enemy closest to winning, and the board being examined
 	// Returns: number of moves it will take the enemy to win minus the number of moves it will take the player to win
 	public int boardValue(int turn, int enemy, Board b){
+		if(b.haveWon())
+			return 100;
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
-		return enemyMoves-playerMoves;
+		int walls = 2*b.playerWalls[turn];
+		return enemyMoves-playerMoves+walls;
 	}
 		
 	// Parameters: the player
@@ -102,7 +107,6 @@ public class AI{
 	
 	// Returns: an ArrayList of one board for every possible wall placement
 	public ArrayList<Board> wallPlacementSearch(Board b){
-		// TODO: account for the possibility of running out of walls; link to PlayQuor?
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
