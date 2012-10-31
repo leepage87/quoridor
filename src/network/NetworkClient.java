@@ -48,7 +48,16 @@ public class NetworkClient {
     }
 
     /**
-     * Creates a NetworkClient object for two players
+     * Creates a NetworkClient object for one local human and one network AI
+     * 
+     **/
+    public NetworkClient(String player1Address){
+        this.player1Address = player1Address;
+        this.numberOfPlayers = 2;
+    }
+    
+    /**
+     * Creates a NetworkClient object for two network AI players
      * 
      **/
     public NetworkClient(String player0Address, String player1Address){
@@ -58,6 +67,16 @@ public class NetworkClient {
 
     }
     
+    /**
+     * Creates a NetworkClient object for one local human and three network AI players
+     * 
+     **/
+    public NetworkClient(String player1Address, String player2Address, String player3Address){
+        this.player1Address = player1Address;
+        this.player2Address = player2Address;
+        this.player3Address = player3Address;
+        this.numberOfPlayers = 4;
+    }
     /**
      * Creates a NetworkClient object for four players
      * 
