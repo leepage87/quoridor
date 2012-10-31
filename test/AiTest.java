@@ -51,7 +51,7 @@ public class AiTest {
 		public void boardValueTest(){
 			int given;
 			given = AIboard.boardValue(1, 2, b);
-			Assert.assertTrue(given == 0);
+			Assert.assertTrue(given == 20);
 		}
 		
 		//Tests the aiMove method
@@ -61,7 +61,7 @@ public class AiTest {
 			placement[0] = 8;
 			placement[1] = 2;
 			AIboard.aiMove(1);
-			temp.move(placement);
+			temp.move(placement, 1);
 			int[] method = new int[2];
 			int [] moved = new int[2];
 			method  = AIboard.currentLoc(1);
@@ -75,7 +75,7 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			temp.move(placement);
+			temp.move(placement, 1);
 			int[] method = new int[2];
 			int [] moved = new int[2];
 			method  = AIboard.currentLoc(2);
@@ -89,9 +89,9 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			AIboard.move(placement);
+			AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
-			Assert.assertTrue(given == 1);
+			Assert.assertTrue(given == 21);
 		}
 		
 		//Tests the boardValue method after moving the first player, then the second, then the first again
@@ -101,16 +101,16 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			AIboard.move(placement);
+			AIboard.move(placement, 1);
 			placement[0] = 6;
 			placement[1] = 16;
-			AIboard.move2();
+			AIboard.move(placement, 2);
 			placement[0] = 8;
 			placement[1] = 4;
-			AIboard.move(placement);
+			AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
-			
-			Assert.assertTrue(given == 1);
+			System.out.println(given);
+			Assert.assertTrue(given == 21);
 		}
 		
 		//Tests the findEnemy method to make sure it finds the correct enemy by using its location
@@ -135,7 +135,7 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			temp.move(placement);
+			temp.move(placement, 1);
 			int[] method = new int[2];
 			int[] moved = new int[2];
 			method = AIboard.currentLoc(1);
