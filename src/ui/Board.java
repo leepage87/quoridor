@@ -232,23 +232,16 @@ public class Board {
 	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
 		if(pieceCollision('N', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]-2;
-			newPlace[1] = place[1];
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]-2;
 			if(!history.contains(newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
+//				System.out.println(newPlace[0] + " " + newPlace[1]);
+//				System.out.println();
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('S', place)){
-			int[] newPlace = new int[2];
-			newPlace[0] = place[0]+2;
-			newPlace[1] = place[1];
-			if(!history.contains(newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}else if(pieceCollision('E', place)){
 			int[] newPlace = new int[2];
 			newPlace[0] = place[0];
 			newPlace[1] = place[1]+2;
@@ -257,10 +250,19 @@ public class Board {
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
+		}else if(pieceCollision('E', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0]+2;
+			newPlace[1] = place[1];
+			if(!history.contains(newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
 		}else if(pieceCollision('W', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]-2;
+			newPlace[0] = place[0]-2;
+			newPlace[1] = place[1];
 			if(!history.contains(newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
