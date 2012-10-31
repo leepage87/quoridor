@@ -14,7 +14,7 @@ public class AiTest {
 		AI AIboard; 
 		AI temp;
 	
-		//initializes the AI for testing
+		//initializes the AI for testing creating a board, and an AI, and a temporary board
 		@Before
 		public void initialize(){
 			b = new Board(2);
@@ -22,7 +22,7 @@ public class AiTest {
 			temp = new AI(b);
 		}
 
-		//Tests to see if the currentLoc method returns the correct location
+		//Tests to see if the currentLoc method returns the correct current location
 		@Test
 		public void currentLocTest(){
 			int[]expected = new int[2];
@@ -32,7 +32,7 @@ public class AiTest {
 			
 		}
 		
-		//Tests the moves methos to make sure it uses the doSearch correctly and finds the correct moevment
+		//Tests the moves method to make sure it uses the doSearch correctly and finds the correct movement
 		@Test
 		public void movesTest(){
 			int [] expected = new int[3];
@@ -57,9 +57,11 @@ public class AiTest {
 		//Tests the aiMove method
 		@Test
 		public void aiMove(){
-			AI temp = new AI(b);
-			temp.move();
+			int [] placement = new int[2];
+			placement[0] = 8;
+			placement[1] = 2;
 			AIboard.aiMove(1);
+			temp.move(placement);
 			int[] method = new int[2];
 			int [] moved = new int[2];
 			method  = AIboard.currentLoc(1);
@@ -69,21 +71,45 @@ public class AiTest {
 		//Tests the findBestMove method
 		@Test
 		public void findBestMoveTest(){
-			AI temp = new AI(b);
 			AIboard.findBestMove(2, 1, b);
-			temp.move();
+			int [] placement = new int[2];
+			placement[0] = 8;
+			placement[1] = 2;
+			temp.move(placement);
 			int[] method = new int[2];
 			int [] moved = new int[2];
 			method  = AIboard.currentLoc(2);
 			moved = temp.currentLoc(2);
 			Assert.assertArrayEquals(method, moved);
 		}
-		//This is not working yet need to move a piece before it will be different
+		//Tests the boardValue method after moving a player to make sure it increments the boardValue
 		@Test
 		public void boardMoveValueTest(){
 			int given;
-			AIboard.move();
+			int [] placement = new int[2];
+			placement[0] = 8;
+			placement[1] = 2;
+			AIboard.move(placement);
 			given = AIboard.boardValue(1, 2, b);
+			Assert.assertTrue(given == 1);
+		}
+		
+		//Tests the boardValue method after moving the first player, then the second, then the first again
+		@Test
+		public void boardMoveValueTest2(){
+			int given;
+			int [] placement = new int[2];
+			placement[0] = 8;
+			placement[1] = 2;
+			AIboard.move(placement);
+			placement[0] = 6;
+			placement[1] = 16;
+			AIboard.move2();
+			placement[0] = 8;
+			placement[1] = 4;
+			AIboard.move(placement);
+			given = AIboard.boardValue(1, 2, b);
+			
 			Assert.assertTrue(given == 1);
 		}
 		
@@ -99,15 +125,17 @@ public class AiTest {
 			Assert.assertArrayEquals(given, actual);
 		}
 		
-		//Tests the each move method
+		//Tests the eachStep method by moving the temp board to where it should go and checking the locations of both
 		@Test
 		public void eachStepTest(){
 			int [] dest = new int[2];
 			dest[0] = 8;
 			dest[1] = 2;
-			AI temp = new AI(b);
 			AIboard.eachStep(1, dest, b);
-			temp.move();
+			int [] placement = new int[2];
+			placement[0] = 8;
+			placement[1] = 2;
+			temp.move(placement);
 			int[] method = new int[2];
 			int[] moved = new int[2];
 			method = AIboard.currentLoc(1);
