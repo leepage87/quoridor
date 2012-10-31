@@ -11,7 +11,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import javax.swing.JOptionPane;
 
 import src.ui.Board;
 import src.ui.BoardButton;
@@ -41,7 +40,6 @@ public class NetworkClient {
     private static int numberOfPlayers;
     static HashMap<Integer, Scanner> networkInputMap = new HashMap<Integer, Scanner>();
     static HashMap<Integer, PrintStream> networkOutputMap = new HashMap<Integer, PrintStream>();
-  
 
 
 
@@ -71,7 +69,7 @@ public class NetworkClient {
         this.player3Address = player3Address;
         this.numberOfPlayers = 4;
 
-    }
+    }//TODO: make player move
 
     /**
      * syncWithPlayers - sends initial message to each player, waits for a response
@@ -79,7 +77,7 @@ public class NetworkClient {
      * @throws IOException
      */
     public void syncWithPlayers() throws UnknownHostException, IOException {
-        //TODO: CHANGE ALL PLAYER ADDRESSES TO USER INPUT
+        
 
         Scanner sc = new Scanner(System.in);
 
@@ -143,8 +141,18 @@ public class NetworkClient {
 
 
     }
+    
+    /**
+     * tells a player that it has been kicked from the game
+     * if that player has made an illegal move
+     * @param playerID
+     */
+    public static void removePlayer(int playerID){
+        networkOutputMap.get(playerID-1).println("REMOVE!");
+        System.out.println("sending REMOVE! to player: " + (playerID-1));
+    }
 
-
+    //TODO: check if we're broadcasting an updated board object to everybody.
     /**
      * broadcastMove: broadcasts the last legal move made to all players
      * @param nextMove: the last legal move made
@@ -203,15 +211,7 @@ public class NetworkClient {
  * 
 
 
-
   String address = JOptionPane.showInputDialog("Input player addresses separated by spaces", "ex. hostname0 hostname1");
-
-
-
-
-
-
-
 
 
 
