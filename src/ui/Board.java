@@ -8,14 +8,15 @@ package src.ui;
 import java.util.*;
 
 import javax.swing.Icon;
-
+/* The back end. Contains a grid for the contents of the game board (both walls and tokens)
+ * and methods for testing the board's possibilities. */
 public class Board {
 
-	final int NUMPLAY;
-	int[] playerWalls = new int[4];
-	final int WALL = 5;
-	int[][] grid;
-	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>();
+	final int NUMPLAY; // number of players
+	int[] playerWalls = new int[4]; // tracks players per wall
+	final int WALL = 5; // how a wall is denoted on the grid
+	int[][] grid; // the board array
+	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
 
 	// Parameters: the number of players (2 or 4)
 	// Creates: a board object
@@ -110,11 +111,15 @@ public class Board {
 		int col = here[0];
 		int row = here[1];
 				
+		/* Adds the icons from GBWB to the map. Allows direct translation
+		 * of turn number to icon. */
 		map.put(1, GameBoardWithButtons.playerOne);
 		map.put(2, GameBoardWithButtons.playerTwo);
 		map.put(3, GameBoardWithButtons.playerThree);
 		map.put(4, GameBoardWithButtons.playerFour);
 		
+		/* For each direction, updates the grid and GUI appropriately. 
+		 * Move legality tested before this method is called. */
 		if(direction == 'N'){
 			grid[col][row] = 0;
 			grid[col][row-2] = Player;
@@ -153,12 +158,12 @@ public class Board {
 	//    to show which player is moving
 	// Returns: if the move is legal
 	public boolean canMovePiece(char direction, int Player){
-		//System.out.println("DIRECTION: "+ direction);
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
-		if(direction == 'X')
+		if(direction == 'X') // This is passed if a non-adjacent pawn move is attempted
 			return false;
+		/* For each direction, tests if a wall blocks the path. Returns false if so. */
 		if(direction == 'N'){
 			if((here[1] == 0) || (grid[col][row-1] == 5))
 				return false;
@@ -175,7 +180,7 @@ public class Board {
 			if((here[0] == 0) || (grid[col-1][row] == 5))
 				return false;
 		}
-		return true;
+		return true; // legal move; return true.
 	}
 
 
@@ -232,23 +237,14 @@ public class Board {
 	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
 		if(pieceCollision('N', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]-2;
+			newPlace[0] = place[0]-2;
+			newPlace[1] = place[1];
 			if(!history.contains(newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('S', place)){
-			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]+2;
-			if(!history.contains(newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}else if(pieceCollision('E', place)){
 			int[] newPlace = new int[2];
 			newPlace[0] = place[0]+2;
 			newPlace[1] = place[1];
@@ -257,10 +253,19 @@ public class Board {
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
+		}else if(pieceCollision('E', place)){
+			int[] newPlace = new int[2];
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]+2;
+			if(!history.contains(newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return aiCanMove(newPlace, Player, newHistory);
+			}
 		}else if(pieceCollision('W', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]-2;
-			newPlace[1] = place[1];
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]-2;
 			if(!history.contains(newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
@@ -517,8 +522,6 @@ public class Board {
 		}
 		return false;
 	}
-
-	////////////////////////////////////////////////////////////////////////////////
 
 	//Testing purposes only
 	public void setWall(){

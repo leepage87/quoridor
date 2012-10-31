@@ -11,15 +11,17 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import src.ui.GameBoardWithButtonsPrototype;
-
+/* Draws the game tiles. Has a map from Button name to Button.*/
 public class BoardButton extends JButton implements ActionListener {
 
+	// Map from button name to button itself. Allows other classes
+	// to access a button using its name.
 	static HashMap<String, BoardButton> map = new HashMap<String, BoardButton>();
 
-	private String name;
-	private static boolean playerPresent;
+	private String name; // name of each button
+	private static boolean playerPresent; // is there a pawn here?
 
-
+	/* Return the button associated with the name passed. */
 	public BoardButton getButton (String str) {
 		BoardButton returnButton = map.get(str);
 		return returnButton;
@@ -31,28 +33,19 @@ public class BoardButton extends JButton implements ActionListener {
 
 	private JComponent me;
 
+	/* When a tile is clicked, update fields in PlayQuor.
+	 * Clicked ends the infinite loop (of waiting for a click).
+	 * nextMove sends data on the button (tile/wall) clicked. */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		BoardButton button = (BoardButton) me;
-		//JOptionPane.showMessageDialog(this.getParent(), "my name is " + button1.getLocalName());
 		button.setRolloverEnabled(false);
-		/*if (PlayQuor.turn == 1) 
-			button.setIcon(GameBoardWithButtons.playerOne);
-		if (PlayQuor.turn == 2)
-			button.setIcon(GameBoardWithButtons.playerTwo);
-		if (PlayQuor.turn == 3)
-			button.setIcon(GameBoardWithButtons.playerThree);
-		if (PlayQuor.turn == 4)
-			button.setIcon(GameBoardWithButtons.playerFour);
-		button.setVisible(true);
-		playerPresent = true;*/
 		PlayQuor.clicked = true;
 		PlayQuor.nextMove = button.name;
-
 	}
 
-	public void rolloverTests(){
+	/* Seems unused. Commented out for now. public void rolloverTests(){
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -62,20 +55,17 @@ public class BoardButton extends JButton implements ActionListener {
 			public void mouseExited(java.awt.event.MouseEvent evt) {
 				if (playerPresent == false)
 					setRolloverEnabled(false);
-
 			}
 		});
-	}
+	}*/
 
 	public static void setPlayerPresent(boolean setting, int col, int row){
 		map.get("B"+col/2+row/2).playerPresent = setting;
 		map.get("B"+col/2+row/2).setIcon(GameBoardWithButtons.defaultIcon);
-
-
-
 	}
 
-
+	/* Creates each button. Sets it to not contain a player. Sets default icon.
+	 * Sets name. Sets rollover to legal move icon. Adds action listener. */
 	BoardButton(String name) {
 		playerPresent = false;
 		this.setIcon(GameBoardWithButtons.defaultIcon);
@@ -85,9 +75,6 @@ public class BoardButton extends JButton implements ActionListener {
 		this.setRolloverEnabled(true);
 		this.setRolloverIcon(GameBoardWithButtons.legalMove);
 		addActionListener(this);
-		//rolloverTests();
-
-
 	}
 }
 

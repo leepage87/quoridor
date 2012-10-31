@@ -6,6 +6,8 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+/* NO LONGER USED. DELETE.*/
+
 
 public class GameBoardPrototype extends JFrame {
 	public GameBoardPrototype() {

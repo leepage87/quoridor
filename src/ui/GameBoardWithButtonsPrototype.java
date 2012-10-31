@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.*;
-
+/* NO LONGER USED. DELETE. */
 
 public class GameBoardWithButtonsPrototype extends JFrame implements ActionListener
 {

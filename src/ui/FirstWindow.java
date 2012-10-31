@@ -30,6 +30,8 @@ import java.awt.*;
  * 
  * @author blad
  * 
+ * NOT USED FOR QUORIDOR. DELETE ME.
+ * 
  */
 public class FirstWindow extends JFrame  implements ActionListener {
 

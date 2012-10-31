@@ -10,7 +10,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-
+/* NO LONGER USED. DELETE. */
 public class MenuBarPrototype extends JFrame implements ActionListener {
 	
 	
