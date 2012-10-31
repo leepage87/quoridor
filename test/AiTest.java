@@ -54,17 +54,36 @@ public class AiTest {
 			Assert.assertTrue(given == 0);
 		}
 		
+		//Tests the aiMove method
+		@Test
+		public void aiMove(){
+			AI temp = new AI(b);
+			temp.move();
+			AIboard.aiMove(1);
+			int[] method = new int[2];
+			int [] moved = new int[2];
+			method  = AIboard.currentLoc(1);
+			moved = temp.currentLoc(1);
+			Assert.assertArrayEquals(method, moved);
+		}
+		//Tests the findBestMove method
+		@Test
+		public void findBestMoveTest(){
+			AI temp = new AI(b);
+			AIboard.findBestMove(2, 1, b);
+			temp.move();
+			int[] method = new int[2];
+			int [] moved = new int[2];
+			method  = AIboard.currentLoc(2);
+			moved = temp.currentLoc(2);
+			Assert.assertArrayEquals(method, moved);
+		}
 		//This is not working yet need to move a piece before it will be different
 		@Test
 		public void boardMoveValueTest(){
 			int given;
 			AIboard.move();
-			int[] printer = new int[2];
-			printer = AIboard.currentLoc(1);
-			System.out.println(printer[0]);
-			System.out.println(printer[1]);
 			given = AIboard.boardValue(1, 2, b);
-			System.out.println(given);
 			Assert.assertTrue(given == 1);
 		}
 		
@@ -79,18 +98,23 @@ public class AiTest {
 			AIboard.currentLoc(test);
 			Assert.assertArrayEquals(given, actual);
 		}
-		//May be a null test that isn't needed
-		/*@Test
-		public void oneStepTestNorth(){
-			temp = new AI(AIboard.oneStep(1, 1, b));
-			int [] given = new int[2];
-			given = temp.currentLoc(1);
-			int [] test = new int[2];
-			test[0] = 8;
-			test[1] = 2;
-			Assert.assertArrayEquals(given, test);
+		
+		//Tests the each move method
+		@Test
+		public void eachStepTest(){
+			int [] dest = new int[2];
+			dest[0] = 8;
+			dest[1] = 2;
+			AI temp = new AI(b);
+			AIboard.eachStep(1, dest, b);
+			temp.move();
+			int[] method = new int[2];
+			int[] moved = new int[2];
+			method = AIboard.currentLoc(1);
+			moved = temp.currentLoc(1);
+			Assert.assertArrayEquals(method, moved);
 		}
-*/
+
 		//Tests the wallPlacementSearch to make sure it comes up with 
 		//the correct amount of different boards where the walls can be placed
 		@Test
@@ -109,7 +133,6 @@ public class AiTest {
 			ArrayList<Board> testMoves = new ArrayList<Board>();
 			testMoves = AIboard.wallPlacementSearch(b);
 			int sizeArray = testMoves.size();
-			System.out.println(sizeArray);
 			Assert.assertTrue(sizeArray==124);
 			
 		
