@@ -30,7 +30,7 @@ public class MoveServer extends Thread {
         int oldRow, oldCol, newRow, newCol;
         char opCode;
         String fromGameClient;
-        while (true){
+        //while (true){
             try {
                 inFromClient = new Scanner(connection.getInputStream());
                 outToClient = new PrintStream(connection.getOutputStream());
@@ -41,21 +41,14 @@ public class MoveServer extends Thread {
                 if (fromGameClient.contains("HI")){
                     //"HI <PlayerNo> <NumberOfPlayers>"
                     outToClient.println("HI");
-                    /*
-                     * 
-                     * Debug code for that random newline char
-                     * 
-                     *
-                    System.out.println(hi.indexOf('\n'));
-                    */
+
                     //get playerNo and NumberOfPlayers
                     PlayerNo = fromGameClient.charAt(3)-'0';
                     NumberOfPlayers = fromGameClient.charAt(5)- '0';
                     System.out.println("MoveServer> I am player number: " + PlayerNo + " and there are " + NumberOfPlayers + " playing.");
-                    //Board gameBoard = new Board(NumberOfPlayers);
                 }
                 else {
-                    System.err.println("???????????");
+                    System.err.println("");
                 }
 
 
@@ -73,47 +66,42 @@ public class MoveServer extends Thread {
                         opCode = 'M';
 
                         String nextMove = "MOVE! " + PlayerNo + " " + opCode + " " + oldRow + " "
-                                + oldCol + " " + newRow + " " + newCol;
-                        
-                        
-                        /*
-                         * Debug code for that random newline char
+                        + oldCol + " " + newRow + " " + newCol;
 
-                        if (nextMove.charAt(0) == '\n'){
-                            System.out.println("beginning of move!");
-                        }
-                        System.out.println(nextMove.indexOf('\n'));
-                        *
-                        */
+
                         //send move to client
                         outToClient.println(nextMove);
                         System.out.println("MoveServer> Move sent was: " + nextMove);
+                        
+                        //get response from client
                         fromGameClient = inFromClient.nextLine();
-                        if(fromGameClient.equals(nextMove)){
+                        if(fromGameClient.contains("MOVE!" + nextMove.substring(6))){
                             System.out.println("MoveServer> Move has been accepted, making the move now");
                             //TODO: make player move
-                        }else if (fromGameClient.contains("REMOVE!")){
-                            System.out.println("Move was illegal, kicked out of game");
-                            System.exit(0);
+                        }else if (fromGameClient.equals("REMOVE!")){
+                            System.out.println("MoveServer> Move was illegal, kicked out of game (Player " + (PlayerNo+1) +")" );
+                            //connection.close();
+                            
+                           
                         }
-                        
-                        
-                        
+
+
+
                     }else if (fromGameClient.contains("MOVE!")){
                         opCode = fromGameClient.charAt(8);
                         oldRow = fromGameClient.charAt(10);
                         oldCol = fromGameClient.charAt(12);
                         newRow = fromGameClient.charAt(14);
                         newCol = fromGameClient.charAt(16);
-                    }else if (fromGameClient.contains("REMOVE!")){
-                        //remove player from game
                     }else{
                         //anything else or game over or something
                     }
                     //TODO: change GAME OVER to whatever protocol is
-                }while (!fromGameClient.contains("GAME OVER"));
-                
-                
+                    
+                    //change while REMOVE! to involve a player number or something, clarify protocol
+                }while (!fromGameClient.contains("GAME OVER") || !fromGameClient.contains("REMOVE!"));
+
+
                 //TODO: display losing or winning message
                 //close the connection
                 connection.close();
@@ -123,8 +111,7 @@ public class MoveServer extends Thread {
             } catch (Exception e) {
             }
         }
-    }
-
+    //}
     public static void main(String [] args) throws Exception {
         ServerSocket welcomeSocket = new ServerSocket(SERVER_LISTEN_PORT);
         System.out.println("MoveServer> Listening on port: " + SERVER_LISTEN_PORT);
