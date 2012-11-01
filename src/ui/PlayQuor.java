@@ -43,6 +43,11 @@ public class PlayQuor{
 			else if (n == 2)
 				System.exit(0);
 			
+			// Create/assign AI to a number of Players
+			isAI[1] = 1;
+			isAI[2] = 0;
+			isAI[3] = 0;		
+			
 			// create a new back end board with desired number of players
 			Board b = new Board(numPlay);
 			
@@ -61,12 +66,7 @@ public class PlayQuor{
 			
 			// set/reset control variables breaker, won, and turn
 			breaker = 0;
-			boolean won = false;
 			turn = 0;
-			// Create/assign AI to a number of Players
-			isAI[1] = 1;
-			isAI[2] = 1;
-			isAI[3] = 1;
 			
 			// Loop containing each game. If breaker becomes 1 or 2, the game has ended.
 			while(breaker == 0){
@@ -78,18 +78,21 @@ public class PlayQuor{
 				// initialize GUI buttons indicating how many walls each player has left
 				for (int i = 0; i < numPlay; i++)
 					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
-				boolean fairMove = false;
-				while(!fairMove)
-					fairMove = takeTurn(b, false);
-				
-				// Indicates player has elected to start a new game; exits the loop
-				if (breaker == 2)
-					break;
-				
+				if(isAI[turn-1] == 1){
+					AI a = new AI(b);
+					b = a.aiMove(turn);				
+				}else {
+					boolean fairMove = false;
+					while(!fairMove)
+						fairMove = takeTurn(b, false);
+					// Indicates player has elected to start a new game; exits the loop
+					if (breaker == 2)
+						break;
+				}
 				// tests win conditions and updates exit variable accordingly
-				won = b.haveWon();
-				if (won)
+				if (b.haveWon())
 					breaker = 1;
+				System.out.println(b);
 			}
 			// if somebody won, say so
 			if (breaker == 1)
@@ -110,11 +113,6 @@ public class PlayQuor{
 	      tests some aspects of move's legality. 
 		 */
 		
-		if(isAI[turn-1] == 1){
-			AI a = new AI(b);
-			a.aiMove(turn);
-			return true;
-		}
 		/* Waits for click. If while in this loop, player decides to start a new game,
 		 * breaker is set and control returns to main. */
 

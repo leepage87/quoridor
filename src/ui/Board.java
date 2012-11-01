@@ -42,6 +42,7 @@ public class Board {
 		}
 		this.grid = tempGrid;
 		this.NUMPLAY = b.NUMPLAY;
+		this.playerWalls = b.playerWalls;
 	}
 
 	// Parameters: the number of players (2 or 4)
@@ -207,7 +208,7 @@ public class Board {
 			return true;
 		return false;
 	}
-	
+
 	// Parameters: the location the AI wants to move to and the Player
 	// Returns: if that movement is legal
 	public boolean aiCanMove(int[] dest, int Player){

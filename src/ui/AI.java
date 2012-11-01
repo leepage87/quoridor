@@ -35,18 +35,18 @@ public class AI{
 	
 	// Parameters: the player whose turn it is
 	// PostCondition: the best move is made
-	public void aiMove(int turn){ //TODO: look turns ahead. Recursive in findBestMove?
+	public Board aiMove(int turn){ //TODO: look turns ahead. Recursive in findBestMove?
 		Board myMove = new Board(AIboard);
 		Board currentBoard = new Board(AIboard);
 		int tempTurn = turn;
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 1; i++){ // # of turns ahead
 			int enemy = findEnemy(turn, currentBoard);
 			currentBoard = findBestMove(turn, enemy, currentBoard);
 			if(i == 0)
 				myMove = currentBoard;
 			tempTurn = (tempTurn%4)+1;
 		}
-		AIboard = myMove;
+		return myMove;
 	}
 	
 	// Parameters: the player whose turn it is and the enemy closest to winning
@@ -68,8 +68,10 @@ public class AI{
 		Board finalMove = new Board(posMoves.get(0));
 		int value = boardValue(turn, enemy, posMoves.get(0));
 		for(int i = 1; i < posMoves.size(); i++)
-			if(value < boardValue(turn, enemy, posMoves.get(i)))
+			if(value < boardValue(turn, enemy, posMoves.get(i))){
 				finalMove = posMoves.get(i);
+				value = boardValue(turn, enemy, posMoves.get(i));
+			}
 		return finalMove;
 	}
 	
