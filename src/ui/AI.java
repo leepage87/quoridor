@@ -130,21 +130,17 @@ public class AI{
 	}
 	//Testing purposes
 	public Board placeWall(){
-        Board temp = new Board(AIboard);
         int [] placement = new int[3];
         placement[0] = 1;
         placement[1] = 1;
-        temp.placeWallBoard(placement);
-        return temp;
+        AIboard.placeWallBoard(placement);
+        return AIboard;
 }       
 
 
 	//Testing purposes
-		public Board move(){
+		public Board move(int [] placement, int player){
 			Board temp = new Board(AIboard);
-			int [] placement = new int[2];
-			placement[0] = 2;
-			placement[1] = 8;
 			temp.quickMove(placement, 1);
 			return temp;
 		}	
