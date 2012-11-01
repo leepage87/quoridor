@@ -91,7 +91,7 @@ public class AiTest {
 			placement[1] = 2;
 			AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
-			Assert.assertTrue(given == 21);
+			Assert.assertTrue(given == 20);
 		}
 		
 		//Tests the boardValue method after moving the first player, then the second, then the first again
@@ -110,7 +110,7 @@ public class AiTest {
 			AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
 			System.out.println(given);
-			Assert.assertTrue(given == 21);
+			Assert.assertTrue(given == 20);
 		}
 		
 		//Tests the findEnemy method to make sure it finds the correct enemy by using its location
