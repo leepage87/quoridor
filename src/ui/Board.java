@@ -237,42 +237,56 @@ public class Board {
 	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
 		if(pieceCollision('N', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]-2;
-			newPlace[1] = place[1];
-			if(!history.contains(newPlace)){
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]-2;
+			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('S', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]+2;
-			newPlace[1] = place[1];
-			if(!history.contains(newPlace)){
+			newPlace[0] = place[0];
+			newPlace[1] = place[1]+2;
+			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('E', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]+2;
-			if(!history.contains(newPlace)){
+			newPlace[0] = place[0]+2;
+			newPlace[1] = place[1];
+			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}else if(pieceCollision('W', place)){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]-2;
-			if(!history.contains(newPlace)){
+			newPlace[0] = place[0]-2;
+			newPlace[1] = place[1];
+			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
 		}
 		return false;
+	}
+
+	// Parameters: a list of locations that have been searched, and a location
+	// Returns: if the location has already been searched
+	private boolean hasBeen(ArrayList<int[]> history, int[] newPlace) {
+		boolean seen = false;
+		for(int i = 0; i < history.size(); i++){
+			int[] next = history.get(i);
+			if(newPlace[0] == next[0] && newPlace[1] == next[1]){
+				seen = true;
+				break;
+			}
+		}
+		return seen;
 	}
 
 	// Parameters: the location the AI wants to move to and the Player
