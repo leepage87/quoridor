@@ -11,9 +11,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 
 import src.ui.Board;
 import src.ui.BoardButton;
+import src.ui.GameBoardWithButtons;
 
 
 public class NetworkClient {
@@ -23,6 +26,10 @@ public class NetworkClient {
     public static String player1Address;
     public static String player2Address;
     public static String player3Address;
+    public static int player0Port;
+    public static int player1Port;
+    public static int player2Port;
+    public static int player3Port;
     static Socket player0Socket;
     static Socket player1Socket;
     static Socket player2Socket;
@@ -52,29 +59,52 @@ public class NetworkClient {
      * 
      **/
     public NetworkClient(String player1Address){
-        this.player1Address = player1Address;
+        //break playerAddresses into hostnames and port
+        String tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
+        player1Port = Integer.parseInt(tempPort);       
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        
         this.numberOfPlayers = 2;
     }
-    
+
     /**
      * Creates a NetworkClient object for two network AI players
      * 
      **/
     public NetworkClient(String player0Address, String player1Address){
-        this.player0Address = player0Address;
-        this.player1Address = player1Address;
+        //break playerAddresses into hostnames and port
+        String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
+        player0Port = Integer.parseInt(tempPort);       
+        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        
+        tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
+        player1Port = Integer.parseInt(tempPort);   
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+
         this.numberOfPlayers = 2;
 
     }
-    
+
     /**
      * Creates a NetworkClient object for one local human and three network AI players
      * 
      **/
     public NetworkClient(String player1Address, String player2Address, String player3Address){
-        this.player1Address = player1Address;
-        this.player2Address = player2Address;
-        this.player3Address = player3Address;
+        //break playerAddresses into hostnames and port
+          
+        String tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
+        player1Port = Integer.parseInt(tempPort);   
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        
+        tempPort = player2Address.substring(player2Address.indexOf(':')+1, player2Address.length());
+        player2Port = Integer.parseInt(tempPort);       
+        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        
+        tempPort = player3Address.substring(player3Address.indexOf(':')+1, player3Address.length());
+        player3Port = Integer.parseInt(tempPort);       
+        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        
+        
         this.numberOfPlayers = 4;
     }
     /**
@@ -82,10 +112,23 @@ public class NetworkClient {
      * 
      **/
     public NetworkClient(String player0Address, String player1Address, String player2Address, String player3Address){
-        this.player0Address = player0Address;
-        this.player1Address = player1Address;
-        this.player2Address = player2Address;
-        this.player3Address = player3Address;
+        //break playerAddresses into hostnames and port
+        
+        String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
+        player0Port = Integer.parseInt(tempPort);       
+        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        
+        tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
+        player1Port = Integer.parseInt(tempPort);   
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        
+        tempPort = player2Address.substring(player2Address.indexOf(':')+1, player2Address.length());
+        player2Port = Integer.parseInt(tempPort);       
+        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        
+        tempPort = player3Address.substring(player3Address.indexOf(':')+1, player3Address.length());
+        player3Port = Integer.parseInt(tempPort);       
+        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
         this.numberOfPlayers = 4;
 
     }//TODO: make player move
@@ -96,7 +139,7 @@ public class NetworkClient {
      * @throws IOException
      */
     public void syncWithPlayers() throws UnknownHostException, IOException {
-        
+
 
         Scanner sc = new Scanner(System.in);
 
@@ -124,19 +167,19 @@ public class NetworkClient {
 
 
         if (numberOfPlayers == 2){
-            outToPlayer0.println("HI 0 2");
-            outToPlayer1.println("HI 1 2");
+            outToPlayer0.println("QUORIDOR 0 2");
+            outToPlayer1.println("QUORIDOR 1 2");
         }else{//NumberOfPlayers == 4
-            outToPlayer0.println("HI 0 4");
-            outToPlayer1.println("HI 1 4");
-            outToPlayer2.println("HI 2 4");
-            outToPlayer3.println("HI 3 4");
+            outToPlayer0.println("QUORIDOR 0 4");
+            outToPlayer1.println("QUORIDOR 1 4");
+            outToPlayer2.println("QUORIDOR 2 4");
+            outToPlayer3.println("QUORIDOR 3 4");
         }
 
         for (int i = 0; i < 2; i++){
             fromPlayer = networkInputMap.get(i).nextLine();
 
-            if(!fromPlayer.equals("HI")){
+            if(!fromPlayer.equals("QUORIDOR")){
                 System.err.println("NetworkClient> Unexpected response from Player " + i);
                 System.exit(1);
             }else{ //this else can be done away with
@@ -147,7 +190,7 @@ public class NetworkClient {
             for (int i = 2; i < 4; i++){
                 fromPlayer = networkInputMap.get(i).nextLine();
 
-                if(!fromPlayer.equals("HI")){
+                if(!fromPlayer.equals("QUORIDOR")){
                     System.err.println("NetworkClient> Unexpected response from Player " + i);
                     System.exit(1);
                 }else{ //this else can be done away with
@@ -160,7 +203,7 @@ public class NetworkClient {
 
 
     }
-    
+
     /**
      * tells a player that it has been kicked from the game
      * if that player has made an illegal move
@@ -230,9 +273,31 @@ public class NetworkClient {
  * 
 
 
-  String address = JOptionPane.showInputDialog("Input player addresses separated by spaces", "ex. hostname0 hostname1");
+ 
 
-
+    options [0] = "Local Game";
+    options [1] = "Network Game";
+    options [2] = "Quit";
+           int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                    "Play local or remote opponent?","Network Game?",
+                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+           
+           if (n == 1 && numPlay == 2){
+                String address = JOptionPane.showInputDialog("Input player address separated by spaces", "ex. hostname0:port");
+                NetworkClient network = new NetworkClient(address);
+                networkGame = true;
+            }
+                else if (n == 1 && numPlay == 4 ){
+                String address = JOptionPane.showInputDialog("Input three player addresses separated by spaces", "ex. hostname0:port hostname1:port hostname2:port");
+                Scanner addressScanner = new Scanner(address);
+                String player1Address = addressScanner.next(); 
+                String player2Address = addressScanner.next(); 
+                String player3Address = addressScanner.next(); 
+                NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
+                networkGame = true;
+            }
+            else if (n == 2)
+                System.exit(0);
 
  * 
  * 

@@ -18,7 +18,7 @@ public class MoveServer extends Thread {
     int PlayerNo;
     int NumberOfPlayers;
     Socket connection;
-    final static int SERVER_LISTEN_PORT = 4050;//subject to change, get official port from Ladd
+    final static int SERVER_LISTEN_PORT = 4050;//allow user to pick port
 
     public MoveServer(Socket conn) {
         this.connection = conn;
@@ -36,15 +36,16 @@ public class MoveServer extends Thread {
                 outToClient = new PrintStream(connection.getOutputStream());
                 // Acknowledge connection from gameDisplay
                 fromGameClient = inFromClient.nextLine();
+                Scanner fromGameClientScanner = new Scanner (fromGameClient);
                 System.out.println("MoveServer> line rec'd from client " + fromGameClient);
 
-                if (fromGameClient.contains("HI")){
-                    //"HI <PlayerNo> <NumberOfPlayers>"
-                    outToClient.println("HI");
+                if (fromGameClientScanner.next().equals("QUORIDOR")){
+                    //"QUORIDOR <PlayerNo> <NumberOfPlayers>"
+                    outToClient.println("QUORIDOR");
 
                     //get playerNo and NumberOfPlayers
-                    PlayerNo = fromGameClient.charAt(3)-'0';
-                    NumberOfPlayers = fromGameClient.charAt(5)- '0';
+                    PlayerNo = fromGameClientScanner.nextInt();
+                    NumberOfPlayers = fromGameClientScanner.nextInt();
                     System.out.println("MoveServer> I am player number: " + PlayerNo + " and there are " + NumberOfPlayers + " playing.");
                 }
                 else {
@@ -65,7 +66,7 @@ public class MoveServer extends Thread {
                         newCol = 1;
                         opCode = 'M';
 
-                        String nextMove = "MOVE! " + PlayerNo + " " + opCode + " " + oldRow + " "
+                        String nextMove = "MOVE " + PlayerNo + " " + opCode + " " + oldRow + " "
                         + oldCol + " " + newRow + " " + newCol;
 
 
@@ -75,7 +76,7 @@ public class MoveServer extends Thread {
                         
                         //get response from client
                         fromGameClient = inFromClient.nextLine();
-                        if(fromGameClient.contains("MOVE!" + nextMove.substring(6))){
+                        if(fromGameClient.contains("MOVED" + nextMove.substring(6))){
                             System.out.println("MoveServer> Move has been accepted, making the move now");
                             //TODO: make player move
                         }else if (fromGameClient.equals("REMOVE!")){

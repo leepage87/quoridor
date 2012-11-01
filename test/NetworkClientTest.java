@@ -18,7 +18,7 @@ public class NetworkClientTest {
     private static NetworkClient network;
     @Before
     public void setUp() throws Exception {
-        network = new NetworkClient("localhost", "localhost");
+        network = new NetworkClient("localhost:4050", "localhost:4050");
 
 
     }
@@ -32,35 +32,37 @@ public class NetworkClientTest {
 
     @Test
     public void testAddressesOfMoveServerZero() {
-        testResults(network.player0Address, "localhost");
+        testResults("localhost",network.player0Address);
     }
     @Test
     public void testAddressesOfMoveServerOne() {
-        testResults(network.player1Address, "localhost");
+        testResults("localhost",network.player1Address);
     }
     @Test
     public void testSynchroniztionWithPlayers() throws UnknownHostException, IOException {
         network.syncWithPlayers();
-        testResults(network.fromPlayer, "HI");
+        testResults("QUORIDOR",network.fromPlayer);
     }
 
     @Test
     public void getMoveFromPlayerZero() {
-        String expectedMove = "MOVE! 0 M 1 1 1 1";
-        testResults(network.getMove(1), expectedMove);
+        String expectedMove = "MOVE 0 M 1 1 1 1";
+        testResults(expectedMove, network.getMove(1));
     }
     @Test
     public void getMoveFromPlayerOne() {
-        String expectedMove = "MOVE! 1 M 1 1 1 1";
-        testResults(network.getMove(2), expectedMove);
+        String expectedMove = "MOVE 1 M 1 1 1 1";
+        testResults( expectedMove, network.getMove(2));
     }
 
     @Test
     public void kickPlayer1AndGetMoveFromPlayer0() {
         network.removePlayer(1);
-        String expectedMove = "MOVE! 0 M 1 1 1 1";
-        testResults(network.getMove(1), expectedMove);
+        String expectedMove = "MOVE 0 M 1 1 1 1";
+        testResults(expectedMove,network.getMove(1)) ;
     }
+    
+
     
     private void testResults(String actual, String expected){
         assertEquals(actual, expected);
