@@ -90,6 +90,7 @@ public class AiTest {
 			placement[1] = 2;
 			AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
+			System.out.println(given);
 			Assert.assertTrue(given == 21);
 		}
 		
@@ -112,7 +113,7 @@ public class AiTest {
 		}
 		
 		//Tests the board value after a wall is placed
-		/*Wall decrements in the gui. This test is invalid
+		/*
 		@Test
 		public void boardMoveValueTestWall(){
 			int given;
@@ -120,12 +121,12 @@ public class AiTest {
 			given = AIboard.boardValue(1, 2, b);
 			int fix;
 			fix = AIboard.boardValue(2, 1, b);
-			System.out.println("fix" + fix);
+			
 			Assert.assertTrue(given == 18);
 		}
 		*/
 		//Tests the board value after a move is taken and a wall is placed
-		/*Wall decrements in the gui, this test is invalid
+		/*
 		@Test
 		public void boardMoveValueTestWall2(){
 			int given;
@@ -181,10 +182,9 @@ public class AiTest {
 		@Test
 		public void wallPlacementSearchTest(){
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = AIboard.wallPlacementSearch(b, 1);
+			testMoves = AIboard.wallPlacementSearch(b);
 			int given;
 			given =AIboard.boardValue(1, 2, b);
-			System.out.println(given);
 			int sizeArray = testMoves.size();
 			Assert.assertTrue(sizeArray==128);
 			
@@ -192,9 +192,9 @@ public class AiTest {
 		
 		@Test
 		public void placeWallTest(){
-			AIboard.placeWall(1);
+			AIboard.placeWall();
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = AIboard.wallPlacementSearch(b,1);
+			testMoves = AIboard.wallPlacementSearch(b);
 			int sizeArray = testMoves.size();
 			int given;
 			given = AIboard.boardValue(1, 1, b);
