@@ -79,7 +79,7 @@ public class AI{
 	// Returns: number of moves it will take the enemy to win minus the number of moves it will take the player to win
 	public int boardValue(int turn, int enemy, Board b){
 		if(b.haveWon())
-			return 100;
+			return 200;
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
 		int walls = 2*b.playerWalls[turn-1];

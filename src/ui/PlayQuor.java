@@ -2,6 +2,7 @@ package src.ui;
 
 import java.util.Scanner;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import src.network.NetworkClient;
@@ -77,11 +78,31 @@ public class PlayQuor{
 	            }
 	            else if (n == 2)
 	                System.exit(0);
-			
+	            /*
+			if(!networkGame && numPlay == 2){
+				options = {"Play Against AI", "Four player game","Quit"};
+				JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+	                    "Play local or remote opponent?","Network Game?",
+	                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+			}
+			*/
+	            if(!networkGame) 
+	            {
+	            	for (int i = 1; i <= numPlay; i++)
+	            	{
+	            		String[] HumanOrAi = {"Human","AI"};
+	            		n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
+	            				"Player " + i + ": Human or AI?", 
+	            				"YOU MUST CHOOSE",JOptionPane.YES_NO_OPTION,
+	            				JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
+	            		isAI[i-1] = n; 
+	            	}
+	            }	            
+	            
 			// Create/assign AI to a number of Players
-			isAI[1] = 1;
+			/*isAI[1] = 1;
 			isAI[2] = 1;
-			isAI[3] = 1;		
+			isAI[3] = 1;*/		
 			
 			// create a new back end board with desired number of players
 			Board b = new Board(numPlay);
