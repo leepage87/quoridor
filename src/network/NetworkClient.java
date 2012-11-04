@@ -61,7 +61,7 @@ public class NetworkClient {
     public NetworkClient(String player1Address){
         //break playerAddresses into hostnames and port
         player1Port = getPort(player1Address);      
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
         numberOfPlayers = 2;
     }
@@ -73,10 +73,10 @@ public class NetworkClient {
     public NetworkClient(String player0Address, String player1Address){
         //break playerAddresses into host names and port
         player0Port = getPort(player0Address);      
-        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
 
         player1Port = getPort(player1Address);  
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
 
         numberOfPlayers = 2;
 
@@ -90,13 +90,13 @@ public class NetworkClient {
         //break playerAddresses into hostnames and port
           
         player1Port = getPort(player1Address);  
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
         player2Port = getPort(player2Address);
-        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
         
         player3Port = getPort(player1Address);      
-        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
         
         numberOfPlayers = 4;
     }
@@ -109,16 +109,16 @@ public class NetworkClient {
         
         String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
         player0Port = getPort(player0Address);       
-        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
         
         player1Port = getPort(player1Address); ;   
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
         player2Port = getPort(player2Address);       
-        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
         
         player3Port = getPort(player3Address);        
-        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
         numberOfPlayers = 4;
 
     }//TODO: make player move
@@ -169,7 +169,7 @@ public class NetworkClient {
         for (int i = 0; i < 2; i++){
             fromPlayer = networkInputMap.get(i).nextLine();
 
-            if(!fromPlayer.equals("QUORIDOR")){
+            if(!fromPlayer.contains("READY")){
                 System.err.println("NetworkClient> Unexpected response from Player " + i);
                 System.exit(1);
             }else{ //this else can be done away with
@@ -180,7 +180,7 @@ public class NetworkClient {
             for (int i = 2; i < 4; i++){
                 fromPlayer = networkInputMap.get(i).nextLine();
 
-                if(!fromPlayer.equals("QUORIDOR")){
+                if(!fromPlayer.contains("READY")){
                     System.err.println("NetworkClient> Unexpected response from Player " + i);
                     System.exit(1);
                 }else{ //this else can be done away with

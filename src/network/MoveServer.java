@@ -74,7 +74,7 @@ public class MoveServer extends Thread {
                   //opCode = 'W';
                     String nextMove;
                     //if player move
-                    nextMove = "MOVE " + playerNo + " " + opCode + " ("+rowOne+", "
+                    nextMove = "MOVE "+ opCode + " ("+rowOne+", "
                             +colOne+") " + "("+rowTwo+", "+colTwo+")";
                     
                     
