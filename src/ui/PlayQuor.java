@@ -80,8 +80,8 @@ public class PlayQuor{
 			
 			// Create/assign AI to a number of Players
 			isAI[1] = 1;
-			isAI[2] = 0;
-			isAI[3] = 0;		
+			isAI[2] = 1;
+			isAI[3] = 1;		
 			
 			// create a new back end board with desired number of players
 			Board b = new Board(numPlay);

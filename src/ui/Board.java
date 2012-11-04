@@ -237,37 +237,39 @@ public class Board {
 	// Parameters: a location on the board, the player, and a list of locations already searched
 	// Returns: if it is possible for the Player to move to the given location
 	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
-		if(pieceCollision('N', place)){
+		int col = place[0];
+		int row = place[1];
+		if(pieceCollision('N', place) && grid[col][row-1] != 5){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]-2;
+			newPlace[0] = col;
+			newPlace[1] = row-2;
 			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
-		}else if(pieceCollision('S', place)){
+		}else if(pieceCollision('S', place) && grid[col][row+1] != 5){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0];
-			newPlace[1] = place[1]+2;
+			newPlace[0] = col;
+			newPlace[1] = row+2;
 			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
-		}else if(pieceCollision('E', place)){
+		}else if(pieceCollision('E', place) && grid[col+1][row] != 5){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]+2;
-			newPlace[1] = place[1];
+			newPlace[0] = col+2;
+			newPlace[1] = row;
 			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
 				return aiCanMove(newPlace, Player, newHistory);
 			}
-		}else if(pieceCollision('W', place)){
+		}else if(pieceCollision('W', place) && grid[col-1][row] != 5){
 			int[] newPlace = new int[2];
-			newPlace[0] = place[0]-2;
-			newPlace[1] = place[1];
+			newPlace[0] = col-2;
+			newPlace[1] = row;
 			if(!hasBeen(history, newPlace)){
 				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
 				newHistory.add(place);
