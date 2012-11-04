@@ -1,6 +1,10 @@
 package src.ui;
 
+import java.util.Scanner;
+
 import javax.swing.JOptionPane;
+
+import src.network.NetworkClient;
 
 /**
  * Tim, Lee, Sara, Jonathan
@@ -19,7 +23,7 @@ public class PlayQuor{
 	public static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
 									// or 2 (new game started with File -> New Game)
     public static int[] isAI = new int[4];
-	
+    private static boolean networkGame = false;
 	/*
 	 * The central game driver. Gets number of players, creates a new backend Board
 	 * and GUI, and loops until player wins or starts a new game.
@@ -28,20 +32,51 @@ public class PlayQuor{
 		
 		GameBoardWithButtons gui = null; // instantiates GUI
 
-		while (true){
-			/* Gets user's preference for number of players and sets numPlay to reflect that. 
-			 * Also gives player opportunity to quit before starting a new game.*/
-			String[] options = {"Two player game", "Four player game","Never mind, I'm done playing today."};
-			int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
-					"How many players want to play today?","Welcome to Quoridor!",
-					JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-			int numPlay = 0;
-			if (n == 0)
-				numPlay = 2;
-			else if (n == 1)
-				numPlay = 4;
-			else if (n == 2)
-				System.exit(0);
+		 while (true){
+	            /* Gets user's preference for number of players and sets numPlay to reflect that. 
+	             * Also gives player opportunity to quit before starting a new game.*/
+	            String[] options = {"Two player game", "Four player game","Quit"};
+	            int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+	                    "How many players want to play today?","Welcome to Quoridor!",
+	                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+	            int numPlay = 0;
+	            if (n == 0)
+	                numPlay = 2;
+	            else if (n == 1)
+	                numPlay = 4;
+	            else if (n == 2)
+	                System.exit(0);
+
+
+	            //get network information, initiate network
+	            options [0] = "Local Game";
+	            options [1] = "Network Game";
+	            options [2] = "Quit";
+	            n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+	                    "Play local or remote opponent?","Network Game?",
+	                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+
+	            if (n == 1 && numPlay == 2){
+	                String address = JOptionPane.showInputDialog("Input player address:", "ex. hostname:port");
+	                if (address != null){
+	                    NetworkClient network = new NetworkClient(address);
+	                    networkGame = true;
+	                }
+	            }
+	            else if (n == 1 && numPlay == 4 ){
+
+	                String address = JOptionPane.showInputDialog("Input three player addresses separated by spaces:", "ex. hostname0:port hostname1:port hostname2:port");
+	                if (address != null){
+	                    Scanner addressScanner = new Scanner(address);
+	                    String player1Address = addressScanner.next(); 
+	                    String player2Address = addressScanner.next(); 
+	                    String player3Address = addressScanner.next(); 
+	                    NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
+	                    networkGame = true;
+	                }
+	            }
+	            else if (n == 2)
+	                System.exit(0);
 			
 			// Create/assign AI to a number of Players
 			isAI[1] = 1;
