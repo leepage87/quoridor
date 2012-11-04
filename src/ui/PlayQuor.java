@@ -115,7 +115,33 @@ public class PlayQuor{
 					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
 				if(isAI[turn-1] == 1){
 					AI a = new AI(b);
-					b = a.aiMove(turn);				
+					int[] startPlace = b.playerPlace(turn);
+					Board tempB = a.aiMove(turn);
+					int[] endPlace = tempB.playerPlace(turn);
+					if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
+						boolean getOut = false;
+						for(int col = 0; col < 17; col++){
+							for(int row = 0; row < 17; row++){		
+								if(b.grid[col][row] != tempB.grid[col][row]){
+									int[] aiWall = new int[3];
+									aiWall[0] = col/2;
+									aiWall[1] = row/2;
+									if(tempB.grid[col][row+1]==5)
+										aiWall[2] = 1;
+									placeWallPQ(b, aiWall);
+									getOut = true;
+								}
+								if(getOut)
+									break;
+							}
+							if(getOut)
+								break;
+						}
+					}else{ // Move, not Wall
+						BoardButton.map.get("B"+endPlace[0]/2+endPlace[1]/2).setIcon(Board.map.get(turn));
+						BoardButton.map.get("B"+startPlace[0]/2+startPlace[1]/2).setIcon(Board.map.get(0));
+						b = tempB;
+					}
 				}else {
 					boolean fairMove = false;
 					while(!fairMove)
@@ -257,6 +283,7 @@ public class PlayQuor{
 	 * an int determining if it is horizontal or vertical	
 	 * PostCondition: the wall is placed, if it was legal*/
 	public static boolean placeWallPQ(Board b, int[] theWall){
+		System.out.println(theWall[0] + " " + theWall[1] + " " + theWall[2]);
 		String wallName;
 		//for(int i = 0; i < theWall.length; i++) (does not seem to do anything useful)
 		

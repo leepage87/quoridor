@@ -114,6 +114,7 @@ public class Board {
 				
 		/* Adds the icons from GBWB to the map. Allows direct translation
 		 * of turn number to icon. */
+		map.put(0, GameBoardWithButtons.defaultIcon);
 		map.put(1, GameBoardWithButtons.playerOne);
 		map.put(2, GameBoardWithButtons.playerTwo);
 		map.put(3, GameBoardWithButtons.playerThree);
