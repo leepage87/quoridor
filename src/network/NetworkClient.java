@@ -60,11 +60,10 @@ public class NetworkClient {
      **/
     public NetworkClient(String player1Address){
         //break playerAddresses into hostnames and port
-        String tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
-        player1Port = Integer.parseInt(tempPort);       
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        player1Port = getPort(player1Address);      
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
-        this.numberOfPlayers = 2;
+        numberOfPlayers = 2;
     }
 
     /**
@@ -72,16 +71,14 @@ public class NetworkClient {
      * 
      **/
     public NetworkClient(String player0Address, String player1Address){
-        //break playerAddresses into hostnames and port
-        String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
-        player0Port = Integer.parseInt(tempPort);       
-        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
-        
-        tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
-        player1Port = Integer.parseInt(tempPort);   
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        //break playerAddresses into host names and port
+        player0Port = getPort(player0Address);      
+        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
 
-        this.numberOfPlayers = 2;
+        player1Port = getPort(player1Address);  
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+
+        numberOfPlayers = 2;
 
     }
 
@@ -92,20 +89,16 @@ public class NetworkClient {
     public NetworkClient(String player1Address, String player2Address, String player3Address){
         //break playerAddresses into hostnames and port
           
-        String tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
-        player1Port = Integer.parseInt(tempPort);   
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        player1Port = getPort(player1Address);  
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
-        tempPort = player2Address.substring(player2Address.indexOf(':')+1, player2Address.length());
-        player2Port = Integer.parseInt(tempPort);       
-        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        player2Port = getPort(player2Address);
+        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
         
-        tempPort = player3Address.substring(player3Address.indexOf(':')+1, player3Address.length());
-        player3Port = Integer.parseInt(tempPort);       
-        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        player3Port = getPort(player1Address);      
+        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
         
-        
-        this.numberOfPlayers = 4;
+        numberOfPlayers = 4;
     }
     /**
      * Creates a NetworkClient object for four players
@@ -115,21 +108,18 @@ public class NetworkClient {
         //break playerAddresses into hostnames and port
         
         String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
-        player0Port = Integer.parseInt(tempPort);       
-        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        player0Port = getPort(player0Address);       
+        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
         
-        tempPort = player1Address.substring(player1Address.indexOf(':')+1, player1Address.length());
-        player1Port = Integer.parseInt(tempPort);   
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        player1Port = getPort(player1Address); ;   
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
         
-        tempPort = player2Address.substring(player2Address.indexOf(':')+1, player2Address.length());
-        player2Port = Integer.parseInt(tempPort);       
-        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        player2Port = getPort(player2Address);       
+        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
         
-        tempPort = player3Address.substring(player3Address.indexOf(':')+1, player3Address.length());
-        player3Port = Integer.parseInt(tempPort);       
-        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
-        this.numberOfPlayers = 4;
+        player3Port = getPort(player3Address);        
+        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        numberOfPlayers = 4;
 
     }//TODO: make player move
 
@@ -167,13 +157,13 @@ public class NetworkClient {
 
 
         if (numberOfPlayers == 2){
-            outToPlayer0.println("QUORIDOR 0 2");
-            outToPlayer1.println("QUORIDOR 1 2");
+            outToPlayer0.println("QUORIDOR 2 0");
+            outToPlayer1.println("QUORIDOR 2 1");
         }else{//NumberOfPlayers == 4
-            outToPlayer0.println("QUORIDOR 0 4");
-            outToPlayer1.println("QUORIDOR 1 4");
-            outToPlayer2.println("QUORIDOR 2 4");
-            outToPlayer3.println("QUORIDOR 3 4");
+            outToPlayer0.println("QUORIDOR 4 0");
+            outToPlayer1.println("QUORIDOR 4 1");
+            outToPlayer2.println("QUORIDOR 4 2");
+            outToPlayer3.println("QUORIDOR 4 3");
         }
 
         for (int i = 0; i < 2; i++){
@@ -262,6 +252,10 @@ public class NetworkClient {
             player2Socket.close();
             player3Socket.close();
         }
+    }
+    
+    public int getPort(String address){
+        return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
     }
 
 }
