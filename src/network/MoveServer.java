@@ -71,6 +71,7 @@ public class MoveServer extends Thread {
                     int [] endLocation = ai.aiMove(playerNo).playerPlace(playerNo);
 
                     //TODO: ACCOUNT FOR AI MAKING WALL PLACEMENTS
+                    //tim is making a method to do this
 
                     rowOne = startLocation[1];
                     colOne = startLocation[0];
@@ -111,7 +112,7 @@ public class MoveServer extends Thread {
                             connection.close();
                             System.exit(0);
                         }else{//someone else was kicked
-                            //TODO: kick the other player from the game
+                            kick((int)fromGameClient.charAt(8), b);
                         }
                     }//end if its a move request
 
@@ -122,16 +123,18 @@ public class MoveServer extends Thread {
 
                 }else if(fromGameClient.contains("REMOVED")){
                     //a different player has been removed
+                    kick((int)fromGameClient.charAt(8), b);
                 }
                 //TODO: change GAME OVER to whatever protocol is
 
                 //change while REMOVE! to involve a player number or something, clarify protocol
-            }while (!fromGameClient.contains("GAME OVER") || !fromGameClient.contains("REMOVE!"));
+            }while (!fromGameClient.contains("WINNER"));
 
 
             //TODO: display losing or winning message
-            //close the connection
+            System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
             connection.close();
+            System.exit(0);
 
 
 
@@ -146,14 +149,14 @@ public class MoveServer extends Thread {
      */
     private static Board move(String frago, Board moveBoard){
         //fragmentary order: MOVED P M (R, C) (R, C)
-        int[] move = {frago.charAt(21), frago.charAt(18)};
-        moveBoard.quickMove(move, frago.charAt(6));
+        int[] move = {frago.charAt(21)*2, frago.charAt(18)*2};
+        moveBoard.quickMove(move, ((int)frago.charAt(6))+1);
         return moveBoard;
     }
     
     private static void kick(int player, Board kickBoard){
-        int[] location = kickBoard.playerPlace(player);
-        kickBoard.grid[location[0]][location[1]] = 0;
+        int[] location = kickBoard.playerPlace(player+1);
+        kickBoard.grid[location[0]*2][location[1]*2] = 0;
     }
 
     public static void main(String [] args) throws Exception {
