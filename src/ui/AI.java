@@ -34,6 +34,12 @@ public class AI{
 			return move;
 	}
 	
+	
+	public Board aiMoveB(int player, Board b){ 
+		
+		return b;
+	}
+	
 	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
 	// Returns: the int of the worst possible outcome for board value
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
@@ -52,7 +58,7 @@ public class AI{
 			return worst;
 		}
 		for(int i = 0; i < allMoves.size(); i++){
-			int next = aiMoveB(enemy, player, b, numRounds-1);
+			int next = aiMoveB(enemy, player, b, numRounds-1); // What if several enemies?
 			if(next < worst)
 				worst = next;
 			if(next <= bigBeta)
