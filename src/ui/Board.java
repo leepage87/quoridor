@@ -29,6 +29,7 @@ public class Board {
 			NUMPLAY = 2;
 		for(int i = 0; i < NUMPLAY; i++)
 			playerWalls[i] = 20/NUMPLAY;
+		mapIcons();
 	}
 
 	// Parameters: a board
@@ -43,6 +44,7 @@ public class Board {
 		this.grid = tempGrid;
 		this.NUMPLAY = b.NUMPLAY;
 		this.playerWalls = b.playerWalls;
+		mapIcons();
 	}
 
 	// Parameters: the number of players (2 or 4)
@@ -111,14 +113,6 @@ public class Board {
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
-				
-		/* Adds the icons from GBWB to the map. Allows direct translation
-		 * of turn number to icon. */
-		map.put(0, GameBoardWithButtons.defaultIcon);
-		map.put(1, GameBoardWithButtons.playerOne);
-		map.put(2, GameBoardWithButtons.playerTwo);
-		map.put(3, GameBoardWithButtons.playerThree);
-		map.put(4, GameBoardWithButtons.playerFour);
 		
 		/* For each direction, updates the grid and GUI appropriately. 
 		 * Move legality tested before this method is called. */
@@ -539,6 +533,16 @@ public class Board {
 				return true;
 		}
 		return false;
+	}
+	
+	public void mapIcons(){
+		/* Adds the icons from GBWB to the map. Allows direct translation
+		 * of turn number to icon. */
+		map.put(0, GameBoardWithButtons.defaultIcon);
+		map.put(1, GameBoardWithButtons.playerOne);
+		map.put(2, GameBoardWithButtons.playerTwo);
+		map.put(3, GameBoardWithButtons.playerThree);
+		map.put(4, GameBoardWithButtons.playerFour);
 	}
 
 	//Testing purposes only

@@ -60,8 +60,7 @@ public class BoardButton extends JButton implements ActionListener {
 	}*/
 
 	public static void setPlayerPresent(boolean setting, int col, int row){
-		map.get("B"+col/2+row/2).playerPresent = setting;
-		map.get("B"+col/2+row/2).setIcon(GameBoardWithButtons.defaultIcon);
+		map.get("B"+col+row).playerPresent = setting;
 	}
 
 	/* Creates each button. Sets it to not contain a player. Sets default icon.

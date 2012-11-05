@@ -6,13 +6,15 @@ import src.ui.PlayQuor;
 
 public class AI{
 
-	
-	   final int WALL = 5;
 	   int[] move = new int[5];
 	   Board AIboard;
+	   int bigAlpha; 
+	   int bigBeta;
 
 	 public AI(Board b){
          AIboard = b;
+         bigAlpha = 201;
+         bigBeta = -201;
 	 }
 
 	public void AIMove(int player){
@@ -30,6 +32,52 @@ public class AI{
 			if(!AIboard.haveWon())
 				move = AIboard.bestMove(player);
 			return move;
+	}
+	
+	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
+	// Returns: the int of the worst possible outcome for board value
+	public int aiMoveB(int player, int enemy, Board b, int numRounds){
+		ArrayList<Board> allMoves = findMovesB(player, enemy, b);
+		int worst = 200;
+		if(numRounds == 0){
+			for(int i = 0; i < allMoves.size(); i++){
+				int value = boardValue(player, enemy, allMoves.get(i));
+				if(value < worst)
+					worst = value;
+				if(value <= bigBeta)
+					return value;
+			}
+			if(bigBeta == -201)
+				bigBeta = worst;
+			return worst;
+		}
+		for(int i = 0; i < allMoves.size(); i++){
+			int next = aiMoveB(enemy, player, b, numRounds-1);
+			if(next < worst)
+				worst = next;
+			if(next <= bigBeta)
+				return worst;
+		}
+		return worst;
+	}
+	
+	// Parameters: the player, the enemy, and the current board
+	// Returns: an Array of all possible moves
+	public ArrayList<Board> findMovesB(int turn, int enemy, Board b){
+		ArrayList<Board> posMoves = new ArrayList<Board>();
+		if(b.playerWalls[turn-1] != 0)
+			posMoves = wallPlacementSearch(b);
+		for(int i = 0; i < 17; i=i+2){
+				for(int j =0; j < 17; j=j+2){
+					int[] destination = new int[2];
+					destination[0] = j;
+					destination[1] = i;
+					Board nextStep = eachStep(turn, destination, b);
+					if(nextStep != b)
+						posMoves.add(nextStep);
+				}
+		}
+		return posMoves;
 	}
 	
 	
