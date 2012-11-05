@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import src.ui.AI;
 import src.ui.Board;
 
 
@@ -19,9 +20,10 @@ import src.ui.Board;
 public class MoveServer extends Thread {
     int playerNo;
     int numberOfPlayers;
+    final static int DEFAULT_SERVER_LISTEN_PORT = 4050;//if user doesn't input port
+    public Board b;
     Socket connection;
-    final static int DEFAULT_SERVER_LISTEN_PORT = 4050;//allow user to pick port
-    Board b;
+    AI ai;
 
     public MoveServer(Socket conn) {
         this.connection = conn;
@@ -40,18 +42,19 @@ public class MoveServer extends Thread {
             // Acknowledge connection from gameDisplay
             fromGameClient = inFromClient.nextLine();
             Scanner fromGameClientScanner = new Scanner (fromGameClient);
-            System.out.println("MoveServer> line rec'd from client " + fromGameClient);
+            System.out.println("MoveServer " + playerNo + "> line rec'd from client " + fromGameClient);
 
             if (fromGameClientScanner.next().equals("QUORIDOR")){
-                //"QUORIDOR <NumberOfPlayers> <PlayerNo>"
+                //"QUORIDOR <NumberOfPlayers> <playerNo>"
                 //get playerNo and NumberOfPlayers
                 numberOfPlayers = fromGameClientScanner.nextInt();
                 playerNo = fromGameClientScanner.nextInt();
-                
+
                 outToClient.println("READY " + playerNo);
 
                 b = new Board(numberOfPlayers);
-                System.out.println("MoveServer> I am player number: " + playerNo + " and there are " + numberOfPlayers + " playing.");
+                ai = new AI (b);
+                System.out.println("MoveServer " + playerNo + "> I am player number: " + playerNo + " and there are " + numberOfPlayers + " playing.");
             }
             else {
                 System.err.println("");
@@ -61,58 +64,64 @@ public class MoveServer extends Thread {
             do {
                 fromGameClient = inFromClient.nextLine();
                 if (fromGameClient.contains("MOVE?")){
-                    System.out.println("MoveServer> Received 'MOVE?' from client, issuing move");
+                    System.out.println("MoveServer " + playerNo + "> Received 'MOVE?' from client, issuing move");
+                    //record start location of player
+                    int[] startLocation = b.playerPlace(playerNo);
+                    //record final location of player
+                    int [] endLocation = ai.aiMove(playerNo).playerPlace(playerNo);
 
-                  //TODO: get a move from AI and break up into rows and cols
-                    rowOne = 1;
-                    colOne = 1;
-                    rowTwo = 1;
-                    colTwo = 1;
-                  //if player move
+                    //TODO: ACCOUNT FOR AI MAKING WALL PLACEMENTS
+
+                    rowOne = startLocation[1];
+                    colOne = startLocation[0];
+                    rowTwo = endLocation[1];
+                    colTwo = endLocation[0];
+                    //if player move
                     opCode = 'M';
-                  //if wall
-                  //opCode = 'W';
+                    //if wall
+                    //opCode = 'W';
                     String nextMove;
                     //if player move
                     nextMove = "MOVE "+ opCode + " ("+rowOne+", "
                             +colOne+") " + "("+rowTwo+", "+colTwo+")";
-                    
-                    
+
+
                     //send move to client
                     outToClient.println(nextMove);
-                    System.out.println("MoveServer> Move sent was: " + nextMove);
+                    System.out.println("MoveServer " + playerNo + "> Move sent was: " + nextMove);
 
                     //get response from client
                     fromGameClient = inFromClient.nextLine();
                     if(fromGameClient.contains("MOVED" + nextMove.substring(6))){
-                        System.out.println("MoveServer> Move has been accepted, making the move now");
-                        if(fromGameClient.charAt(6) == 'M'){
+
+                        System.out.println("MoveServer " + playerNo + "> Move has been accepted, making the move now");
+                        if(fromGameClient.charAt(8) == 'M'){
+
                             //move the player
+                            b = move(fromGameClient, b);
                         }else{//its a wall placement
                             //place the wall
-                            
+
                             //b.placeWallBoard();
                         }
+
                     }else if (fromGameClient.equals("REMOVED")){
                         if(playerNo == ((int)fromGameClient.charAt(8))){
-                        System.out.println("MoveServer> Move was illegal, you've been kicked out of game (Player " + (playerNo+1) +")" );
-                        //connection.close();
+                            System.out.println("MoveServer " + playerNo + "> Move was illegal, you've been kicked out of game (Player " + (playerNo+1) +")" );
+                            connection.close();
+                            System.exit(0);
                         }else{//someone else was kicked
                             //TODO: kick the other player from the game
                         }
                     }//end if its a move request
-                    
-                //server telling you to move a piece    
+
+                    //server telling you to move a different player's piece    
                 }else if (fromGameClient.contains("MOVED")){
-                    //MOVED M (0,0) (0,0)
-                    opCode = fromGameClient.charAt(6);
-                    rowOne = fromGameClient.charAt(9);
-                    colOne = fromGameClient.charAt(11);
-                    rowTwo = fromGameClient.charAt(15);
-                    colTwo = fromGameClient.charAt(17);
                     //move the piece
-                }else{
-                    //anything else or game over or something
+                    b = move(fromGameClient, b);
+
+                }else if(fromGameClient.contains("REMOVED")){
+                    //a different player has been removed
                 }
                 //TODO: change GAME OVER to whatever protocol is
 
@@ -129,6 +138,24 @@ public class MoveServer extends Thread {
         } catch (Exception e) {
         }
     }
+    /**
+     * Moves a player after receiving a MOVED line from the client
+     * @param order - the line received from the client
+     * @param moveBoard - the board's current status
+     * @return moveBooard - returns an updated board with the new move
+     */
+    private static Board move(String frago, Board moveBoard){
+        //fragmentary order: MOVED P M (R, C) (R, C)
+        int[] move = {frago.charAt(21), frago.charAt(18)};
+        moveBoard.quickMove(move, frago.charAt(6));
+        return moveBoard;
+    }
+    
+    private static void kick(int player, Board kickBoard){
+        int[] location = kickBoard.playerPlace(player);
+        kickBoard.grid[location[0]][location[1]] = 0;
+    }
+
     public static void main(String [] args) throws Exception {
         ServerSocket welcomeSocket;
         if(args.length == 0){

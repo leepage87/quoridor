@@ -15,7 +15,7 @@ public class Board {
 	final int NUMPLAY; // number of players
 	int[] playerWalls = new int[4]; // tracks players per wall
 	final int WALL = 5; // how a wall is denoted on the grid
-	int[][] grid; // the board array
+	public int[][] grid; // the board array
 	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
 
 	// Parameters: the number of players (2 or 4)
