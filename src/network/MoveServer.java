@@ -67,9 +67,10 @@ public class MoveServer extends Thread {
                     System.out.println("MoveServer " + playerNo + "> Received 'MOVE?' from client, issuing move");
                     //record start location of player
                     int[] startLocation = b.playerPlace(playerNo);
+                    System.out.println("Player " + playerNo +" start location: " + startLocation);
                     //record final location of player
                     int [] endLocation = ai.aiMove(playerNo).playerPlace(playerNo);
-
+                    System.out.println("Player " + playerNo +" moved to: " + startLocation);
                     //TODO: ACCOUNT FOR AI MAKING WALL PLACEMENTS
                     //tim is making a method to do this
 
