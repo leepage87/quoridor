@@ -34,8 +34,36 @@ public class AI{
 			return move;
 	}
 	
+    // Paramters: the player, the board before moving, the board after moving
+    // Returns: where the player placed a wall
+	public int[] aiWall(int player, Board old, Board current){
+		int[] startPlace = old.playerPlace(player);
+		int[] endPlace = current.playerPlace(player);
+		if(startPlace[0]!=endPlace[0] && startPlace[1]!=endPlace[1])
+			return null;
+		int[] aiWall = new int[3];
+		boolean getOut = false;
+		for(int col = 0; col < 17; col++){
+			for(int row = 0; row < 17; row++){		
+				if(old.grid[col][row] != current.grid[col][row]){
+					aiWall[0] = col/2;
+					aiWall[1] = row/2;
+					if(current.grid[col][row+1]==5)
+						aiWall[2] = 1;
+					getOut = true;
+				}
+				if(getOut)
+					break;
+			}
+			if(getOut)
+				break;
+		}
+		return aiWall;
+	}
+	
 	
 	public Board aiMoveB(int player, Board b){ 
+		ArrayList<Board> moves = findMovesB(player, b);
 		
 		return b;
 	}
@@ -43,7 +71,7 @@ public class AI{
 	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
 	// Returns: the int of the worst possible outcome for board value
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
-		ArrayList<Board> allMoves = findMovesB(player, enemy, b);
+		ArrayList<Board> allMoves = findMovesB(player, b);
 		int worst = 200;
 		if(numRounds == 0){
 			for(int i = 0; i < allMoves.size(); i++){
@@ -69,7 +97,7 @@ public class AI{
 	
 	// Parameters: the player, the enemy, and the current board
 	// Returns: an Array of all possible moves
-	public ArrayList<Board> findMovesB(int turn, int enemy, Board b){
+	public ArrayList<Board> findMovesB(int turn, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		if(b.playerWalls[turn-1] != 0)
 			posMoves = wallPlacementSearch(b);
