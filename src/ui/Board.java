@@ -15,7 +15,7 @@ public class Board {
 	final int NUMPLAY; // number of players
 	int[] playerWalls = new int[4]; // tracks players per wall
 	final int WALL = 5; // how a wall is denoted on the grid
-	public int[][] grid; // the board array
+	int[][] grid; // the board array
 	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
 
 	// Parameters: the number of players (2 or 4)
@@ -29,6 +29,7 @@ public class Board {
 			NUMPLAY = 2;
 		for(int i = 0; i < NUMPLAY; i++)
 			playerWalls[i] = 20/NUMPLAY;
+		
 		mapIcons();
 	}
 
@@ -45,6 +46,8 @@ public class Board {
 		this.NUMPLAY = b.NUMPLAY;
 		this.playerWalls = b.playerWalls;
 		mapIcons();
+		
+		
 	}
 
 	// Parameters: the number of players (2 or 4)
@@ -106,13 +109,13 @@ public class Board {
 		return location;
 	}
 
-	// Parameters: character to represent the direction moved and an int
-	//    to show which player is moving
 	// PostCondition: the piece is moved if it was possible
 	public void movePieceBoard(char direction, int Player){
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
+				
+
 		
 		/* For each direction, updates the grid and GUI appropriately. 
 		 * Move legality tested before this method is called. */
@@ -534,17 +537,6 @@ public class Board {
 		}
 		return false;
 	}
-	
-	public void mapIcons(){
-		/* Adds the icons from GBWB to the map. Allows direct translation
-		 * of turn number to icon. */
-		map.put(0, GameBoardWithButtons.defaultIcon);
-		map.put(1, GameBoardWithButtons.playerOne);
-		map.put(2, GameBoardWithButtons.playerTwo);
-		map.put(3, GameBoardWithButtons.playerThree);
-		map.put(4, GameBoardWithButtons.playerFour);
-		map.put(5, GameBoardWithButtons.legalMove);
-	}
 
 	//Testing purposes only
 	public void setWall(){
@@ -575,6 +567,16 @@ public class Board {
 
 	public void placeTestWall(){
 		grid[1][9] = 5;
+	}
+	
+	private void mapIcons(){
+		/* Adds the icons from GBWB to the map. Allows direct translation
+		 * of turn number to icon. */
+		map.put(0, GameBoardWithButtons.defaultIcon);
+		map.put(1, GameBoardWithButtons.playerOne);
+		map.put(2, GameBoardWithButtons.playerTwo);
+		map.put(3, GameBoardWithButtons.playerThree);
+		map.put(4, GameBoardWithButtons.playerFour);
 	}
 
 }

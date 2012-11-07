@@ -79,7 +79,7 @@ public class AI{
 		}
 		return moves.get(whichBoard);
 	}
-	
+
 	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
 	// Returns: the board value of the best possible outcome
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
@@ -160,8 +160,9 @@ public class AI{
 	// Returns: the board after making the best possible move
 	public Board findBestMove(int turn, int enemy, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
-		if(b.playerWalls[turn-1] != 0)
+		if(b.playerWalls[turn-1] != 0){
 			posMoves = wallPlacementSearch(b);
+		}
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
 					int[] destination = new int[2];
@@ -170,7 +171,7 @@ public class AI{
 					Board nextStep = eachStep(turn, destination, b);
 					if(nextStep != b)
 						posMoves.add(nextStep);
-			}
+				}
 		}
 		Board finalMove = new Board(posMoves.get(0));
 		int value = boardValue(turn, enemy, posMoves.get(0));
@@ -207,10 +208,10 @@ public class AI{
 	
 	// Parameters: the player and an int representing a direction
 	// Returns: the board after moving the player in the chosen direction, if possible
-	public Board eachStep(int turn, int[] destination, Board b){	
+	public Board eachStep(int turn, int[] destination, Board b){
 		Board temp = new Board(b);
 		if(temp.aiCanMove(destination, turn))
-				temp.quickMove(destination, turn);
+			temp.quickMove(destination, turn);
 		return temp;
 	}
 	
@@ -235,7 +236,8 @@ public class AI{
 					posMoves.add(tempB);
 				}
 			}	
-		}return posMoves;
+		}
+		return posMoves;
 	}
 	//Testing purposes
 	public Board placeWall(){
