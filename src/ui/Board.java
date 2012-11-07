@@ -543,6 +543,7 @@ public class Board {
 		map.put(2, GameBoardWithButtons.playerTwo);
 		map.put(3, GameBoardWithButtons.playerThree);
 		map.put(4, GameBoardWithButtons.playerFour);
+		map.put(5, GameBoardWithButtons.legalMove);
 	}
 
 	//Testing purposes only
