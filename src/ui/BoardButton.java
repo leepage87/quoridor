@@ -72,7 +72,7 @@ public class BoardButton extends JButton implements ActionListener {
 		me = this;
 
 		this.setRolloverEnabled(true);
-		this.setRolloverIcon(GameBoardWithButtons.legalMove);
+		//this.setRolloverIcon(GameBoardWithButtons.legalMove);
 		addActionListener(this);
 	}
 }
