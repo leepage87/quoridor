@@ -10,6 +10,7 @@ public class AI{
 	   Board AIboard;
 	   int bigAlpha; 
 	   int bigBeta;
+	   int truePlayer;
 
 	 public AI(Board b){
          AIboard = b;
@@ -61,38 +62,62 @@ public class AI{
 		return aiWall;
 	}
 	
-	
-	public Board aiMoveB(int player, Board b){ 
-		ArrayList<Board> moves = findMovesB(player, b);
-		
-		return b;
+	// Parameters: the player
+	// Returns: the board after moving
+	public Board aiMoveB(int player){
+		truePlayer = player;
+		ArrayList<Board> moves = findMovesB(player, AIboard);
+		int enemy = findEnemy(player, AIboard);
+		int best = aiMoveB(player, enemy, moves.get(0), 1);
+		int whichBoard = 0;
+		for(int i = 1; i < moves.size(); i++){
+			int value = aiMoveB((player%AIboard.NUMPLAY)+1, player, moves.get(i), 1);
+			if(value > best){
+				best = value;
+				whichBoard = i;
+			}
+		}
+		return moves.get(whichBoard);
 	}
 	
 	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
-	// Returns: the int of the worst possible outcome for board value
+	// Returns: the board value of the best possible outcome
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMovesB(player, b);
-		int worst = 200;
+		int best = -200;
 		if(numRounds == 0){
 			for(int i = 0; i < allMoves.size(); i++){
-				int value = boardValue(player, enemy, allMoves.get(i));
-				if(value < worst)
-					worst = value;
-				if(value <= bigBeta)
-					return value;
+				int realValue = boardValue(player, enemy, allMoves.get(i));
+				int value = realValue;
+				if(player != truePlayer)
+					value *= -1;
+				if(value > best)
+					best = value;
+				if(realValue <= bigBeta)
+					return realValue;
 			}
+			if(player != truePlayer)
+				best *= -1;
 			if(bigBeta == -201)
-				bigBeta = worst;
-			return worst;
+				bigBeta = best;
+			return best;
 		}
 		for(int i = 0; i < allMoves.size(); i++){
-			int next = aiMoveB(enemy, player, b, numRounds-1); // What if several enemies?
-			if(next < worst)
-				worst = next;
-			if(next <= bigBeta)
-				return worst;
+			int realValue;
+			if((player%AIboard.NUMPLAY)+1==truePlayer){
+				int nextEnemy = findEnemy(truePlayer, AIboard);
+				realValue = aiMoveB(player, nextEnemy, b, numRounds-1);
+			}else
+				realValue = aiMoveB((player%AIboard.NUMPLAY)+1, player, b, numRounds-1);
+			int value = realValue;
+			if(player != truePlayer)
+				value *= -1;
+			if(value > best)
+				best = value;
+			if(realValue <= bigBeta)
+				return realValue;
 		}
-		return worst;
+		return best;
 	}
 	
 	// Parameters: the player, the enemy, and the current board
