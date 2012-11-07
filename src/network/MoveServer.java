@@ -70,12 +70,12 @@ public class MoveServer extends Thread {
                     System.out.println("MoveServer " + playerNo + "> Received 'MOVE?' from client, issuing move");
                     //record start location of player
                     Board tempOldBoard = b;
-                    int[] startLocation = b.playerPlace(playerNo);
+                    int[] startLocation = b.playerPlace(playerNo+1);
                     System.out.println("Player " + playerNo +" start location: " + startLocation[0]/2 + startLocation[1]/2);
                     //record final location of player
-                    Board tempNewBoard = ai.aiMove(playerNo);
+                    Board tempNewBoard = ai.aiMove(playerNo+1);
                     System.out.println("AI has made a move!");
-                    int [] endLocation = tempNewBoard.playerPlace(playerNo);
+                    int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
                     System.out.println("Player " + playerNo +" moved to: " + endLocation[0]/2 + endLocation[1]/2);
                     int[] wallLocation = ai.aiWall(playerNo, tempOldBoard, tempNewBoard);
                     if(wallLocation != null){

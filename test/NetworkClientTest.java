@@ -57,7 +57,7 @@ public class NetworkClientTest {
 
     @Test
     public void kickPlayer1AndGetMoveFromPlayer0() {
-        NetworkClient.removePlayer(1);
+        NetworkClient.removePlayer(2);
         String expectedMove = "MOVE M (1, 1) (1, 1)";
         testResults(expectedMove,NetworkClient.getMove(1)) ;
     }
