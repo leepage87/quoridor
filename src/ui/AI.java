@@ -6,91 +6,36 @@ import src.ui.PlayQuor;
 
 public class AI{
 
-	   private int[] move = new int[5];
-	   private Board AIboard;
-	   private int bigAlpha; 
-	   private int bigBeta;
-	   private int truePlayer;
-	   private int[] place;
+	   int[] move = new int[5];
+	   Board AIboard;
+	   int bigAlpha; 
+	   int bigBeta;
+	   int truePlayer;
 
-	 //Parameters: the board
-	//Creates an AI object, and sets the values to bigAlpha and bigBeta
 	 public AI(Board b){
          AIboard = b;
          bigAlpha = 201;
          bigBeta = -201;
 	 }
 
-	//public void AIMove(int player){
-	 //    moves(currentLoc(player), player);
-		// }
+	public void AIMove(int player){
+	     moves(currentLoc(player), player);
+		 }
 	
-	 public void setMove(int[] mover){
-		 move = mover;
-	 }
-	 
-	 public int[] getMove(){
-		 return move;
-	 }
-	 
-	 public void setBoard(Board b){
-		 AIboard = b;
-	 }
-	 
-	 public Board setBoard(){
-		 return AIboard;
-	 }
-	 
-	 public void setBigAlpha(int alpha){
-		 bigAlpha = alpha;
-	 }
-	 
-	 public int getBigAlpha(){
-		 return bigAlpha;
-	 }
-	 
-	 public void setBigBeta(int beta){
-		 bigBeta = beta;
-	 }
-	 
-	 public int getBigBeta(){
-		 return bigBeta;
-	 }
-	 
-	 public void setTruePlayer(int player){
-		 truePlayer = player;
-	 }
-	 
-	 public int getTruePlayer(){
-		 return truePlayer;
-	 }
-	 
-	 //Parameter: the number of players
-	 //Returns: an int array containing the player's location
-	 public int[] getCurrentLoc(int player){
-		 currentLoc(player);
-		 return place;
-	 }
-	 
-	 //Parameters: the number of players
-	 //Returns: an int array containing the player's location
-	 private int[] currentLoc(int player){
-			place = new int[2];
+	public int[] currentLoc(int player){
+		int[] place = new int[2];
 			place = AIboard.playerPlace(player);
 			return place;
-	 }
+	}
 	
 
-	 //Parameters: an int array containing the player's location and the player number
-	 //Returns: an int array containing the moved places
-	 public int[] moves(int [] place, int player){
+	public int[] moves(int [] place, int player){
 			if(!AIboard.haveWon())
 				move = AIboard.bestMove(player);
-			setMove(move);
 			return move;
-	 }
+	}
 	
-    // Parameters: the player, the board before moving, the board after moving
+    // Paramters: the player, the board before moving, the board after moving
     // Returns: where the player placed a wall
 	public int[] aiWall(int player, Board old, Board current){
 		int[] startPlace = old.playerPlace(player);
@@ -134,7 +79,7 @@ public class AI{
 		}
 		return moves.get(whichBoard);
 	}
-
+	
 	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
 	// Returns: the board value of the best possible outcome
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
@@ -215,9 +160,8 @@ public class AI{
 	// Returns: the board after making the best possible move
 	public Board findBestMove(int turn, int enemy, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
-		if(b.playerWalls[turn-1] != 0){
+		if(b.playerWalls[turn-1] != 0)
 			posMoves = wallPlacementSearch(b);
-		}
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
 					int[] destination = new int[2];
@@ -226,7 +170,7 @@ public class AI{
 					Board nextStep = eachStep(turn, destination, b);
 					if(nextStep != b)
 						posMoves.add(nextStep);
-				}
+			}
 		}
 		Board finalMove = new Board(posMoves.get(0));
 		int value = boardValue(turn, enemy, posMoves.get(0));
@@ -263,10 +207,10 @@ public class AI{
 	
 	// Parameters: the player and an int representing a direction
 	// Returns: the board after moving the player in the chosen direction, if possible
-	public Board eachStep(int turn, int[] destination, Board b){
+	public Board eachStep(int turn, int[] destination, Board b){	
 		Board temp = new Board(b);
 		if(temp.aiCanMove(destination, turn))
-			temp.quickMove(destination, turn);
+				temp.quickMove(destination, turn);
 		return temp;
 	}
 	
@@ -291,11 +235,9 @@ public class AI{
 					posMoves.add(tempB);
 				}
 			}	
-		}
-		return posMoves;
+		}return posMoves;
 	}
 	//Testing purposes
-	//Places a wall on the board
 	public Board placeWall(){
         int [] placement = new int[3];
         placement[0] = 1;
@@ -306,10 +248,10 @@ public class AI{
 
 
 	//Testing purposes
-	//Moves the player to a set location
 		public Board move(int [] placement, int player){
-			AIboard.quickMove(placement, 1);
-			return AIboard;
+			Board temp = new Board(AIboard);
+			temp.quickMove(placement, 1);
+			return temp;
 		}	
 }
 	

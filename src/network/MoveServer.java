@@ -78,7 +78,9 @@ public class MoveServer extends Thread {
                     int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
                     System.out.println("Player " + playerNo +" moved to: " + endLocation[0]/2 + endLocation[1]/2);
                     int[] wallLocation = ai.aiWall(playerNo, tempOldBoard, tempNewBoard);
+                    System.out.println("wallLocation: " + wallLocation[0] + wallLocation[1] + wallLocation[2]);
                     if(wallLocation != null){
+                        System.out.println("if(walllocation!=null)");
                         opCode = 'W';
                         //a wall movement has been made
                         //this is the center spot
@@ -95,6 +97,7 @@ public class MoveServer extends Thread {
                             colTwo = wallLocation[0]+1;
                         }
                     }else{//its a player move
+                        System.out.println("inside else//player move");
                         opCode = 'M';
                         rowOne = startLocation[1]/2;
                         colOne = startLocation[0]/2;

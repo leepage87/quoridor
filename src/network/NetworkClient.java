@@ -232,10 +232,10 @@ public class NetworkClient {
         networkOutputMap.get(turn).println("MOVE?");
         fromPlayer = networkInputMap.get(turn).nextLine();
 
-        /*
+        
         System.out.println("NetworkClient> Player " + turn + " has responded with a move: "+
                 fromPlayer);
-         */
+         
         return fromPlayer;
     }
 

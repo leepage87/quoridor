@@ -22,7 +22,7 @@ public class BoardButton extends JButton implements ActionListener {
 	private static boolean playerPresent; // is there a pawn here?
 
 	/* Return the button associated with the name passed. */
-	public static BoardButton getButton (String str) {
+	public BoardButton getButton (String str) {
 		BoardButton returnButton = map.get(str);
 		return returnButton;
 	}
