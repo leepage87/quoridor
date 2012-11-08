@@ -11,10 +11,10 @@ public class PlayQuor{
 	public static String nextMove = "";
 	public static String oldMove = "";
 	public static int turn;
-	public static void main(String[] args) throws InterruptedException{
+	public void main(String[] args) throws InterruptedException{
 		int numPlay = 4; // Number of Players
 		Board b = new Board(numPlay);
-		GameBoardWithButtons gui = new GameBoardWithButtons(b);
+		GameBoardWithButtons gui = new GameBoardWithButtons(b, numPlay);
 		// Create/assign AI to a number of Players
 		boolean won = false;
 		turn = 1;
@@ -26,6 +26,9 @@ public class PlayQuor{
 		}
 	}
 
+	//public boolean getClicked(){
+	//	return clicked;
+	//}
 	public static void takeTurn(Board b, int turn, boolean moveOnly) throws InterruptedException{
 	    /*
 	  Get placeWall/movePiece from Player/AI, in int[] form

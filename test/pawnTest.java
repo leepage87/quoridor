@@ -4,7 +4,7 @@
  * Quoridor Project
  * pawnTest.java - to test the pawn object
  */
-
+/*
 package test;
 
 import static org.junit.Assert.*;
@@ -44,3 +44,4 @@ public class pawnTest {
 	}
 
 }
+*/

@@ -578,5 +578,4 @@ public class Board {
 		map.put(3, GameBoardWithButtons.playerThree);
 		map.put(4, GameBoardWithButtons.playerFour);
 	}
-
 }
