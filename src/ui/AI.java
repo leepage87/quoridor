@@ -251,9 +251,8 @@ public class AI{
 
 	//Testing purposes
 		public Board move(int [] placement, int player){
-			Board temp = new Board(AIboard);
-			temp.quickMove(placement, 1);
-			return temp;
+			AIboard.quickMove(placement, 1);
+			return AIboard;
 		}	
 }
 	

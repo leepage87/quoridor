@@ -81,10 +81,10 @@ public class PlayQuor{
 	// PostCondition: the player's piece is moved, if it was legal
 	public static void movePiece(Board b, int turn, char direction) throws InterruptedException{
 	    System.out.println("Hey we in PQ.movepiece");
-	    if(canMovePiece(direction, turn)){
+	    if(b.canMovePiece(direction, turn)){
 		System.out.println("pass 1st if");
 		if(!b.pieceCollision(direction, turn)){
-		    b.movePiece(direction, turn);
+		    b.movePieceBoard(direction, turn);
 		}else{
 		    doubleMove(b, turn, direction);
 		}
@@ -97,7 +97,7 @@ public class PlayQuor{
 	// PostCondition: the wall is placed, if it was legal
 	public static void placeWall(Board b, int turn, int[] theWall){
 	    if(b.canPlaceWall(theWall)){
-		b.placeWall(theWall);
+		b.placeWallBoard(theWall);
 	    }else turn--;
 	}
 
@@ -117,8 +117,8 @@ public class PlayQuor{
 		otherPlayer = b.grid[col+1][row];
 	    else otherPlayer = b.grid[col-1][row];
 	    int[] spot = b.playerPlace(otherPlayer);
-	    b.movePiece(direction, turn);
-	    while(grid[spot[0]][spot[1]] == turn){
+	    b.movePieceBoard(direction, turn);
+	    while(b.grid[spot[0]][spot[1]] == turn){
 		takeTurn(b, turn, true);
 	    }
 	    b.grid[spot[0]][spot[1]] = otherPlayer;
