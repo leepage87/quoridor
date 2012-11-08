@@ -46,12 +46,20 @@ public class NetworkClientTest {
 
     @Test
     public void getMoveFromPlayerZero() {
-        String expectedMove = "MOVE M (1, 1) (1, 1)";
-        testResults(expectedMove, NetworkClient.getMove(1));
+        String expectedMove = "MOVE M (0, 4) (1, 4)";
+        
+        String receivedMove = NetworkClient.getMove(1);
+        //accept the move
+        network.broadcastMove("MOVED 0" + expectedMove.substring(4));
+        testResults(expectedMove, receivedMove);
+        
     }
     @Test
     public void getMoveFromPlayerOne() {
-        String expectedMove = "MOVE M (1, 1) (1, 1)";
+        String expectedMove = "MOVE M (8, 4) (7, 4)";
+        String receivedMove = NetworkClient.getMove(2);
+        //accept the move
+        network.broadcastMove("MOVED 1" + expectedMove.substring(4));
         testResults( expectedMove, NetworkClient.getMove(2));
     }
 
