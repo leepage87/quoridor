@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import src.network.NetworkClient;
 
 /**
- * Tim, Lee, Sara, Jonathan
+ * Tim, Lee, Sarah, Jonathan
  * teamOrangeBeard
  * In main method, contains the loop that forms the beginning and end of each game experience.
  * Also has methods that check for legality of play, execute legal plays, ...
@@ -23,10 +23,12 @@ public class PlayQuor{
 	private static int[] pieceHolder = new int[3]; // Used to correctly update GUI during a "double move"
 	public static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
 									// or 2 (new game started with File -> New Game)
+	private static int[] playerWalls;
     public static int[] isAI = new int[4];
     private static boolean networkGame = false;
+    private static int[][] legalMovesArray = new int[9][9]; // used for tracking which squares get the legal move icon
 	/*
-	 * The central game driver. Gets number of players, creates a new backend Board
+	 * The central game driver. Gets number of players, creates a new back end Board
 	 * and GUI, and loops until player wins or starts a new game.
 	 * */
 	public static void main(String[] args) throws InterruptedException{
@@ -108,9 +110,10 @@ public class PlayQuor{
 			Board b = new Board(numPlay);
 			
 			// Give each player the appropriate number of walls
+			playerWalls = new int[numPlay];
 			for(int i = 0; i < numPlay; i++)
-				b.playerWalls[i] = 20/numPlay;
-			
+				playerWalls[i] = 20/numPlay;
+			b.setPlayerWalls(playerWalls);
 			// if GUI is not null, a game has just ended and its data must be thrown out.
 			if (gui != null)
 				gui.dispose();
@@ -126,14 +129,34 @@ public class PlayQuor{
 			
 			// Loop containing each game. If breaker becomes 1 or 2, the game has ended.
 			while(breaker == 0){
-				turn = (turn%numPlay) + 1; // update turn
+				/*Resets the legal move icons to default icons*/
+				for (int i = 0; i < 17; i+=2) 
+					for (int j = 0; j < 17; j+=2) 
+						if (b.grid[i][j] == 0) 
+							BoardButton.getButton("B" + i/2 + j/2).setIcon(GameBoardWithButtons.defaultIcon);
 				
+				/*Resets the legal move array*/
+				for (int i = 0; i < 9; i++)
+					for (int j = 0; j < 9; j++)
+						legalMovesArray[i][j] = 0;
+				
+				turn = (turn%numPlay) + 1; // update turn
+
+				/*If it is a human player's turn, calls method to set legal move array as appropriate*/
+				/*Then reads legal move array and draws icons where a player can legally move*/
+				if (isAI[turn-1] == 0) {
+					setLegalMoves(b.playerPlace(turn), b);
+					for (int i = 0; i < 9; i++)
+						for (int j = 0; j < 9; j++)
+							if (legalMovesArray[i][j] == 1) 
+								BoardButton.getButton("B" + i + j).setIcon(GameBoardWithButtons.legalMove);
+				}
 				// initialize GUI button indicating turn
 				GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
 				
 				// initialize GUI buttons indicating how many walls each player has left
 				for (int i = 0; i < numPlay; i++)
-					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
+					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
 				if(isAI[turn-1] == 1){
 					AI a = new AI(b);
 					int[] startPlace = b.playerPlace(turn);
@@ -176,7 +199,7 @@ public class PlayQuor{
 				// tests win conditions and updates exit variable accordingly
 				if (b.haveWon())
 					breaker = 1;
-				System.out.println(b);
+				//System.out.println(b);
 			}
 			// if somebody won, say so
 			if (breaker == 1)
@@ -185,6 +208,61 @@ public class PlayQuor{
 
 	}	
 	
+
+
+	private static void setLegalMoves(int[] playerPlace, Board b) {
+		int currentColumn = playerPlace[0];
+		int currentRow = playerPlace[1];
+		//west
+		if ((currentColumn != 0) && (b.grid[currentColumn-1][currentRow] !=5)) 
+		{
+			if (b.grid[currentColumn - 2][currentRow] == 0) {
+				legalMovesArray[(currentColumn-2)/2][currentRow/2] = 1;
+			}
+			else if (legalMovesArray[(currentColumn-2)/2][currentRow/2] != 2){
+				legalMovesArray[currentColumn/2][currentRow/2] = 2;
+				int[] temp = {(currentColumn-2),currentRow};
+				setLegalMoves(temp, b);
+			}
+		}
+		//east
+		if ((currentColumn != 16) && (b.grid[currentColumn+1][currentRow] !=5)) 
+		{
+			if (b.grid[currentColumn + 2][currentRow] == 0) {
+				legalMovesArray[(currentColumn+2)/2][currentRow/2] = 1;
+			}
+			else if (legalMovesArray[(currentColumn+2)/2][currentRow/2] != 2){
+				legalMovesArray[currentColumn/2][currentRow/2] = 2;
+				int[] temp = {(currentColumn+2),currentRow};
+				setLegalMoves(temp, b);
+			}
+		}
+		//north
+		if ((currentRow != 0) && (b.grid[currentColumn][currentRow-1] !=5)) 
+		{
+			if (b.grid[currentColumn][currentRow-2] == 0) {
+				legalMovesArray[(currentColumn)/2][(currentRow-2)/2] = 1;
+			}
+			else if (legalMovesArray[(currentColumn)/2][(currentRow-2)/2] != 2){
+				legalMovesArray[currentColumn/2][currentRow/2] = 2;
+				int[] temp = {(currentColumn),currentRow-2};
+				setLegalMoves(temp, b);
+			}
+		}
+		//south
+		if ((currentRow != 16) && (b.grid[currentColumn][currentRow+1] !=5)) 
+		{
+			if (b.grid[currentColumn][currentRow+2] == 0) {
+				legalMovesArray[(currentColumn)/2][(currentRow+2)/2] = 1;
+			}
+			else if (legalMovesArray[(currentColumn)/2][(currentRow+2)/2] != 2){
+				legalMovesArray[currentColumn/2][currentRow/2] = 2;
+				int[] temp = {(currentColumn),currentRow+2};
+				setLegalMoves(temp, b);
+			}
+		}
+	}
+
 
 
 	public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
@@ -306,15 +384,17 @@ public class PlayQuor{
 	 * an int determining if it is horizontal or vertical	
 	 * PostCondition: the wall is placed, if it was legal*/
 	public static boolean placeWallPQ(Board b, int[] theWall){
-		System.out.println(theWall[0] + " " + theWall[1] + " " + theWall[2]);
+		playerWalls = b.getPlayerWalls();
+		//System.out.println(theWall[0] + " " + theWall[1] + " " + theWall[2]);
 		String wallName;
 		//for(int i = 0; i < theWall.length; i++) (does not seem to do anything useful)
 		
 		/* if the player has walls left to play, and the back end says a wall can go here ... */
-		if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall)) 
+		
+		if ((playerWalls[turn-1] > 0) && b.canPlaceWall(theWall)) 
 		{
 			b.placeWallBoard(theWall); // place it with the back end (NOT GUI YET)
-			b.playerWalls[turn-1]--; // decrement player's number of walls
+			playerWalls[turn-1]--; // decrement player's number of walls
 			
 			
 			/* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */

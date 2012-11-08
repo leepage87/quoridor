@@ -11,6 +11,7 @@ public class AI{
 	   int bigAlpha; 
 	   int bigBeta;
 	   int truePlayer;
+	   private int[] playerWalls;
 
 	 public AI(Board b){
          AIboard = b;
@@ -124,7 +125,8 @@ public class AI{
 	// Returns: an Array of all possible moves
 	public ArrayList<Board> findMovesB(int turn, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
-		if(b.playerWalls[turn-1] != 0)
+		playerWalls = b.getPlayerWalls();
+		if(playerWalls[turn-1] != 0)
 			posMoves = wallPlacementSearch(b);
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
@@ -160,7 +162,8 @@ public class AI{
 	// Returns: the board after making the best possible move
 	public Board findBestMove(int turn, int enemy, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
-		if(b.playerWalls[turn-1] != 0)
+		playerWalls = b.getPlayerWalls();
+		if(playerWalls[turn-1] != 0)
 			posMoves = wallPlacementSearch(b);
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
@@ -189,7 +192,8 @@ public class AI{
 			return 200;
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
-		int walls = 2*b.playerWalls[turn-1];
+		playerWalls = b.getPlayerWalls();
+		int walls = 2*playerWalls[turn-1];
 		return enemyMoves-playerMoves+walls;
 	}
 		

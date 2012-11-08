@@ -13,7 +13,7 @@ import javax.swing.Icon;
 public class Board {
 
 	final int NUMPLAY; // number of players
-	int[] playerWalls = new int[4]; // tracks players per wall
+	private int[] playerWalls = new int[4]; // tracks players per wall
 	final int WALL = 5; // how a wall is denoted on the grid
 	public int[][] grid; // the board array
 	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
@@ -32,6 +32,13 @@ public class Board {
 		mapIcons();
 	}
 
+	public void setPlayerWalls(int[] playerWallss){
+		playerWalls = playerWallss;
+	}
+	
+	public int[] getPlayerWalls(){
+		return playerWalls;
+	}
 	// Parameters: a board
 	// Creates: a board object that is a duplicate of the board given
 	public Board(Board b){
