@@ -196,7 +196,6 @@ public class AiTest {
 			int sizeArray = testMoves.size();
 			int given;
 			given = AIboard.boardValue(1, 1, b);
-			System.out.println(given);
 			Assert.assertTrue(sizeArray==124);
 			
 		
