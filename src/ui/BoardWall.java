@@ -9,11 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+
+import src.main.PlayQuor;
+
 import java.util.*;
 /* Creates each wall button. Contains a map from button name to button. */
 public class BoardWall extends JButton implements ActionListener {
 
-	static HashMap<String, BoardWall> map = new HashMap<String, BoardWall>();
+	public static HashMap<String, BoardWall> map = new HashMap<String, BoardWall>();
 
 	private String name;
 	private boolean wallPresent;

@@ -3,20 +3,23 @@
  * Tim, Lee, Sara, Jon
  * teamOrangeBeard
  */
-package src.ui;
+package src.main;
 
 import java.util.*;
 
 import javax.swing.Icon;
+
+import src.ui.BoardButton;
+import src.ui.GameBoardWithButtons;
 /* The back end. Contains a grid for the contents of the game board (both walls and tokens)
  * and methods for testing the board's possibilities. */
 public class Board {
 
-	final int NUMPLAY; // number of players
+	public final int NUMPLAY; // number of players
 	private int[] playerWalls = new int[4]; // tracks players per wall
 	final int WALL = 5; // how a wall is denoted on the grid
 	public int[][] grid; // the board array
-	static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
+	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
 
 	// Parameters: the number of players (2 or 4)
 	// Creates: a board object

@@ -1,4 +1,4 @@
-package src.ui;
+package src.main;
 
 import java.util.Scanner;
 
@@ -6,6 +6,10 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import src.network.NetworkClient;
+import src.ui.AI;
+import src.ui.BoardButton;
+import src.ui.BoardWall;
+import src.ui.GameBoardWithButtons;
 
 /**
  * Tim, Lee, Sarah, Jonathan
@@ -133,7 +137,7 @@ public class PlayQuor{
 				for (int i = 0; i < 17; i+=2) 
 					for (int j = 0; j < 17; j+=2) 
 						if (b.grid[i][j] == 0) 
-							BoardButton.getButton("B" + i/2 + j/2).setIcon(GameBoardWithButtons.defaultIcon);
+							BoardButton.getButton("B" + i/2 + j/2).setIcon(src.ui.GameBoardWithButtons.defaultIcon);
 				
 				/*Resets the legal move array*/
 				for (int i = 0; i < 9; i++)

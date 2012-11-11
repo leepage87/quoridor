@@ -12,7 +12,7 @@ import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSp
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import src.ui.Board;
+import src.main.Board;
 import src.ui.FirstWindow;
 import src.ui.GameBoardWithButtons;
 
