@@ -84,13 +84,11 @@ public class AiTest {
 		//Tests the boardValue method after moving a player to make sure it increments the boardValue
 		@Test
 		public void boardMoveValueTest(){
-			int given;
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			AIboard.move(placement, 1);
-			given = AIboard.boardValue(1, 2, b);
-			System.out.println(given);
+			this.b = AIboard.move(placement, 1);
+			int given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 21);
 		}
 		
@@ -101,13 +99,13 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			AIboard.move(placement, 1);
+			this.b = AIboard.move(placement, 1);
 			placement[0] = 6;
 			placement[1] = 16;
-			AIboard.move(placement, 2);
+			this.b = AIboard.move(placement, 2);
 			placement[0] = 8;
 			placement[1] = 4;
-			AIboard.move(placement, 1);
+			this.b = AIboard.move(placement, 1);
 			given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 22);
 		}
@@ -203,4 +201,18 @@ public class AiTest {
 			
 		
 		}
+		
+		@Test
+		public void aiMoveBTest(){
+			b = new Board(2);
+			AI a = new AI(b);
+			a.truePlayer = 1;
+			a.beta = -201;
+			int best = a.aiMoveB(1, 2, b, 0);
+			Assert.assertTrue(best == 21);
+			best = a.aiMoveB(1, 2, b, 1);
+			Assert.assertTrue(best == 20);
+		}
+		
+		
 }

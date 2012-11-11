@@ -8,15 +8,13 @@ public class AI{
 
 	   int[] move = new int[5];
 	   Board AIboard;
-	   int bigAlpha; 
-	   int bigBeta;
-	   int truePlayer;
+	   public int beta;
+	   public int truePlayer;
 	   private int[] playerWalls;
 
 	 public AI(Board b){
          AIboard = b;
-         bigAlpha = 201;
-         bigBeta = -201;
+         beta = -201;
 	 }
 
 	public void AIMove(int player){
@@ -67,12 +65,13 @@ public class AI{
 	// Returns: the board after moving
 	public Board aiMoveB(int player){
 		truePlayer = player;
+		int rounds = 1;
 		ArrayList<Board> moves = findMovesB(player, AIboard);
 		int enemy = findEnemy(player, AIboard);
-		int best = aiMoveB(player, enemy, moves.get(0), 1);
+		int best = aiMoveB(player, enemy, moves.get(0), rounds);
 		int whichBoard = 0;
 		for(int i = 1; i < moves.size(); i++){
-			int value = aiMoveB((player%AIboard.NUMPLAY)+1, player, moves.get(i), 1);
+			int value = aiMoveB((player%AIboard.NUMPLAY)+1, player, moves.get(i), rounds);
 			if(value > best){
 				best = value;
 				whichBoard = i;
@@ -94,13 +93,13 @@ public class AI{
 					value *= -1;
 				if(value > best)
 					best = value;
-				if(realValue <= bigBeta)
+				if(realValue <= beta)
 					return realValue;
 			}
 			if(player != truePlayer)
 				best *= -1;
-			if(bigBeta == -201)
-				bigBeta = best;
+			if(beta == -201)
+				beta = best;
 			return best;
 		}
 		for(int i = 0; i < allMoves.size(); i++){
@@ -115,7 +114,7 @@ public class AI{
 				value *= -1;
 			if(value > best)
 				best = value;
-			if(realValue <= bigBeta)
+			if(realValue <= beta)
 				return realValue;
 		}
 		return best;
@@ -128,13 +127,13 @@ public class AI{
 		playerWalls = b.getPlayerWalls();
 		if(playerWalls[turn-1] != 0)
 			posMoves = wallPlacementSearch(b);
-		for(int i = 0; i < 17; i=i+2){
-				for(int j =0; j < 17; j=j+2){
+		for(int row = 0; row < 17; row=row+2){
+				for(int col =0; col < 17; col=col+2){
 					int[] destination = new int[2];
-					destination[0] = j;
-					destination[1] = i;
+					destination[0] = col;
+					destination[1] = row;
 					Board nextStep = eachStep(turn, destination, b);
-					if(nextStep != b)
+					if(!nextStep.equals(b))
 						posMoves.add(nextStep);
 				}
 		}
@@ -144,18 +143,10 @@ public class AI{
 	
 	// Parameters: the player whose turn it is
 	// PostCondition: the best move is made
-	public Board aiMove(int turn){ //TODO: look turns ahead. Recursive in findBestMove?
+	public Board aiMove(int turn){
 		Board myMove = new Board(AIboard);
-		Board currentBoard = new Board(AIboard);
-		int tempTurn = turn;
-		for(int i = 0; i < 1; i++){ // # of turns ahead
-			int enemy = findEnemy(turn, currentBoard);
-			currentBoard = findBestMove(turn, enemy, currentBoard);
-			if(i == 0)
-				myMove = currentBoard;
-			tempTurn = (tempTurn%4)+1;
-		}
-		return myMove;
+		int enemy = findEnemy(turn, myMove);
+		return findBestMove(turn, enemy, myMove);
 	}
 	
 	// Parameters: the player whose turn it is and the enemy closest to winning
@@ -171,7 +162,7 @@ public class AI{
 					destination[0] = j;
 					destination[1] = i;
 					Board nextStep = eachStep(turn, destination, b);
-					if(nextStep != b)
+					if(!nextStep.equals(b))
 						posMoves.add(nextStep);
 			}
 		}
