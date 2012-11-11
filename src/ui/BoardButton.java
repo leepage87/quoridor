@@ -9,8 +9,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-
-import src.ui.GameBoardWithButtonsPrototype;
 /* Draws the game tiles. Has a map from Button name to Button.*/
 public class BoardButton extends JButton implements ActionListener {
 

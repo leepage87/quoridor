@@ -17,12 +17,12 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 {
 	
 	/* The icons for the tiles. Used across multiple classes. */
-	static Icon playerOne = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player1.png"));
-	static Icon playerTwo = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player2.png"));
-	static Icon playerThree = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player3.png"));
-	static Icon playerFour = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("player4.png"));
-	static Icon legalMove = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("legalMove.png"));
-	static Icon defaultIcon = new ImageIcon(GameBoardWithButtonsPrototype.class.getResource("default.gif"));
+	static Icon playerOne = new ImageIcon("player1.png");
+	static Icon playerTwo = new ImageIcon("player2.png");
+	static Icon playerThree = new ImageIcon("player3.png");
+	static Icon playerFour = new ImageIcon("player4.png");
+	static Icon legalMove = new ImageIcon("legalMove.png");
+	static Icon defaultIcon = new ImageIcon("default.gif");
 	
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
 	public static JPanel contentPane;
