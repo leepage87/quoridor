@@ -1,8 +1,8 @@
 package src.ui;
 import java.util.ArrayList;
 
-import src.ui.Board;
-import src.ui.PlayQuor;
+import src.main.Board;
+import src.main.PlayQuor;
 
 public class AI{
 

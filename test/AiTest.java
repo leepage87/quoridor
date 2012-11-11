@@ -1,8 +1,8 @@
 package test;
 import java.util.ArrayList;
 
+import src.main.Board;
 import src.ui.AI;
-import src.ui.Board;
 
 import org.junit.Assert;
 import org.junit.Before;

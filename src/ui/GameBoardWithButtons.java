@@ -8,6 +8,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.*;
 
+import src.main.Board;
+import src.main.PlayQuor;
+
 
 @SuppressWarnings("serial")
 
@@ -17,12 +20,12 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 {
 	
 	/* The icons for the tiles. Used across multiple classes. */
-	static Icon playerOne = new ImageIcon("player1.png");
-	static Icon playerTwo = new ImageIcon("player2.png");
-	static Icon playerThree = new ImageIcon("player3.png");
-	static Icon playerFour = new ImageIcon("player4.png");
-	static Icon legalMove = new ImageIcon("legalMove.png");
-	static Icon defaultIcon = new ImageIcon("default.gif");
+	public static Icon playerOne = new ImageIcon("player1.png");
+	public static Icon playerTwo = new ImageIcon("player2.png");
+	public static Icon playerThree = new ImageIcon("player3.png");
+	public static Icon playerFour = new ImageIcon("player4.png");
+	public static Icon legalMove = new ImageIcon("legalMove.png");
+	public static Icon defaultIcon = new ImageIcon("default.gif");
 	
 	public final static String MAIN_WINDOW_TITLE = "Quoridor";
 	public static JPanel contentPane;

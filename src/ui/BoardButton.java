@@ -9,12 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+
+import src.main.PlayQuor;
 /* Draws the game tiles. Has a map from Button name to Button.*/
 public class BoardButton extends JButton implements ActionListener {
 
 	// Map from button name to button itself. Allows other classes
 	// to access a button using its name.
-	static HashMap<String, BoardButton> map = new HashMap<String, BoardButton>();
+	public static HashMap<String, BoardButton> map = new HashMap<String, BoardButton>();
 
 	private String name; // name of each button
 	private static boolean playerPresent; // is there a pawn here?
