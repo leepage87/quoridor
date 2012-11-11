@@ -19,6 +19,7 @@ public class NetworkClientTest {
     @Before
     public void setUp() throws Exception {
         network = new NetworkClient("localhost:4050", "localhost:4050");
+        network.syncWithPlayers();
 
 
     }
@@ -32,16 +33,11 @@ public class NetworkClientTest {
 
     @Test
     public void testAddressesOfMoveServerZero() {
-        testResults("localhost",NetworkClient.player0Address);
+        testResults("localhost",NetworkClient.players[0].playerAddress);
     }
     @Test
     public void testAddressesOfMoveServerOne() {
-        testResults("localhost",NetworkClient.player1Address);
-    }
-    @Test
-    public void testSynchroniztionWithPlayers() throws UnknownHostException, IOException {
-        network.syncWithPlayers();
-        testResults("READY 1",NetworkClient.fromPlayer);
+        testResults("localhost",NetworkClient.players[1].playerAddress);
     }
 
     @Test
@@ -49,6 +45,7 @@ public class NetworkClientTest {
         String expectedMove = "MOVE M (0, 4) (1, 4)";
         
         String receivedMove = NetworkClient.getMove(1);
+        System.out.println("getMoveFromPlayerZero: " + receivedMove);
         //accept the move
         network.broadcastMove("MOVED 0" + expectedMove.substring(4));
         testResults(expectedMove, receivedMove);
@@ -64,7 +61,7 @@ public class NetworkClientTest {
     }
 
     @Test
-    public void kickPlayer1AndGetMoveFromPlayer0() {
+    public void kickPlayer1AndGetMoveFromPlayer0() throws IOException {
         NetworkClient.removePlayer(2);
         String expectedMove = "MOVE M (1, 1) (1, 1)";
         testResults(expectedMove,NetworkClient.getMove(1)) ;
@@ -75,10 +72,10 @@ public class NetworkClientTest {
     private void testResults(String actual, String expected){
         assertEquals(actual, expected);
     }
-
+/*
     @AfterClass
     public static void tearDown() throws IOException{
         network.kill();
     }
-
+*/
 }

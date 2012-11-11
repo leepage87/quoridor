@@ -20,85 +20,72 @@ import src.ui.GameBoardWithButtons;
 
 
 public class NetworkClient {
-    //TODO: GET REAL PORT
+
     final static int REMOTE_PORT = 4050;
-    public static String player0Address;
-    public static String player1Address;
-    public static String player2Address;
-    public static String player3Address;
-    public static int player0Port;
-    public static int player1Port;
-    public static int player2Port;
-    public static int player3Port;
-    static Socket player0Socket;
-    static Socket player1Socket;
-    static Socket player2Socket;
-    static Socket player3Socket;
-    static PrintStream outToPlayer0;
-    static PrintStream outToPlayer1;
-    static PrintStream outToPlayer2;
-    static PrintStream outToPlayer3;
-    static Scanner inFromPlayer0;
-    static Scanner inFromPlayer1;
-    static Scanner inFromPlayer2;
-    static Scanner inFromPlayer3;
-    public static String fromPlayer;
-    static int turn;
-    private static int numberOfPlayers;
-    static HashMap<Integer, Scanner> networkInputMap = new HashMap<Integer, Scanner>();
-    static HashMap<Integer, PrintStream> networkOutputMap = new HashMap<Integer, PrintStream>();
-
-
+    public static NetworkPlayer[] players;
 
     public NetworkClient(){
 
     }
 
     /**
-     * Creates a NetworkClient object for one local human and one network AI
+     * Creates a NetworkClient object for one local human and one network player
      * 
      **/
     public NetworkClient(String player1Address){
         //break playerAddresses into hostnames and port
-        player1Port = getPort(player1Address);      
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        
-        numberOfPlayers = 2;
+        int playerPort = getPort(player1Address);      
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
+        //numberOfPlayers = 2;
+        players = new NetworkPlayer[1];
+        players[0] = one;
     }
 
     /**
-     * Creates a NetworkClient object for two network AI players
+     * Creates a NetworkClient object for two network players
      * 
      **/
     public NetworkClient(String player0Address, String player1Address){
         //break playerAddresses into host names and port
-        player0Port = getPort(player0Address);      
-        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
-
-        player1Port = getPort(player1Address);  
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-
-        numberOfPlayers = 2;
+        int playerPort = getPort(player0Address);      
+        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        NetworkPlayer zero = new NetworkPlayer(player0Address, playerPort);
+        playerPort = getPort(player1Address);  
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
+        //numberOfPlayers = 2;
+        players = new NetworkPlayer[2];
+        players[0] = zero;
+        players[1] = one;
 
     }
 
     /**
-     * Creates a NetworkClient object for one local human and three network AI players
+     * Creates a NetworkClient object for one local human and three network players
      * 
      **/
     public NetworkClient(String player1Address, String player2Address, String player3Address){
         //break playerAddresses into hostnames and port
-          
-        player1Port = getPort(player1Address);  
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        
-        player2Port = getPort(player2Address);
-        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
-        
-        player3Port = getPort(player1Address);      
-        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
-        
-        numberOfPlayers = 4;
+
+        int playerPort = getPort(player1Address);  
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
+
+        playerPort = getPort(player2Address);
+        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        NetworkPlayer two = new NetworkPlayer(player2Address, playerPort);
+
+        playerPort = getPort(player1Address);      
+        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        NetworkPlayer three = new NetworkPlayer(player1Address, playerPort);
+
+        //numberOfPlayers = 4;
+        players = new NetworkPlayer[4];
+        players[0] = null;
+        players[1] = one;
+        players[2] = two;
+        players[3] = three;
     }
     /**
      * Creates a NetworkClient object for four players
@@ -106,20 +93,30 @@ public class NetworkClient {
      **/
     public NetworkClient(String player0Address, String player1Address, String player2Address, String player3Address){
         //break playerAddresses into hostnames and port
-        
+
         String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
-        player0Port = getPort(player0Address);       
-        this.player0Address = player0Address.substring(0, player0Address.indexOf(':'));
-        
-        player1Port = getPort(player1Address); ;   
-        this.player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        
-        player2Port = getPort(player2Address);       
-        this.player2Address = player2Address.substring(0, player2Address.indexOf(':'));
-        
-        player3Port = getPort(player3Address);        
-        this.player3Address = player3Address.substring(0, player3Address.indexOf(':'));
-        numberOfPlayers = 4;
+        int playerPort = getPort(player0Address);       
+        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
+        NetworkPlayer zero = new NetworkPlayer(player0Address, playerPort);
+
+        playerPort = getPort(player1Address); ;   
+        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
+        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
+
+        playerPort = getPort(player2Address);       
+        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
+        NetworkPlayer two = new NetworkPlayer (player2Address, playerPort);
+
+        playerPort = getPort(player3Address);        
+        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
+        NetworkPlayer three = new NetworkPlayer(player3Address, playerPort);
+
+        players = new NetworkPlayer[4];
+        players[0] = zero;
+        players[1] = one;
+        players[2] = two;
+        players[3] = three;
+        //numberOfPlayers = 4;
 
     }//TODO: make player move
 
@@ -129,64 +126,42 @@ public class NetworkClient {
      * @throws IOException
      */
     public void syncWithPlayers() throws UnknownHostException, IOException {
-
-
-        Scanner sc = new Scanner(System.in);
-
-        player0Socket = new Socket(player0Address, REMOTE_PORT);
-
-        player1Socket = new Socket(player1Address, REMOTE_PORT);
-
-        networkOutputMap.put(0,outToPlayer0 = new PrintStream(player0Socket.getOutputStream()));
-        networkOutputMap.put(1, outToPlayer1 = new PrintStream(player1Socket.getOutputStream()));
-
-        networkInputMap.put(0, inFromPlayer0 = new Scanner(player0Socket.getInputStream())); 
-        networkInputMap.put(1, inFromPlayer1 = new Scanner(player1Socket.getInputStream()));
-
-        if(numberOfPlayers == 4){
-            player2Socket = new Socket(player2Address, REMOTE_PORT);
-            player3Socket = new Socket(player3Address, REMOTE_PORT);
-
-            networkOutputMap.put(2, outToPlayer2 = new PrintStream(player2Socket.getOutputStream()));          
-            networkOutputMap.put(3, outToPlayer3 = new PrintStream(player3Socket.getOutputStream()));
-
-            networkInputMap.put(2, inFromPlayer2 = new Scanner(player2Socket.getInputStream()));
-            networkInputMap.put(3, inFromPlayer3 = new Scanner(player3Socket.getInputStream()));
-        }
-
-
-
-        if (numberOfPlayers == 2){
-            outToPlayer0.println("QUORIDOR 2 0");
-            outToPlayer1.println("QUORIDOR 2 1");
-        }else{//NumberOfPlayers == 4
-            outToPlayer0.println("QUORIDOR 4 0");
-            outToPlayer1.println("QUORIDOR 4 1");
-            outToPlayer2.println("QUORIDOR 4 2");
-            outToPlayer3.println("QUORIDOR 4 3");
-        }
-
-        for (int i = 0; i < 2; i++){
-            fromPlayer = networkInputMap.get(i).nextLine();
-
-            if(!fromPlayer.contains("READY")){
-                System.err.println("NetworkClient> Unexpected response from Player " + i);
-                System.exit(1);
-            }else{ //this else can be done away with
-                System.out.println("NetworkClient> player " + i +" says: " + fromPlayer);
+        //get input and output streams for all players' sockets, assign them to their respective fields
+        for (int i = 0; i< players.length; i++){
+            if(players[i] != null){
+                players[i].playerSocket = new Socket(players[i].playerAddress, players[i].playerPort);
+                players[i].outToPlayer = new PrintStream(players[i].playerSocket.getOutputStream());
+                players[i].inFromPlayer = new Scanner(players[i].playerSocket.getInputStream());
             }
-        }     
-        if (numberOfPlayers == 4){
-            for (int i = 2; i < 4; i++){
-                fromPlayer = networkInputMap.get(i).nextLine();
-
-                if(!fromPlayer.contains("READY")){
-                    System.err.println("NetworkClient> Unexpected response from Player " + i);
-                    System.exit(1);
-                }else{ //this else can be done away with
-                    System.out.println("NetworkClient> player " + i +" says: " + fromPlayer);
+        }
+        //initiate first contact
+        for (int i = 0; i < players.length; i++){
+            System.out.println("players.length: " + players.length + "loop i value: " + i);
+            if(players[i] != null){
+                players[i].outToPlayer.print("QUORIDOR " + players.length + " " + i +"\n");
+                System.out.println("QUORIDOR " + players.length + " " + i +"\n");
+            }
+        }
+        /**
+         * 
+         * 
+         * 
+         * DEBUG HERE SENDING MROE THAN ONE THING
+         * 
+         * 
+         * 
+         */
+        //listen for acknowledgment, get player name
+        for (int i = 0; i < players.length; i++){
+            if(players[i] != null){
+                String fromPlayer = players[i].inFromPlayer.nextLine();
+                if (!fromPlayer.contains("READY")){
+                    System.err.println("Unexpected response from player " + i);
+                }else{
+                    players[i].displayName = fromPlayer.substring(6);
+                    System.out.println("Player " + i + " says: " + fromPlayer);
                 }
-            } 
+            }
         }
 
 
@@ -198,13 +173,17 @@ public class NetworkClient {
      * tells a player that it has been kicked from the game
      * if that player has made an illegal move
      * @param playerID
+     * @throws IOException 
      */
-    public static void removePlayer(int playerID){
-        networkOutputMap.get(playerID-1).println("REMOVE!");
-        System.out.println("sending REMOVE! to player: " + (playerID-1));
+    public static void removePlayer(int playerID) throws IOException{
+        for (int i = 0; i < players.length; i++){
+            players[i].outToPlayer.print("REMOVED" + (playerID-1) + "\n"); 
+        }
+        players[playerID-1].playerSocket.close();
+        players[playerID-1] = null;
+        System.out.println("Broadcasting REMOVED for player: " + (playerID-1));
     }
 
-    //TODO: check if we're broadcasting an updated board object to everybody.
     /**
      * broadcastMove: broadcasts the last legal move made to all players
      * @param nextMove: the last legal move made
@@ -212,12 +191,10 @@ public class NetworkClient {
     public static void broadcastMove(String nextMove) { 
 
         //TODO: test this with multiple players
-        networkOutputMap.get(0).println(nextMove);
-        networkOutputMap.get(1).println(nextMove);
 
-        if (numberOfPlayers == 4){
-            for (int i = 2; i <=3; i++)
-                networkOutputMap.get(i).println(nextMove); 
+        for (int i = 0; i < players.length; i++){
+            if(players[i]!= null)
+                players[i].outToPlayer.print(nextMove+"\n");
         }
 
     }
@@ -228,14 +205,12 @@ public class NetworkClient {
      * @return: returns the move taken from the player
      */
     public static String getMove(int player){
-        turn = player-1;
-        networkOutputMap.get(turn).println("MOVE?");
-        fromPlayer = networkInputMap.get(turn).nextLine();
-
-        
-        System.out.println("NetworkClient> Player " + turn + " has responded with a move: "+
+        System.out.println("getMove passed: " + player + " looking at: " + (player-1));
+        players[player-1].outToPlayer.print("MOVE?\n");
+        String fromPlayer = players[player-1].inFromPlayer.nextLine();
+        System.out.println("NetworkClient> Player " + (player-1) + " has responded with a move: "+
                 fromPlayer);
-         
+        //TODO: figure out where you want to check if this is a legal move, probably in PlayQuor 
         return fromPlayer;
     }
 
@@ -245,16 +220,14 @@ public class NetworkClient {
      */
 
     public void kill() throws IOException{
-        //close all the sockets
-        player0Socket.close();
-        player1Socket.close();
-        if(numberOfPlayers == 4){
-            player2Socket.close();
-            player3Socket.close();
+        for (int i = 0; i < players.length; i++){
+            if (players[i] != null){
+                players[i].playerSocket.close();
+            }
         }
     }
-    
-    public int getPort(String address){
+
+    private int getPort(String address){
         return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
     }
 
