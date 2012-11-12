@@ -15,8 +15,8 @@ public class NetworkPlayer {
     
     /**
      * creates a NetworkPlayer object to hold network information 
-     * @param address
-     * @param port
+     * @param address hostname or IP address of network player
+     * @param port port of network player
      */
     public NetworkPlayer(String address, int port){
         this.playerAddress = address;
