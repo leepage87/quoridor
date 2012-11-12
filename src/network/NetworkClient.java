@@ -14,7 +14,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 
-import src.main.Board;
+import src.ui.Board;
 import src.ui.BoardButton;
 import src.ui.GameBoardWithButtons;
 
@@ -189,26 +189,29 @@ public class NetworkClient {
      */
     public static void removePlayer(int playerID) throws IOException{
         System.out.println("We're in remove player");
+        broadcast("REMOVED " + (playerID-1));
+        /*
         for (int i = 0; i < players.length; i++){
             players[i].outToPlayer.print("REMOVED " + (playerID-1) + "\n"); 
         }
         players[playerID-1].playerSocket.close();
         players[playerID-1] = null;
         System.out.println("Broadcasting REMOVED for player: " + (playerID-1));
+        */
     }
 
     /**
-     * broadcastMove: broadcasts the last legal move made to all players
-     * @param nextMove: the last legal move made
+     * broadcastMove: broadcasts a message to all players
+     * @param message: the message to be broadcast
      */
-    public static void broadcastMove(String nextMove) { 
+    public static void broadcast(String message) { 
 
         //TODO: test this with multiple players
         
         for (int i = 0; i < players.length; i++){
-            System.out.println("NetworkClient> Broadcasting move to player " + i);
+            System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);
             if(players[i]!= null)
-                players[i].outToPlayer.print(nextMove+"\n");
+                players[i].outToPlayer.print(message+"\n");
         }
 
     }
@@ -219,7 +222,7 @@ public class NetworkClient {
      * @return: returns the move taken from the player
      */
     public static String getMove(int player){
-        System.out.println("NetworkClient> asking player 1 for a move");
+        System.out.println("NetworkClient> asking player " + (player-1) + " for a move");
         players[player-1].outToPlayer.print("MOVE?\n");
         System.out.println("NetworkClient> request sent, waiting for response");
         String fromPlayer = players[player-1].inFromPlayer.nextLine();
