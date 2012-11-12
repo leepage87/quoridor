@@ -47,6 +47,7 @@ public class NetworkClientTest {
         //accept the move
         network.broadcast("MOVED 0" + expectedMove.substring(4));
         testResults(expectedMove, receivedMove);
+        
 
     }
     @Test
