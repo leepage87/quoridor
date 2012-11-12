@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import src.main.Board;
-import src.ui.FirstWindow;
+//import src.ui.FirstWindow;
 import src.ui.GameBoardWithButtons;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
@@ -33,7 +33,7 @@ public class GameBoardTest {
 	@Before
 	public void setUp() throws Exception {
 		Board b = new Board (2);
-		GameBoardWithButtons game = new GameBoardWithButtons(b);
+		GameBoardWithButtons game = new GameBoardWithButtons(b, 2);
 		driver = new JFrameDriver(new GesturePerformer(), new AWTEventQueueProber(), 
 				JFrameDriver.named(MAIN_WINDOW_TITLE), JFrameDriver.showingOnScreen());
 	}

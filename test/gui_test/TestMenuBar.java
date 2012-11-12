@@ -3,7 +3,7 @@ package test.gui_test;
 import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static src.ui.MenuBarPrototype.*;
+//import static src.ui.MenuBarPrototype.*;
 
 import javax.swing.JButton;
 
@@ -22,7 +22,7 @@ import com.objogate.wl.swing.driver.JMenuDriver;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
 import src.ui.*;
-import src.ui.FirstWindow.*;
+//import src.ui.FirstWindow.*;
 public class TestMenuBar{
 
 	// A JFrameDriver is the class that WindowLicker uses to interact with the Java event queue

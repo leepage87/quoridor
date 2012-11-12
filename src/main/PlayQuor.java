@@ -66,7 +66,7 @@ public class PlayQuor{
 	            if (n == 1 && numPlay == 2){
 	                String address = JOptionPane.showInputDialog("Input player address:", "ex. hostname:port");
 	                if (address != null){
-	                    NetworkClient network = new NetworkClient(address);
+	             //       NetworkClient network = new NetworkClient(address);
 	                    networkGame = true;
 	                }
 	            }
@@ -78,7 +78,7 @@ public class PlayQuor{
 	                    String player1Address = addressScanner.next(); 
 	                    String player2Address = addressScanner.next(); 
 	                    String player3Address = addressScanner.next(); 
-	                    NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
+	             //       NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
 	                    networkGame = true;
 	                }
 	            }
