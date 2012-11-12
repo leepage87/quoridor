@@ -14,7 +14,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 
-import src.ui.Board;
+import src.main.Board;
 import src.ui.BoardButton;
 import src.ui.GameBoardWithButtons;
 

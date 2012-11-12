@@ -80,7 +80,8 @@ public class AI{
 		return moves.get(whichBoard);
 	}
 	
-	// Parameters: the player, the enemy, the current board, the number of turns ahead to be explored
+	// Parameters: the player, the enemy, the current board,
+	//   and the number of turns ahead to be explored
 	// Returns: the board value of the best possible outcome
 	public int aiMoveB(int player, int enemy, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMovesB(player, b);
@@ -176,8 +177,11 @@ public class AI{
 		return finalMove;
 	}
 	
-	// Parameters: the player whose turn it is, the enemy closest to winning, and the board being examined
-	// Returns: number of moves it will take the enemy to win minus the number of moves it will take the player to win
+	// Parameters: the player whose turn it is, the enemy closest
+	//   to winning, and the board being examined
+	// Returns: number of moves it will take the enemy to win minus
+	//   the number of moves it will take the player to win
+	//   plus 2*the number of remaining walls
 	public int boardValue(int turn, int enemy, Board b){
 		if(b.haveWon())
 			return 200;
