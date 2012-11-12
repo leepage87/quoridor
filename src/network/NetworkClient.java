@@ -133,7 +133,7 @@ public class NetworkClient {
     }//TODO: make player move
 
     /**
-     * syncWithPlayers - sends initial message to each player, waits for a response
+     * sends initial message to each player, waits for a response
      * @throws UnknownHostException
      * @throws IOException
      */
@@ -154,15 +154,7 @@ public class NetworkClient {
                 System.out.println("QUORIDOR " + players.length + " " + i +"\n");
             }
         }
-        /**
-         * 
-         * 
-         * 
-         * DEBUG HERE SENDING MROE THAN ONE THING/
-         * 
-         * 
-         * 
-         */
+
         //listen for acknowledgment, get player name
         for (int i = 0; i < players.length; i++){
             if(players[i] != null){
@@ -201,7 +193,7 @@ public class NetworkClient {
     }
 
     /**
-     * broadcastMove: broadcasts a message to all players
+     * broadcasts a message to all players
      * @param message: the message to be broadcast
      */
     public static void broadcast(String message) { 
@@ -218,7 +210,7 @@ public class NetworkClient {
 
 
     /**
-     * getMove(): this method gets a move from the player whose turn it is
+     * gets a move from the player whose turn it is
      * @return: returns the move taken from the player
      */
     public static String getMove(int player){
@@ -244,7 +236,11 @@ public class NetworkClient {
             }
         }
     }
-
+/**
+ * Gets the port from the given address
+ * @param address
+ * @return the port associated with the given address
+ */
     private int getPort(String address){
         return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
     }

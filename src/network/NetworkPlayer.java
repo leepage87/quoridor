@@ -12,6 +12,12 @@ public class NetworkPlayer {
     public Scanner inFromPlayer;
     public String displayName;
     
+    
+    /**
+     * creates a NetworkPlayer object to hold network information 
+     * @param address
+     * @param port
+     */
     public NetworkPlayer(String address, int port){
         this.playerAddress = address;
         this.playerPort = port;
