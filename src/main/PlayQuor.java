@@ -66,15 +66,7 @@ public class PlayQuor{
 	            if (n == 1 && numPlay == 2){
 	                String address = JOptionPane.showInputDialog("Input player address:", "ex. hostname:port");
 	                if (address != null){
-<<<<<<< HEAD
-<<<<<<< HEAD
 	                    //NetworkClient network = new NetworkClient(address);
-=======
-	             //       NetworkClient network = new NetworkClient(address);
->>>>>>> 3342b4e1684a11ceb7666b1787c9c63b081124ab
-=======
-	             //       NetworkClient network = new NetworkClient(address);
->>>>>>> 3342b4e1684a11ceb7666b1787c9c63b081124ab
 	                    networkGame = true;
 	                }
 	            }
@@ -86,15 +78,7 @@ public class PlayQuor{
 	                    String player1Address = addressScanner.next(); 
 	                    String player2Address = addressScanner.next(); 
 	                    String player3Address = addressScanner.next(); 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	                    //NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
-=======
-	             //       NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
->>>>>>> 3342b4e1684a11ceb7666b1787c9c63b081124ab
-=======
-	             //       NetworkClient network = new NetworkClient(player1Address, player2Address, player3Address);
->>>>>>> 3342b4e1684a11ceb7666b1787c9c63b081124ab
 	                    networkGame = true;
 	                }
 	            }
@@ -224,7 +208,7 @@ public class PlayQuor{
 			// if somebody won, say so
 			if (breaker == 1)
 				JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
-		}
+		 }
 
 	}	
 	
