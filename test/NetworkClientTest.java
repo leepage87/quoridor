@@ -19,12 +19,10 @@ public class NetworkClientTest {
     @Before
     public void setUp() throws Exception {
         network = new NetworkClient("localhost:4050", "localhost:4050");
-        network.syncWithPlayers();
-
 
     }
 
-
+    /*
     @Test
     public void testNetworkExists(){
         assertNotNull(network);
@@ -39,43 +37,60 @@ public class NetworkClientTest {
     public void testAddressesOfMoveServerOne() {
         testResults("localhost",NetworkClient.players[1].playerAddress);
     }
-
+     */
     @Test
     public void getMoveFromPlayerZero() {
         String expectedMove = "MOVE M (0, 4) (1, 4)";
-        
+
         String receivedMove = NetworkClient.getMove(1);
         System.out.println("getMoveFromPlayerZero: " + receivedMove);
         //accept the move
-        network.broadcastMove("MOVED 0" + expectedMove.substring(4));
+        network.broadcast("MOVED 0" + expectedMove.substring(4));
         testResults(expectedMove, receivedMove);
-        
+
     }
     @Test
     public void getMoveFromPlayerOne() {
         String expectedMove = "MOVE M (8, 4) (7, 4)";
         String receivedMove = NetworkClient.getMove(2);
         //accept the move
-        network.broadcastMove("MOVED 1" + expectedMove.substring(4));
+        network.broadcast("MOVED 1" + expectedMove.substring(4));
+        testResults( expectedMove, NetworkClient.getMove(2));
+    }
+
+    @Test
+    public void getMoveFromPlayerOneandTwo() {
+
+        String receivedMove = NetworkClient.getMove(1);
+        System.out.println("getMoveFromPlayerZero: " + receivedMove);
+        //accept the move
+        network.broadcast("MOVED 0" + receivedMove.substring(4));
+        String expectedMove = "MOVE M (8, 4) (7, 4)";
+        System.out.println("asking player 1 for a move");
+        receivedMove = NetworkClient.getMove(2);
+        System.out.println("getMoveFromPlayerOne: " + receivedMove);
+        //accept the move
+        network.broadcast("MOVED 1" + receivedMove.substring(4));
         testResults( expectedMove, NetworkClient.getMove(2));
     }
 
     @Test
     public void kickPlayer1AndGetMoveFromPlayer0() throws IOException {
+        NetworkClient.getMove(2);
         NetworkClient.removePlayer(2);
-        String expectedMove = "MOVE M (1, 1) (1, 1)";
+        String expectedMove = "MOVE M (0, 4) (1, 4)";
         testResults(expectedMove,NetworkClient.getMove(1)) ;
     }
-    
 
-    
+
+
     private void testResults(String actual, String expected){
         assertEquals(actual, expected);
     }
-/*
+
     @AfterClass
     public static void tearDown() throws IOException{
         network.kill();
     }
-*/
+
 }

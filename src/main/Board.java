@@ -1,6 +1,6 @@
 
 /**
- * Tim, Lee, Sara, Jon
+ * Tim, Lee, Sarah, Jon
  * teamOrangeBeard
  */
 package src.main;
