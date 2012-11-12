@@ -14,7 +14,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import src.ui.AI;
+import src.main.AI;
 import src.main.Board;
 
 

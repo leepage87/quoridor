@@ -6,7 +6,6 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import src.network.NetworkClient;
-import src.ui.AI;
 import src.ui.BoardButton;
 import src.ui.BoardWall;
 import src.ui.GameBoardWithButtons;
@@ -164,7 +163,7 @@ public class PlayQuor{
 				if(isAI[turn-1] == 1){
 					AI a = new AI(b);
 					int[] startPlace = b.playerPlace(turn);
-					Board tempB = a.aiMove(turn);
+					Board tempB = a.aiMoveB(turn);
 //					if(numPlay == 2)
 //						tempB = a.aiMoveB(turn, b);
 					int[] endPlace = tempB.playerPlace(turn);

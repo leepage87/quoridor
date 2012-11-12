@@ -6,8 +6,8 @@
 package test;
 import java.util.ArrayList;
 
+import src.main.AI;
 import src.main.Board;
-import src.ui.AI;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -211,7 +211,6 @@ public class AiTest {
 			b = new Board(2);
 			AI a = new AI(b);
 			a.truePlayer = 1;
-			a.beta = -201;
 			int best = a.aiMoveB(1, 2, b, 0);
 			Assert.assertTrue(best == 21);
 			best = a.aiMoveB(1, 2, b, 1);
