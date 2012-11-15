@@ -211,10 +211,7 @@ public class AiTest {
 			b = new Board(2);
 			AI a = new AI(b);
 			a.truePlayer = 1;
-			int best = a.aiMoveB(1, 2, b, 0);
-			Assert.assertTrue(best == 21);
-			best = a.aiMoveB(1, 2, b, 1);
-			Assert.assertTrue(best == 20);
+
 		}
 		
 		

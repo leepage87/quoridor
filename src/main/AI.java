@@ -65,11 +65,10 @@ public class AI{
 		truePlayer = player;
 		int rounds = 1;
 		ArrayList<Board> moves = findMovesB(player, AIboard);
-		int enemy = findEnemy(player, AIboard);
-		int best = aiMoveB(player, enemy, moves.get(0), rounds);
+		int best = aiMoveB(player, moves.get(0), rounds);
 		int whichBoard = 0;
 		for(int i = 1; i < moves.size(); i++){
-			int value = aiMoveB((player%AIboard.NUMPLAY)+1, player, moves.get(i), rounds);
+			int value = aiMoveB((player%AIboard.NUMPLAY)+1, moves.get(i), rounds);
 			if(value > best){
 				best = value;
 				whichBoard = i;
@@ -81,55 +80,78 @@ public class AI{
 	// Parameters: the player, the enemy, the current board,
 	//   and the number of turns ahead to be explored
 	// Returns: the board value of the best possible outcome
-	public int aiMoveB(int player, int enemy, Board b, int numRounds){
+	public int aiMoveB(int player, Board b, int numRounds){
+		int[] answer = new int[3];
+		answer[1] = 201;
+		answer[2] = -201;
+		answer = search(answer, player, b, numRounds);
+		return answer[0];
+	}
+	
+	// Parameters:
+	// Returns:
+	public int[] search(int[] answer, int player, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMovesB(player, b);
 		if(numRounds == 0)
-			return baseCase(player, enemy, allMoves);
-		return search(player, enemy, allMoves, numRounds);
-	}
-	
-	// Parameters:
-	// Returns:
-	public int search(int player, int enemy, ArrayList<Board> allMoves, int numRounds){
-		int best = -200;
-		for(int i = 0; i < allMoves.size(); i++){
-			int realValue;
-			if((player%AIboard.NUMPLAY)+1==truePlayer){
-				int nextEnemy = findEnemy(truePlayer, AIboard);
-				realValue = aiMoveB(player, nextEnemy, allMoves.get(i), numRounds-1);
-			}else
-				realValue = aiMoveB((player%AIboard.NUMPLAY)+1, player, allMoves.get(i), numRounds-1);
-			int value = realValue;
-			if(player != truePlayer)
-				value *= -1;
-			if(value > best){
-				best = value;
+			return baseCase(answer, player, allMoves);
+		int[] nextAnswer = {answer[0], answer[1], answer[2]};
+		if(player == truePlayer){
+			int best = -201;
+			for(int i = 0; i < allMoves.size(); i++){
+				int[] value = search(nextAnswer, (player%AIboard.NUMPLAY)+1, allMoves.get(i), numRounds-1);
+				if(value[0] > nextAnswer[2])
+					nextAnswer[2] = value[0];
+				if(value[0] > nextAnswer[1]){
+					return nextAnswer; 
+				}
 			}
-			if(realValue <= beta)
-				return realValue;
+			int[] newAnswer = {best, answer[1], answer[2]};
+			return newAnswer;
 		}
-		return best;
+		int worst = 201;
+		for(int i = 0; i < allMoves.size(); i++){
+			int[] value = search(nextAnswer, (player%AIboard.NUMPLAY)+1, allMoves.get(i), numRounds-1);
+			if(value[0] < nextAnswer[1])
+				nextAnswer[2] = value[0];
+			if(value[0] < nextAnswer[2]){
+				return nextAnswer; 
+			}
+		}
+		int[] newAnswer = {worst, answer[1], answer[2]};
+		return newAnswer;
 	}
+	
 	
 	// Parameters:
 	// Returns:
-	public int baseCase(int player, int enemy, ArrayList<Board> allMoves){
-		int best = -200;
-		for(int i = 0; i < allMoves.size(); i++){
-			int realValue = boardValue(player, enemy, allMoves.get(i));
-			int value = realValue;
-			if(player != truePlayer)
-				value *= -1;
-			if(value > best)
-				best = value;
-			if(realValue <= beta)
-				return realValue;
+	public int[] baseCase(int[] answer, int player, ArrayList<Board> allMoves){
+		if(player == truePlayer){
+			int best = -201;
+			for(int i = 0; i < allMoves.size(); i++){
+				int enemy = findEnemy(player, AIboard);
+				int value = boardValue(player, enemy, allMoves.get(i));
+				if(value > best)
+					best = value;
+				if(value > answer[1]){
+					int[] newAnswer = {value, answer[1], answer[2]};
+					return newAnswer;
+				}
+			}
+			int[] newAnswer = {best, answer[1], answer[2]};
+			return newAnswer;
 		}
-		if(player != truePlayer)
-			best *= -1;
-		if(beta == -201)
-			beta = best;
-		return best;
+		int worst = 201;
+		for(int i = 0; i < allMoves.size(); i++){
+			int value = boardValue(truePlayer, player, allMoves.get(i));
+			if(value < worst)
+				worst = value;
+			if(value < answer[2]){
+				int[] newAnswer = {value, answer[1], answer[2]};
+				return newAnswer;
+			}
+		}
+		int[] newAnswer = {worst, answer[1], answer[2]};
+		return newAnswer;
 	}
 	
 	// Parameters: the player, the enemy, and the current board
