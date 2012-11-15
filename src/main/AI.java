@@ -64,30 +64,26 @@ public class AI{
 	public Board aiMoveB(int player){
 		truePlayer = player;
 		int rounds = 1;
+		int[] answer = new int[3];
+		answer[0] = -201;
+		answer[1] = 201;
+		answer[2] = -201;
 		ArrayList<Board> moves = findMovesB(player, AIboard);
-		int best = aiMoveB(player, moves.get(0), rounds);
+		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
+		answer[0] = next[0];
+		answer[2] = next[0];
 		int whichBoard = 0;
 		for(int i = 1; i < moves.size(); i++){
-			int value = aiMoveB((player%AIboard.NUMPLAY)+1, moves.get(i), rounds);
-			if(value > best){
-				best = value;
+			next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(i), rounds-1);
+			if(next[0] > answer[0]){
+				answer[0] = next[0];
+				answer[2] = next[0];
 				whichBoard = i;
 			}
 		}
 		return moves.get(whichBoard);
 	}
-	
-	// Parameters: the player, the enemy, the current board,
-	//   and the number of turns ahead to be explored
-	// Returns: the board value of the best possible outcome
-	public int aiMoveB(int player, Board b, int numRounds){
-		int[] answer = new int[3];
-		answer[1] = 201;
-		answer[2] = -201;
-		answer = search(answer, player, b, numRounds);
-		return answer[0];
-	}
-	
+
 	// Parameters:
 	// Returns:
 	public int[] search(int[] answer, int player, Board b, int numRounds){
