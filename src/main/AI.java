@@ -157,6 +157,17 @@ public class AI{
 	// PostCondition: the best move is made
 	public Board aiMove(int turn){
 		Board myMove = new Board(AIboard);
+		for(int i = 1; i <= AIboard.NUMPLAY; i++){
+			int[] nextEnemy = AIboard.playerPlace(i);
+			if(i!=AIboard.NUMPLAY && nextEnemy[0] != -1)
+				break;
+			if(i == AIboard.NUMPLAY){
+				Board b = new Board(AIboard);
+				int[] dest = b.bestMove(turn);
+				b.quickMove(dest, turn);
+				return b;
+			}
+		}
 		int enemy = findEnemy(turn, myMove);
 		return findBestMove(turn, enemy, myMove);
 	}
