@@ -15,22 +15,6 @@ public class AI{
          beta = -201;
 	 }
 
-	public void AIMove(int player){
-	     moves(currentLoc(player), player);
-		 }
-	
-	public int[] currentLoc(int player){
-		int[] place = new int[2];
-			place = AIboard.playerPlace(player);
-			return place;
-	}
-	
-
-	public int[] moves(int [] place, int player){
-			if(!AIboard.haveWon())
-				move = AIboard.bestMove(player);
-			return move;
-	}
 	
     // Paramters: the player, the board before moving, the board after moving
     // Returns: where the player placed a wall
@@ -61,14 +45,14 @@ public class AI{
 	
 	// Parameters: the player
 	// Returns: the board after moving
-	public Board aiMoveB(int player){
+	public Board aiMove(int player){
 		truePlayer = player;
 		int rounds = 1;
 		int[] answer = new int[3];
 		answer[0] = -201;
 		answer[1] = 201;
 		answer[2] = -201;
-		ArrayList<Board> moves = findMovesB(player, AIboard);
+		ArrayList<Board> moves = findMoves(player, AIboard);
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
 		answer[0] = next[0];
 		answer[2] = next[0];
@@ -84,10 +68,11 @@ public class AI{
 		return moves.get(whichBoard);
 	}
 
-	// Parameters:
-	// Returns:
+	// Parameters: an array of the current value + the alpha + the beta,
+	//    the player, a board, and the number of rounds to look ahead
+	// Returns: the same array, or the same array with either the alpha or beta changed
 	public int[] search(int[] answer, int player, Board b, int numRounds){
-		ArrayList<Board> allMoves = findMovesB(player, b);
+		ArrayList<Board> allMoves = findMoves(player, b);
 		if(numRounds == 0)
 			return baseCase(answer, player, allMoves);
 		int[] nextAnswer = {answer[0], answer[1], answer[2]};
@@ -118,8 +103,10 @@ public class AI{
 	}
 	
 	
-	// Parameters:
-	// Returns:
+	// Parameters: an array of the current value + the alpha + the beta,
+	//    the player, and an ArrayList of possible boards
+	// Returns: an array of the best move, or a move that is lower than the beta, or a
+	//    move that is higher than the alpha + the alpha + the beta
 	public int[] baseCase(int[] answer, int player, ArrayList<Board> allMoves){
 		if(player == truePlayer){
 			int best = -201;
@@ -152,7 +139,7 @@ public class AI{
 	
 	// Parameters: the player, the enemy, and the current board
 	// Returns: an Array of all possible moves
-	public ArrayList<Board> findMovesB(int turn, Board b){
+	public ArrayList<Board> findMoves(int turn, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		playerWalls = b.getPlayerWalls();
 		if(playerWalls[turn-1] != 0)
@@ -168,26 +155,6 @@ public class AI{
 				}
 		}
 		return posMoves;
-	}
-	
-	
-	// Parameters: the player whose turn it is
-	// PostCondition: the best move is made
-	public Board aiMove(int turn){
-		Board myMove = new Board(AIboard);
-		for(int i = 1; i <= AIboard.NUMPLAY; i++){
-			int[] nextEnemy = AIboard.playerPlace(i);
-			if(i!=AIboard.NUMPLAY && nextEnemy[0] != -1)
-				break;
-			if(i == AIboard.NUMPLAY){
-				Board b = new Board(AIboard);
-				int[] dest = b.bestMove(turn);
-				b.quickMove(dest, turn);
-				return b;
-			}
-		}
-		int enemy = findEnemy(turn, myMove);
-		return findBestMove(turn, enemy, myMove);
 	}
 	
 	// Parameters: the player whose turn it is and the enemy closest to winning
@@ -229,7 +196,7 @@ public class AI{
 		int playerMoves = b.doSearch(turn)[2];
 		playerWalls = b.getPlayerWalls();
 		int walls = 2*playerWalls[turn-1];
-		return enemyMoves-playerMoves;
+		return enemyMoves-playerMoves+walls;
 	}
 		
 	// Parameters: the player
