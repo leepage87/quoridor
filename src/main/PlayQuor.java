@@ -163,7 +163,7 @@ public class PlayQuor{
 				if(isAI[turn-1] == 1){
 					AI a = new AI(b);
 					int[] startPlace = b.playerPlace(turn);
-					Board tempB = a.aiMoveB(turn);
+					Board tempB = a.aiMove(turn);
 //					if(numPlay == 2)
 //						tempB = a.aiMoveB(turn, b);
 					int[] endPlace = tempB.playerPlace(turn);

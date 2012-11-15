@@ -83,7 +83,7 @@ public class MoveServer extends Thread {
                     //get move, send to client
                     nextMove = getMove(playerNo, b, ai);
                     outToClient.println(nextMove);
-                    
+
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
                             "> Move sent was: " + nextMove);
                     //get response from client
@@ -95,20 +95,11 @@ public class MoveServer extends Thread {
                     //MOVED <player-id> <op> <location-1> <location-2>
 
                     if(fromGameClient.contains("MOVED " + playerNo + nextMove.substring(4))){
-                        if(fromGameClient.charAt(8) == 'M'){
-                            //move the player
-                            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +"> *player move*");
+                        //move has been accepted, so make teh move
 
-                            b = move(fromGameClient, b);
-                            System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
-                            System.err.println(b.toString());
-                        }else{//its a wall placement
-                            //place the wall
-                            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +" *wall placement*");
-                            //b.placeWallBoard();
-                        }
-
-                        //might be able to get rid of this else if entirely
+                        b = move(fromGameClient, b);
+                        System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +"> move confirmed, making move:");
+                        System.out.println(b.toString());
 
 
                     }else if (fromGameClient.contains("REMOVED")){
@@ -127,12 +118,11 @@ public class MoveServer extends Thread {
                         }
                     }
                 }else if (fromGameClient.substring(0,5).equals("MOVED")){
-                    System.err.println("FUCK SHIT FROMGAMECLIENT IS: "  + fromGameClient);
                     //server telling you to move a different player's piece 
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> a different player has moved!" );
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + ">******moved******");
                     b = move(fromGameClient, b);
-                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
+                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " Opponent has just moved");
                     System.err.println(b.toString());
                 }else if(fromGameClient.contains("REMOVED")){
                     //a different player has been removed  
@@ -148,7 +138,7 @@ public class MoveServer extends Thread {
 
             //TODO: display losing or winning message
             if(fromGameClient.contains("WINNER"));
-                System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
+            System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
             //connection.close();
             // System.exit(0);
         }catch (Exception e){
@@ -174,9 +164,15 @@ public class MoveServer extends Thread {
         //record final location of player
         Board tempNewBoard = ai.aiMove(playerNo+1);
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
+        System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
+        System.out.println(tempNewBoard.toString());
         int[] wallLocation = ai.aiWall(playerNo, tempOldBoard, tempNewBoard);
-        if(wallLocation[0] != 0 && wallLocation[1] != 0){
+
+        if(startLocation[0] == endLocation[0] && startLocation[1] == endLocation[1]){//its a wall
+
             opCode = 'W';
+            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> printing wall center location");
+            System.out.println(wallLocation[0] + " " + wallLocation[1] + " " + wallLocation[2] + "." );
             //a wall movement has been made
             //this is the center spot
             if (wallLocation[2] == 0){
@@ -191,15 +187,21 @@ public class MoveServer extends Thread {
                 rowTwo = wallLocation[1]+2;
                 colTwo = wallLocation[0]+1;
             }
+
             return ("MOVE "+ opCode + " ("+rowOne+", "
                     +colOne+") " + "("+rowTwo+", "+colTwo+")");
         }else{//its a player move
+
+
+
+            System.out.println("Player has moved, start location: " + startLocation[0] + " " + startLocation[1]);
+            System.out.println("end location: " + endLocation[0] + " " + endLocation[1]);
+
             opCode = 'M';
             rowOne = startLocation[1]/2;
             colOne = startLocation[0]/2;
             rowTwo = endLocation[1]/2;
             colTwo = endLocation[0]/2;
-
 
             return ("MOVE "+ opCode + " ("+rowOne+", "
                     +colOne+") " + "("+rowTwo+", "+colTwo+")");
@@ -216,11 +218,38 @@ public class MoveServer extends Thread {
 
     private Board move(String frago, Board moveBoard){
         //fragmentary order: MOVED P M (R, C) (R, C)
-        int[] move = {(frago.charAt(21)-'0')*2, (frago.charAt(18)-'0')*2};
-        moveBoard.playerPlace(frago.charAt(6)-'0');
-        System.out.println("Move[] " + move[0] + move[1]);
-        moveBoard.quickMove(move, ((frago.charAt(6)-'0')+1));
+        int[] move = new int[3];
+        if(frago.charAt(8)== 'M'){
+            move [0] = (frago.charAt(21)-'0')*2;
+            move [1] = (frago.charAt(18)-'0')*2;
+            moveBoard.playerPlace(frago.charAt(6)-'0');
+            System.out.println("Move[] " + move[0] + move[1]);
+            moveBoard.quickMove(move, ((frago.charAt(6)-'0')+1));
+        }else{//its a wall placement
+            System.err.println("We're placing a wall");
+            if(frago.charAt(11) == frago.charAt(18)){//horizontal wall
+                if((frago.charAt(14)-'0') != 0){
+                    move[0] = (frago.charAt(14)-'0')-1;
+                }else{
+                    move[0] = (frago.charAt(14)-'0');
+                }
+                move[1] = (frago.charAt(11)-'0');
+                move[2] = 1;
+                moveBoard.placeWallBoard(move);
+            }else{//vertical wall
+                move[0] = (frago.charAt(14)-'0');
+                if((frago.charAt(11)-'0') != 0){
+                    move[1] = (frago.charAt(11)-'0')-1;
+                }else{
+                    move[1] = (frago.charAt(11)-'0'); 
+                }
+                move[2] = 0;
+                moveBoard.placeWallBoard(move);
+            }
+
+        }
         return moveBoard;
+
     }
 
     /**
@@ -232,7 +261,7 @@ public class MoveServer extends Thread {
     private Board kick(int player, Board kickBoard){
         int[] location2 = kickBoard.playerPlace(1);
         System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> player place test search for 1: " + location2[0] + location2[1]);
-        
+
         System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> inside kick, kicking player: " + player);
         System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
         System.err.println(kickBoard.toString());

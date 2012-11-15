@@ -37,7 +37,7 @@ public class NetworkClientTest {
     public void testAddressesOfMoveServerOne() {
         testResults("localhost",NetworkClient.players[1].playerAddress);
     }
-     */
+     
     @Test
     public void getMoveFromPlayerZero() {
         String expectedMove = "MOVE M (0, 4) (1, 4)";
@@ -82,9 +82,20 @@ public class NetworkClientTest {
         String expectedMove = "MOVE M (0, 4) (1, 4)";
         testResults(expectedMove,NetworkClient.getMove(1)) ;
     }
+*/
 
-
-
+    @Test
+    public void getAWholeBunchOfMoves() {
+        String receivedMove;
+        for(int i = 0; i <=99 ; i++){
+            receivedMove = NetworkClient.getMove(i%2+1);
+            System.out.println("getMove: " + receivedMove);
+            network.broadcast("MOVED " + (i%2) + receivedMove.substring(4));
+            //TODO: check indexing for playquor vs network
+        }
+        
+    }
+    
     private void testResults(String actual, String expected){
         assertEquals(actual, expected);
     }
