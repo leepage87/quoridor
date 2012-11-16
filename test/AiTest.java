@@ -28,7 +28,7 @@ public class AiTest {
 		}
 
 		//Tests to see if the currentLoc method returns the correct current location
-		@Test
+		/*@Test
 		public void currentLocTest(){
 			int[]expected = new int[2];
 			expected[0] = 8;
@@ -36,20 +36,20 @@ public class AiTest {
 			Assert.assertArrayEquals(expected, AIboard.currentLoc(1));
 			
 		}
-		
+		*/
 		//Tests the moves method to make sure it uses the doSearch correctly and finds the correct movement
-		@Test
+		/*@Test
 		public void movesTest(){
 			int [] expected = new int[3];
 			expected[0] = 8;
 			expected[1] = 2;
 			expected[2] = 8;
 			int [] actual = new int[3];
-			actual = AIboard.moves(AIboard.currentLoc(1), 1);
+			actual = AIboard.moves(b.playerPlace(1), 1);
 			Assert.assertArrayEquals(expected, actual);
 			
 		}
-
+*/
 		//Tests the boardValue method to make sure the starting position board value is 0
 		@Test
 		public void boardValueTest(){
@@ -68,8 +68,8 @@ public class AiTest {
 			AIboard.move(placement, 1);
 			int[] method = new int[2];
 			int [] moved = new int[2];
-			method  = AIboard.currentLoc(1);
-			moved = AIboard.currentLoc(1);
+			method  = AIboard.playerPlacee(1);
+			moved = AIboard.playerPlacee(1);
 			Assert.assertArrayEquals(method, moved);
 		}
 		//Tests the findBestMove method
@@ -82,8 +82,8 @@ public class AiTest {
 			temp.move(placement, 1);
 			int[] method = new int[2];
 			int [] moved = new int[2];
-			method  = AIboard.currentLoc(2);
-			moved = temp.currentLoc(2);
+			method  = AIboard.playerPlacee(2);
+			moved = temp.playerPlacee(2);
 			Assert.assertArrayEquals(method, moved);
 		}
 		//Tests the boardValue method after moving a player to make sure it increments the boardValue
@@ -157,8 +157,8 @@ public class AiTest {
 			test = AIboard.findEnemy(1, b);
 			int[] actual = new int[2];
 			int [] given = new int[2];
-			AIboard.currentLoc(2);
-			AIboard.currentLoc(test);
+			AIboard.playerPlacee(2);
+			AIboard.playerPlacee(test);
 			Assert.assertArrayEquals(given, actual);
 		}
 		
@@ -175,8 +175,8 @@ public class AiTest {
 			temp.move(placement, 1);
 			int[] method = new int[2];
 			int[] moved = new int[2];
-			method = AIboard.currentLoc(1);
-			moved = temp.currentLoc(1);
+			method = AIboard.playerPlacee(1);
+			moved = temp.playerPlacee(1);
 			Assert.assertArrayEquals(method, moved);
 		}
 
@@ -186,8 +186,8 @@ public class AiTest {
 		public void wallPlacementSearchTest(){
 			ArrayList<Board> testMoves = new ArrayList<Board>();
 			testMoves = AIboard.wallPlacementSearch(b);
-			int given;
-			given =AIboard.boardValue(1, 2, b);
+			//int given;
+			//given =AIboard.boardValue(1, 2, b);
 			int sizeArray = testMoves.size();
 			Assert.assertTrue(sizeArray==128);
 			
@@ -199,8 +199,8 @@ public class AiTest {
 			ArrayList<Board> testMoves = new ArrayList<Board>();
 			testMoves = AIboard.wallPlacementSearch(b);
 			int sizeArray = testMoves.size();
-			int given;
-			given = AIboard.boardValue(1, 1, b);
+			//int given;
+			//given = AIboard.boardValue(1, 1, b);
 			Assert.assertTrue(sizeArray==124);
 			
 		

@@ -259,6 +259,13 @@ public class AI{
 			temp.quickMove(placement, 1);
 			return temp;
 		}	
+		
+		//Testing purposes
+		public int[] playerPlacee(int player){
+			int [] place = new int[2];
+			place = AIboard.playerPlace(player);
+			return place;
+		}
 }
 	
 
