@@ -1,4 +1,4 @@
-package test.gui_test;
+/*package test.gui_test;
 
 import static src.ui.FirstWindow.*;
 
@@ -86,3 +86,4 @@ public class WalkingSkeletonTest {
 	}	
 
 }
+*/

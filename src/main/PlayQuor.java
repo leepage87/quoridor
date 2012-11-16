@@ -1,3 +1,10 @@
+/**
+ * Tim, Lee, Sarah, Jonathan
+ * teamOrangeBeard
+ * In main method, contains the loop that forms the beginning and end of each game experience.
+ * Also has methods that check for legality of play, execute legal plays, ...
+ */
+
 package src.main;
 
 import java.util.Scanner;
@@ -9,13 +16,6 @@ import src.network.NetworkClient;
 import src.ui.BoardButton;
 import src.ui.BoardWall;
 import src.ui.GameBoardWithButtons;
-
-/**
- * Tim, Lee, Sarah, Jonathan
- * teamOrangeBeard
- * In main method, contains the loop that forms the beginning and end of each game experience.
- * Also has methods that check for legality of play, execute legal plays, ...
- */
 
 public class PlayQuor{
 
