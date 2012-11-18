@@ -53,7 +53,8 @@ public class Board {
 		}
 		this.grid = tempGrid;
 		this.NUMPLAY = b.NUMPLAY;
-		this.playerWalls = b.playerWalls;
+		for(int i = 0; i < 4; i++)
+			this.playerWalls[i] = b.playerWalls[i];
 		mapIcons();
 	}
 
