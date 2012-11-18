@@ -351,6 +351,7 @@ public class Board {
 			return false;
 		Board tempB = new Board(this);		
 		tempB.placeWallBoard(theWall, player);
+		playerWalls[player-1]++;
 		if(!tempB.canWin())
 		    return false;
 		return true;

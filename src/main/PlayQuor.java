@@ -101,13 +101,8 @@ public class PlayQuor{
 	            				JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
 	            		isAI[i-1] = n; 
 	            	}
-	            }	            
+	            }
 	            
-			// Create/assign AI to a number of Players
-			/*isAI[1] = 1;
-			isAI[2] = 1;
-			isAI[3] = 1;*/		
-			
 			// create a new back end board with desired number of players
 			Board b = new Board(numPlay);
 			
@@ -380,22 +375,18 @@ public class PlayQuor{
 	 * an int determining if it is horizontal or vertical	
 	 * PostCondition: the wall is placed, if it was legal*/
 	public static boolean placeWallPQ(Board b, int[] theWall){
-		b.playerWalls = b.getPlayerWalls();
-		//System.out.println(theWall[0] + " " + theWall[1] + " " + theWall[2]);
 		String wallName;
-		//for(int i = 0; i < theWall.length; i++) (does not seem to do anything useful)
 		
 		/* if the player has walls left to play, and the back end says a wall can go here ... */
 		
-		if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall, turn)) 
+		if (b.canPlaceWall(theWall, turn)) 
 		{
 			b.placeWallBoard(theWall, turn); // place it with the back end (NOT GUI YET)
-			
 			
 			/* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */
 			if (theWall[2] == 0)
 				wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
-			else//its a 1, meaning vertical
+			else //its a 1, meaning vertical
 				wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "V";    
 			BoardWall.map.get(wallName).setWall();
 			BoardWall.map.get(wallName).nextWall().setWall();
