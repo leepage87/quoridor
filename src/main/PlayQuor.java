@@ -26,7 +26,6 @@ public class PlayQuor{
 	private static int[] pieceHolder = new int[3]; // Used to correctly update GUI during a "double move"
 	public static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
 									// or 2 (new game started with File -> New Game)
-	private static int[] playerWalls;
     public static int[] isAI = new int[4];
     private static boolean networkGame = false;
     private static int[][] legalMovesArray = new int[9][9]; // used for tracking which squares get the legal move icon
@@ -113,18 +112,14 @@ public class PlayQuor{
 			Board b = new Board(numPlay);
 			
 			// Give each player the appropriate number of walls
-			playerWalls = new int[numPlay];
 			for(int i = 0; i < numPlay; i++)
-				playerWalls[i] = 20/numPlay;
-			b.setPlayerWalls(playerWalls);
+				b.playerWalls[i] = 20/numPlay;
 			// if GUI is not null, a game has just ended and its data must be thrown out.
 			if (gui != null)
 				gui.dispose();
 			
 			// Create brand new gui with board and number of players
 			gui = new GameBoardWithButtons(b, numPlay);
-			
-			// TODO: Create/assign AI to a number of Players
 			
 			// set/reset control variables breaker, won, and turn
 			breaker = 0;
@@ -159,13 +154,11 @@ public class PlayQuor{
 				
 				// initialize GUI buttons indicating how many walls each player has left
 				for (int i = 0; i < numPlay; i++)
-					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + playerWalls[i] + " walls");
+					GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
 				if(isAI[turn-1] == 1){
 					AI a = new AI(b);
 					int[] startPlace = b.playerPlace(turn);
 					Board tempB = a.aiMove(turn);
-//					if(numPlay == 2)
-//						tempB = a.aiMoveB(turn, b);
 					int[] endPlace = tempB.playerPlace(turn);
 					if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
 						boolean getOut = false;
@@ -387,17 +380,16 @@ public class PlayQuor{
 	 * an int determining if it is horizontal or vertical	
 	 * PostCondition: the wall is placed, if it was legal*/
 	public static boolean placeWallPQ(Board b, int[] theWall){
-		playerWalls = b.getPlayerWalls();
+		b.playerWalls = b.getPlayerWalls();
 		//System.out.println(theWall[0] + " " + theWall[1] + " " + theWall[2]);
 		String wallName;
 		//for(int i = 0; i < theWall.length; i++) (does not seem to do anything useful)
 		
 		/* if the player has walls left to play, and the back end says a wall can go here ... */
 		
-		if ((playerWalls[turn-1] > 0) && b.canPlaceWall(theWall)) 
+		if ((b.playerWalls[turn-1] > 0) && b.canPlaceWall(theWall, turn)) 
 		{
-			b.placeWallBoard(theWall); // place it with the back end (NOT GUI YET)
-			playerWalls[turn-1]--; // decrement player's number of walls
+			b.placeWallBoard(theWall, turn); // place it with the back end (NOT GUI YET)
 			
 			
 			/* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */

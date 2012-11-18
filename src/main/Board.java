@@ -16,7 +16,7 @@ import src.ui.GameBoardWithButtons;
 public class Board {
 
 	public final int NUMPLAY; // number of players
-	private int[] playerWalls = new int[4]; // tracks players per wall
+	public int[] playerWalls = new int[4]; // tracks players per wall
 	final int WALL = 5; // how a wall is denoted on the grid
 	public int[][] grid; // the board array
 	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
@@ -319,7 +319,7 @@ public class Board {
 	//    center of the new wall and the third number gives the
 	//    direction the wall will face
 	// PostCondition: a new wall is placed
-	public void placeWallBoard(int[] theWall){
+	public void placeWallBoard(int[] theWall, int player){
 		int col = 2*theWall[0] + 1;
 		int row = 2*theWall[1] + 1;
 		if(theWall[2] == 0){
@@ -331,13 +331,16 @@ public class Board {
 			grid[col][row-1] = WALL;
 			grid[col][row+1] = WALL;
 		}
+		playerWalls[player-1]--;
 	}
 
 	// Parameters: an int[3] where the first and second numbers give the
 	//    center of the new wall and the third number gives the
 	//    direction the wall will face
 	// Returns: if the wall can be placed there
-	public boolean canPlaceWall(int[] theWall){
+	public boolean canPlaceWall(int[] theWall, int player){
+		if(playerWalls[player-1] == 0)
+			return false;
 		int col = 2*theWall[0] + 1;
 		int row = 2*theWall[1] + 1;
 		if(grid[col][row] != 0)
@@ -347,7 +350,7 @@ public class Board {
 		if(theWall[2]==1 && (grid[col][row-1]!=0 || grid[col][row+1]!=0))
 			return false;
 		Board tempB = new Board(this);		
-		tempB.placeWallBoard(theWall);
+		tempB.placeWallBoard(theWall, player);
 		if(!tempB.canWin())
 		    return false;
 		return true;

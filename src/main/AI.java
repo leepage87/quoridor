@@ -6,13 +6,11 @@ public class AI{
 
 	   int[] move = new int[5];
 	   Board AIboard;
-	   public int beta;
 	   public int truePlayer;
 	   private int[] playerWalls;
 
 	 public AI(Board b){
          AIboard = b;
-         beta = -201;
 	 }
 
 	
@@ -53,6 +51,7 @@ public class AI{
 		answer[1] = 201;
 		answer[2] = -201;
 		ArrayList<Board> moves = findMoves(player, AIboard);
+		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
 		answer[0] = next[0];
 		answer[2] = next[0];
@@ -143,7 +142,7 @@ public class AI{
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		playerWalls = b.getPlayerWalls();
 		if(playerWalls[turn-1] != 0)
-			posMoves = wallPlacementSearch(b);
+			posMoves = wallPlacementSearch(b, turn);
 		for(int row = 0; row < 17; row=row+2){
 				for(int col =0; col < 17; col=col+2){
 					int[] destination = new int[2];
@@ -163,7 +162,7 @@ public class AI{
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		playerWalls = b.getPlayerWalls();
 		if(playerWalls[turn-1] != 0)
-			posMoves = wallPlacementSearch(b);
+			posMoves = wallPlacementSearch(b, turn);
 		for(int i = 0; i < 17; i=i+2){
 				for(int j =0; j < 17; j=j+2){
 					int[] destination = new int[2];
@@ -221,7 +220,7 @@ public class AI{
 	}
 	
 	// Returns: an ArrayList of one board for every possible wall placement
-	public ArrayList<Board> wallPlacementSearch(Board b){
+	public ArrayList<Board> wallPlacementSearch(Board b, int player){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
 			for(int j = 0; j < 8; j++){
@@ -229,15 +228,15 @@ public class AI{
 				theWall[0] = i;
 				theWall[1] = j;
 				theWall[2] = 0;
-				if(b.canPlaceWall(theWall)){
+				if(b.canPlaceWall(theWall, player)){
 					Board tempB = new Board(b);
-					tempB.placeWallBoard(theWall);
+					tempB.placeWallBoard(theWall, player);
 					posMoves.add(tempB);
 				}
 				theWall[2] = 1;
-				if(b.canPlaceWall(theWall)){
+				if(b.canPlaceWall(theWall, player)){
 					Board tempB = new Board(b);
-					tempB.placeWallBoard(theWall);
+					tempB.placeWallBoard(theWall, player);
 					posMoves.add(tempB);
 				}
 			}	
@@ -248,7 +247,7 @@ public class AI{
         int [] placement = new int[3];
         placement[0] = 1;
         placement[1] = 1;
-        AIboard.placeWallBoard(placement);
+        AIboard.placeWallBoard(placement, 1);
         return AIboard;
 }       
 
