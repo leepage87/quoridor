@@ -276,7 +276,7 @@ public class PlayQuor{
 		Thread.sleep(0);
 		
 		/* nextMove is set by GUI upon click. First character determines whether a board or wall is being moved/placed. */
-		if (nextMove.charAt(0) == 'B') {//its a player move
+		if (nextMove.charAt(0) == 'B') { //its a player move
 			boolean getOut = false; // needed to get out of loop in some cases
 			
 			/* Finds the player's old location. Determines direction of move. Tests ability to make that move.*/
@@ -284,7 +284,6 @@ public class PlayQuor{
 			{
 				for (int row = 0; row < 17; row +=2)
 				{
-					//System.out.print(b.grid[col][row] + " ");
 					if (b.grid[col][row] == turn)
 					{
 						int oldCol = col; // player's old location
