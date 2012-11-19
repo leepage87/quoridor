@@ -52,11 +52,13 @@ public class AI{
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
 		if(rounds == 0){
-			int enemy = (player%AIboard.NUMPLAY)+1;
+			int enemy = findEnemy(player, AIboard);
 			int value = boardValue(player, enemy, moves.get(0));
 			for(int i = 1; i < moves.size(); i++){
 				int nextValue = boardValue(player, enemy, moves.get(i));
 				if(nextValue > value){
+					value = nextValue;
+					System.out.println(moves.get(i));
 					goodMoves = new ArrayList<Integer>();
 					goodMoves.add(i);
 				}else if(nextValue == value)
@@ -68,6 +70,7 @@ public class AI{
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
 		answer[0] = next[0];
 		answer[2] = next[0];
+		goodMoves.add(0);
 		for(int i = 1; i < moves.size(); i++){
 			next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(i), rounds-1);
 			if(next[0] > answer[0]){
@@ -79,6 +82,8 @@ public class AI{
 				goodMoves.add(i);
 			}
 		}
+		if(goodMoves.size() > 1)
+			System.out.println("Random: " + goodMoves.size());
 		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
 		return moves.get(whichBoard);
 	}
@@ -208,7 +213,7 @@ public class AI{
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
 		int walls = 2*b.playerWalls[turn-1];
-		return enemyMoves-playerMoves+walls;
+		return enemyMoves-playerMoves;
 	}
 		
 	// Parameters: the player
