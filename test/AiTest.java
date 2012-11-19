@@ -64,7 +64,7 @@ public class AiTest {
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
-			AIboard.aiMove(1);
+			AIboard.aiMove(1, 1);
 			AIboard.move(placement, 1);
 			int[] method = new int[2];
 			int [] moved = new int[2];

@@ -8,9 +8,12 @@ public class AI{
 	   Board AIboard;
 	   public int truePlayer;
 	   private int[] playerWalls;
+	   boolean panic = false;
+	   Board lastMove;
 
 	 public AI(Board b){
          AIboard = b;
+         lastMove = b;
 	 }
 
 	
@@ -51,20 +54,21 @@ public class AI{
 		answer[2] = -201;
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
-		if(rounds == 0){
+		if(rounds == 0 || panic == true){
 			int enemy = findEnemy(player, AIboard);
 			int value = boardValue(player, enemy, moves.get(0));
 			for(int i = 1; i < moves.size(); i++){
 				int nextValue = boardValue(player, enemy, moves.get(i));
 				if(nextValue > value){
 					value = nextValue;
-					System.out.println(moves.get(i));
 					goodMoves = new ArrayList<Integer>();
 					goodMoves.add(i);
 				}else if(nextValue == value)
 					goodMoves.add(i);
 			}
 			int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
+			if(panic == true && wallPlaced(lastMove, moves.get(whichBoard)))
+				panic = false;
 			return moves.get(whichBoard);
 		}
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
@@ -82,12 +86,15 @@ public class AI{
 				goodMoves.add(i);
 			}
 		}
-		if(goodMoves.size() > 1)
-			System.out.println("Random: " + goodMoves.size());
-		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
+		if(splitMove(moves.get(0)))
+			return aiMove(player, 0);
+		lastMove = AIboard;
+		if(goodMoves.size() > 8)
+			return aiMove(player, 0);
+		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
 		return moves.get(whichBoard);
 	}
-
+	
 	// Parameters: an array of the current value + the alpha + the beta,
 	//    the player, a board, and the number of rounds to look ahead
 	// Returns: the same array, or the same array with either the alpha or beta changed
@@ -175,31 +182,34 @@ public class AI{
 		}
 		return posMoves;
 	}
+
+	// Parameters: the next move
+	// Returns: if the board is trying to move back to its
+	//    old location despite no walls being placed
+	// PostCondition: board is set to panic
+	public boolean splitMove(Board b){
+		// No new walls
+		if(wallPlaced(lastMove, b))
+			return false;
+		// Moving to old location
+		int[] oldPlace = lastMove.playerPlace(truePlayer);
+		int[] newPlace = b.playerPlace(truePlayer);
+		if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
+			return false;
+		panic = true;
+		return true;
+	}
 	
-	// Parameters: the player whose turn it is and the enemy closest to winning
-	// Returns: the board after making the best possible move
-	public Board findBestMove(int turn, int enemy, Board b){
-		ArrayList<Board> posMoves = new ArrayList<Board>();
-		if(b.playerWalls[turn-1] != 0)
-			posMoves = wallPlacementSearch(b, turn);
-		for(int i = 0; i < 17; i=i+2){
-				for(int j =0; j < 17; j=j+2){
-					int[] destination = new int[2];
-					destination[0] = j;
-					destination[1] = i;
-					Board nextStep = eachStep(turn, destination, b);
-					if(!nextStep.equals(b))
-						posMoves.add(nextStep);
-			}
+	// Parameters: a board
+	// Returns: if a wall has been placed in the last turn
+	public boolean wallPlaced(Board b1, Board b2){
+		int oldWalls = 0;
+		int newWalls = 0;
+		for(int i = 0; i < 4; i++){
+			oldWalls += b1.playerWalls[i];
+			newWalls += b2.playerWalls[i];
 		}
-		Board finalMove = new Board(posMoves.get(0));
-		int value = boardValue(turn, enemy, posMoves.get(0));
-		for(int i = 1; i < posMoves.size(); i++)
-			if(value < boardValue(turn, enemy, posMoves.get(i))){
-				finalMove = posMoves.get(i);
-				value = boardValue(turn, enemy, posMoves.get(i));
-			}
-		return finalMove;
+		return oldWalls != newWalls;
 	}
 	
 	// Parameters: the player whose turn it is, the enemy closest
