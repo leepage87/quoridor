@@ -8,9 +8,12 @@ public class AI{
 	   Board AIboard;
 	   public int truePlayer;
 	   private int[] playerWalls;
+	   boolean panic = false;
+	   Board lastMove;
 
 	 public AI(Board b){
          AIboard = b;
+         lastMove = b;
 	 }
 
 	
@@ -51,7 +54,7 @@ public class AI{
 		answer[2] = -201;
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
-		if(rounds == 0){
+		if(rounds == 0 || panic == true){
 			int enemy = findEnemy(player, AIboard);
 			int value = boardValue(player, enemy, moves.get(0));
 			for(int i = 1; i < moves.size(); i++){
@@ -64,6 +67,9 @@ public class AI{
 					goodMoves.add(i);
 			}
 			int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
+			// Turn off panic if a wall has been placed
+			if(panic == true && wallPlaced(lastMove, moves.get(whichBoard)))
+				panic = false;
 			return moves.get(whichBoard);
 		}
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
@@ -81,12 +87,44 @@ public class AI{
 				goodMoves.add(i);
 			}
 		}
+		if(splitMove(moves.get(0)))
+			return aiMove(player, 0);
+		lastMove = AIboard;
 		if(goodMoves.size() > 8)
 			return aiMove(player, 0);
 		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
 		return moves.get(whichBoard);
 	}
 
+	// Parameters: the next move
+	// Returns: if the board is trying to move back to its
+	//    old location despite no walls being placed
+	// PostCondition: board is set to panic
+	public boolean splitMove(Board b){
+		// No new walls
+		if(wallPlaced(lastMove, b))
+			return false;
+		// Moving to old location
+		int[] oldPlace = lastMove.playerPlace(truePlayer);
+		int[] newPlace = b.playerPlace(truePlayer);
+		if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
+			return false;
+		panic = true;
+		return true;
+	}
+	
+	// Parameters: a board
+	// Returns: if a wall has been placed in the last turn
+	public boolean wallPlaced(Board b1, Board b2){
+		int oldWalls = 0;
+		int newWalls = 0;
+		for(int i = 0; i < 4; i++){
+			oldWalls += b1.playerWalls[i];
+			newWalls += b2.playerWalls[i];
+		}
+		return oldWalls != newWalls;
+	}
+	
 	// Parameters: an array of the current value + the alpha + the beta,
 	//    the player, a board, and the number of rounds to look ahead
 	// Returns: the same array, or the same array with either the alpha or beta changed
