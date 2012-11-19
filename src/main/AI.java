@@ -67,7 +67,6 @@ public class AI{
 					goodMoves.add(i);
 			}
 			int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
-			// Turn off panic if a wall has been placed
 			if(panic == true && wallPlaced(lastMove, moves.get(whichBoard)))
 				panic = false;
 			return moves.get(whichBoard);
@@ -94,35 +93,6 @@ public class AI{
 			return aiMove(player, 0);
 		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
 		return moves.get(whichBoard);
-	}
-
-	// Parameters: the next move
-	// Returns: if the board is trying to move back to its
-	//    old location despite no walls being placed
-	// PostCondition: board is set to panic
-	public boolean splitMove(Board b){
-		// No new walls
-		if(wallPlaced(lastMove, b))
-			return false;
-		// Moving to old location
-		int[] oldPlace = lastMove.playerPlace(truePlayer);
-		int[] newPlace = b.playerPlace(truePlayer);
-		if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
-			return false;
-		panic = true;
-		return true;
-	}
-	
-	// Parameters: a board
-	// Returns: if a wall has been placed in the last turn
-	public boolean wallPlaced(Board b1, Board b2){
-		int oldWalls = 0;
-		int newWalls = 0;
-		for(int i = 0; i < 4; i++){
-			oldWalls += b1.playerWalls[i];
-			newWalls += b2.playerWalls[i];
-		}
-		return oldWalls != newWalls;
 	}
 	
 	// Parameters: an array of the current value + the alpha + the beta,
@@ -213,6 +183,35 @@ public class AI{
 		return posMoves;
 	}
 
+	// Parameters: the next move
+	// Returns: if the board is trying to move back to its
+	//    old location despite no walls being placed
+	// PostCondition: board is set to panic
+	public boolean splitMove(Board b){
+		// No new walls
+		if(wallPlaced(lastMove, b))
+			return false;
+		// Moving to old location
+		int[] oldPlace = lastMove.playerPlace(truePlayer);
+		int[] newPlace = b.playerPlace(truePlayer);
+		if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
+			return false;
+		panic = true;
+		return true;
+	}
+	
+	// Parameters: a board
+	// Returns: if a wall has been placed in the last turn
+	public boolean wallPlaced(Board b1, Board b2){
+		int oldWalls = 0;
+		int newWalls = 0;
+		for(int i = 0; i < 4; i++){
+			oldWalls += b1.playerWalls[i];
+			newWalls += b2.playerWalls[i];
+		}
+		return oldWalls != newWalls;
+	}
+	
 	// Parameters: the player whose turn it is, the enemy closest
 	//   to winning, and the board being examined
 	// Returns: number of moves it will take the enemy to win minus
