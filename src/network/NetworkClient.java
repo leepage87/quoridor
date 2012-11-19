@@ -180,16 +180,10 @@ public class NetworkClient {
      * @throws IOException 
      */
     public static void removePlayer(int playerID) throws IOException{
-        System.out.println("We're in remove player");
         broadcast("REMOVED " + (playerID-1));
-        /*
-        for (int i = 0; i < players.length; i++){
-            players[i].outToPlayer.print("REMOVED " + (playerID-1) + "\n"); 
-        }
         players[playerID-1].playerSocket.close();
         players[playerID-1] = null;
-        System.out.println("Broadcasting REMOVED for player: " + (playerID-1));
-        */
+
     }
 
     /**
@@ -197,8 +191,6 @@ public class NetworkClient {
      * @param message: the message to be broadcast
      */
     public static void broadcast(String message) { 
-
-        //TODO: test this with multiple players
         
         for (int i = 0; i < players.length; i++){
             System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);

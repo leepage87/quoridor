@@ -30,7 +30,7 @@ public class MoveServer extends Thread {
     private long tID;
     /**
      * constructor
-     * @param conn
+     * @param conn the connection with network client
      */
     public MoveServer(Socket conn) {
         this.connection = conn;
@@ -218,6 +218,7 @@ public class MoveServer extends Thread {
 
     private Board move(String frago, Board moveBoard){
         //fragmentary order: MOVED P M (R, C) (R, C)
+        int player = frago.charAt(5);
         int[] move = new int[3];
         if(frago.charAt(8)== 'M'){
             move [0] = (frago.charAt(21)-'0')*2;
@@ -235,7 +236,7 @@ public class MoveServer extends Thread {
                 }
                 move[1] = (frago.charAt(11)-'0');
                 move[2] = 1;
-                moveBoard.placeWallBoard(move);
+                moveBoard.placeWallBoard(move, player);
             }else{//vertical wall
                 move[0] = (frago.charAt(14)-'0');
                 if((frago.charAt(11)-'0') != 0){
@@ -244,7 +245,7 @@ public class MoveServer extends Thread {
                     move[1] = (frago.charAt(11)-'0'); 
                 }
                 move[2] = 0;
-                moveBoard.placeWallBoard(move);
+                moveBoard.placeWallBoard(move, player);
             }
 
         }
