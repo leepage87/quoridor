@@ -127,7 +127,7 @@ public class MoveServer extends Thread {
                 }else if(fromGameClient.contains("REMOVED")){
                     //a different player has been removed  
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Someone else made an illegal move");
-                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> charAt8 is: " + fromGameClient.charAt(8));
+                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> remove says kick: " + fromGameClient.charAt(8));
                     b = kick(fromGameClient.charAt(8)-'0' + 1, b);
                     System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
                     System.err.println(b.toString());
@@ -227,8 +227,11 @@ public class MoveServer extends Thread {
             System.out.println("Move[] " + move[0] + move[1]);
             moveBoard.quickMove(move, ((frago.charAt(6)-'0')+1));
         }else{//its a wall placement
-            System.err.println("We're placing a wall");
-            if(frago.charAt(11) == frago.charAt(18)){//horizontal wall
+            System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> We're placing a wall");
+            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> wall rec'd: " + frago);
+
+            if(frago.charAt(14) == frago.charAt(21)){//horizontal wall
+                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its horz");
                 if((frago.charAt(14)-'0') != 0){
                     move[0] = (frago.charAt(14)-'0')-1;
                 }else{
@@ -238,6 +241,7 @@ public class MoveServer extends Thread {
                 move[2] = 1;
                 moveBoard.placeWallBoard(move, player);
             }else{//vertical wall
+                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its vert");
                 move[0] = (frago.charAt(14)-'0');
                 if((frago.charAt(11)-'0') != 0){
                     move[1] = (frago.charAt(11)-'0')-1;
@@ -260,8 +264,6 @@ public class MoveServer extends Thread {
      * @return the board after the player has been removed
      */
     private Board kick(int player, Board kickBoard){
-        int[] location2 = kickBoard.playerPlace(1);
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> player place test search for 1: " + location2[0] + location2[1]);
 
         System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> inside kick, kicking player: " + player);
         System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
