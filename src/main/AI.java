@@ -58,7 +58,6 @@ public class AI{
 				int nextValue = boardValue(player, enemy, moves.get(i));
 				if(nextValue > value){
 					value = nextValue;
-					System.out.println(moves.get(i));
 					goodMoves = new ArrayList<Integer>();
 					goodMoves.add(i);
 				}else if(nextValue == value)
