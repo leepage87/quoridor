@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="public" author="true" classpath="JARs/windowlicker-swing-a256.jar:JARs/objenesis-1.0.jar:JARs/windowlicker-core-DEV.jar:JARs/windowlicker-core-a256-src.jar:JARs/hamcrest-all-1.3.jar:JARs/junit-dep-4.10.jar:JARs/hamcrest-core-1.1.jar:JARs/windowlicker-swing-DEV.jar:JARs/hamcrest-library-1.1.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.6" sourcefiles="src/main/AI.java" sourcepath="." splitindex="true" use="true" version="true"/>
+        <javadoc access="public" author="true" classpath="JARs/windowlicker-swing-a256.jar:JARs/objenesis-1.0.jar:JARs/windowlicker-core-DEV.jar:JARs/windowlicker-core-a256-src.jar:JARs/hamcrest-all-1.3.jar:JARs/junit-dep-4.10.jar:JARs/hamcrest-core-1.1.jar:JARs/windowlicker-swing-DEV.jar:JARs/hamcrest-library-1.1.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" source="1.6" sourcefiles="src/main/BoardTestHelp.java" sourcepath="." splitindex="true" use="true" version="true"/>
     </target>
 </project>
