@@ -43,27 +43,43 @@ public class AI{
 	
 	// Parameters: the player
 	// Returns: the board after moving
-	public Board aiMove(int player){
+	public Board aiMove(int player, int rounds){
 		truePlayer = player;
-		int rounds = 1;
 		int[] answer = new int[3];
 		answer[0] = -201;
 		answer[1] = 201;
 		answer[2] = -201;
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
+		if(rounds == 0){
+			int enemy = (player%AIboard.NUMPLAY)+1;
+			int value = boardValue(player, enemy, moves.get(0));
+			for(int i = 1; i < moves.size(); i++){
+				int nextValue = boardValue(player, enemy, moves.get(i));
+				if(nextValue > value){
+					goodMoves = new ArrayList<Integer>();
+					goodMoves.add(i);
+				}else if(nextValue == value)
+					goodMoves.add(i);
+			}
+			int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
+			return moves.get(whichBoard);
+		}
 		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
 		answer[0] = next[0];
 		answer[2] = next[0];
-		int whichBoard = 0;
 		for(int i = 1; i < moves.size(); i++){
 			next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(i), rounds-1);
 			if(next[0] > answer[0]){
+				goodMoves = new ArrayList<Integer>();
 				answer[0] = next[0];
 				answer[2] = next[0];
-				whichBoard = i;
+				goodMoves.add(i);
+			}else if(next[0] == answer[0]){
+				goodMoves.add(i);
 			}
 		}
+		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
 		return moves.get(whichBoard);
 	}
 
@@ -72,7 +88,7 @@ public class AI{
 	// Returns: the same array, or the same array with either the alpha or beta changed
 	public int[] search(int[] answer, int player, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMoves(player, b);
-		if(numRounds == 0)
+		if(numRounds < 1)
 			return baseCase(answer, player, allMoves);
 		int[] nextAnswer = {answer[0], answer[1], answer[2]};
 		if(player == truePlayer){

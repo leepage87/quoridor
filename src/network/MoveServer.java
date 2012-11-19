@@ -162,7 +162,7 @@ public class MoveServer extends Thread {
         //record start location of player
         int[] startLocation = b.playerPlace(playerNo+1);
         //record final location of player
-        Board tempNewBoard = ai.aiMove(playerNo+1);
+        Board tempNewBoard = ai.aiMove(playerNo+1, 1);
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
         System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
         System.out.println(tempNewBoard.toString());

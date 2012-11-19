@@ -35,7 +35,8 @@ public class PlayQuor{
      * The central game driver. Gets number of players, creates a new back end Board
      * and GUI, and loops until player wins or starts a new game.
      * */
-    public static void main(String[] args) throws InterruptedException, UnknownHostException, IOException{
+
+    public static void main(String[] args) throws InterruptedException, IOException{
 
         GameBoardWithButtons gui = null; // instantiates GUI
 
@@ -54,7 +55,7 @@ public class PlayQuor{
             else if (n == 2)
                 System.exit(0);
 
-            NetworkClient network = new NetworkClient();
+
             //get network information, initiate network
             options [0] = "Local Game";
             options [1] = "Network Game";
@@ -62,33 +63,40 @@ public class PlayQuor{
             n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
                     "Play local or remote opponent?","Network Game?",
                     JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-
+            NetworkClient network = new NetworkClient();
             if (n == 1 && numPlay == 2){
-                String address = JOptionPane.showInputDialog("Input address of two move servers:", "ex. hostname:port hostname2:port");
+                String address = JOptionPane.showInputDialog("Input addresses for two move servers separated by spaces:", "ex. hostname1:port hostname2:port");
                 if (address != null){
                     Scanner addressScanner = new Scanner(address);
-                    String player1Address = addressScanner.next();
-                    String player2Address = addressScanner.next();
+                    String player1Address = addressScanner.next(); 
+                    String player2Address = addressScanner.next(); 
                     network = new NetworkClient(player1Address, player2Address);
                     networkGame = true;
                 }
             }
             else if (n == 1 && numPlay == 4 ){
 
-                String address = JOptionPane.showInputDialog("Input address of four move servers:", "ex. hostname1:port hostname2:port");
+                String address = JOptionPane.showInputDialog("Input addreses for four move servers separated by spaces", "ex. hostname1:port hostname2:port");
                 if (address != null){
                     Scanner addressScanner = new Scanner(address);
                     String player1Address = addressScanner.next(); 
                     String player2Address = addressScanner.next(); 
                     String player3Address = addressScanner.next(); 
-                    String player4Address = addressScanner.next();
+                    String player4Address = addressScanner.next(); 
                     network = new NetworkClient(player1Address, player2Address, player3Address, player4Address);
                     networkGame = true;
                 }
             }
             else if (n == 2)
                 System.exit(0);
-
+            /*
+			if(!networkGame && numPlay == 2){
+				options = {"Play Against AI", "Four player game","Quit"};
+				JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+	                    "Play local or remote opponent?","Network Game?",
+	                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+			}
+             */
             if(!networkGame) 
             {
                 for (int i = 1; i <= numPlay; i++)
@@ -128,8 +136,9 @@ public class PlayQuor{
                             BoardButton.getButton("B" + i/2 + j/2).setIcon(src.ui.GameBoardWithButtons.defaultIcon);
 
                 /*Resets the legal move array*/
-                resetLegalMoves();
-                
+                for (int i = 0; i < 9; i++)
+                    for (int j = 0; j < 9; j++)
+                        legalMovesArray[i][j] = 0;
 
                 turn = (turn%numPlay) + 1; // update turn
 
@@ -148,7 +157,8 @@ public class PlayQuor{
                 // initialize GUI buttons indicating how many walls each player has left
                 for (int i = 0; i < numPlay; i++)
                     GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
-                
+
+
                 /*
                  * 
                  * 
@@ -182,7 +192,7 @@ public class PlayQuor{
                         System.out.println("oldx " + oldX + "oldY " + oldY);
                         BoardButton.map.get("B"+oldX+oldY).setIcon(Board.map.get(0));
                         int move[] = new int[2];
-                       
+
                         if(networkMove.charAt(5)== 'M'){
                             move [0] = (networkMove.charAt(18)-'0')*2;
                             move [1] = (networkMove.charAt(15)-'0')*2;
@@ -191,19 +201,19 @@ public class PlayQuor{
                             b.quickMove(move, turn);
                             System.err.println(b.toString());
                         }
-                        
+
                         //TODO: ACCOUNT FOR WALL MOVEMENTS
-                        
+
                     }else{//the move is not legal, kick player
                         network.removePlayer(turn);
                     }
                     //decode the  move
-                    
+
                 }else{
                     if(isAI[turn-1] == 1){
                         AI a = new AI(b);
                         int[] startPlace = b.playerPlace(turn);
-                        Board tempB = a.aiMove(turn);
+                        Board tempB = a.aiMove(turn, 1);
                         int[] endPlace = tempB.playerPlace(turn);
                         if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
                             boolean getOut = false;
@@ -237,15 +247,15 @@ public class PlayQuor{
                         if (breaker == 2)
                             break;
                     }
+                    // tests win conditions and updates exit variable accordingly
+                    if (b.haveWon())
+                        breaker = 1;
+                    //System.out.println(b);
                 }
-                // tests win conditions and updates exit variable accordingly
-                if (b.haveWon())
-                    breaker = 1;
-                //System.out.println(b);
+                // if somebody won, say so
+                if (breaker == 1)
+                    JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
             }
-            // if somebody won, say so
-            if (breaker == 1)
-                JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
         }
 
     }	
@@ -309,6 +319,7 @@ public class PlayQuor{
 
     public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
         /*
+
 	  Get placeWall/movePiece from Player/AI, in int[] form
 	      movePiece: gives int to get the char from
 	      placeWall: gives int/int/int (row, column, direction)
@@ -479,7 +490,7 @@ public class PlayQuor{
             return false;
         return true;
     }
-    
+
     private static void resetLegalMoves(){
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
