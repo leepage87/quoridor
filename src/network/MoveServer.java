@@ -75,11 +75,15 @@ public class MoveServer extends Thread {
                 System.err.println("ID: "+ tID + " top of do/while");
 
                 fromGameClient = inFromClient.nextLine();
-
+                if(fromGameClient.contains("WINNER")){
+                    System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
+                    connection.close();
+                    System.exit(0);
+                }
                 if (fromGameClient.contains("MOVE?")){
 
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
-                    "> Received 'MOVE?' from client, issuing move");
+                            "> Received 'MOVE?' from client, issuing move");
                     //get move, send to client
                     nextMove = getMove(playerNo, b, ai);
                     outToClient.println(nextMove);
@@ -96,9 +100,9 @@ public class MoveServer extends Thread {
 
                     if(fromGameClient.contains("MOVED " + playerNo + nextMove.substring(4))){
                         //move has been accepted, so make teh move
-
-                        b = move(fromGameClient, b);
                         System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +"> move confirmed, making move:");
+                        b = move(fromGameClient, b);
+
                         System.out.println(b.toString());
 
 
@@ -107,7 +111,7 @@ public class MoveServer extends Thread {
                         System.out.println("Player no is: " + playerNo + "vs char: " + fromGameClient.charAt(8));
                         if(playerNo == (fromGameClient.charAt(8)-'0')){
                             System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Move was illegal, you've been kicked out of game (Player " + (playerNo+1) +")" );
-                            //connection.close();
+                            connection.close();
                             //System.exit(0);
                         }else{//someone else was kicked
                             System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Someone else made an illegal move (Player " +
@@ -120,7 +124,6 @@ public class MoveServer extends Thread {
                 }else if (fromGameClient.substring(0,5).equals("MOVED")){
                     //server telling you to move a different player's piece 
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> a different player has moved!" );
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + ">******moved******");
                     b = move(fromGameClient, b);
                     System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " Opponent has just moved");
                     System.err.println(b.toString());
@@ -133,14 +136,9 @@ public class MoveServer extends Thread {
                     System.err.println(b.toString());
                 }
                 System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + ">at bottom of while loop");
-            }while (!fromGameClient.contains("WINNER") || !fromGameClient.contains("REMOVED " + playerNo));
+            }while (!fromGameClient.contains("REMOVED " + playerNo));
             System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "is outside the do/while loop");
 
-            //TODO: display losing or winning message
-            if(fromGameClient.contains("WINNER"));
-            System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
-            //connection.close();
-            // System.exit(0);
         }catch (Exception e){
 
         }
@@ -179,8 +177,8 @@ public class MoveServer extends Thread {
                 //its a horizontal wall
                 rowOne = wallLocation[1]+1;
                 colOne = wallLocation[0];
-                rowTwo = wallLocation[1]+3;
-                colTwo = wallLocation[0];
+                rowTwo = wallLocation[1]+1;//just changed this from +3 to +1
+                colTwo = wallLocation[0]+2;//changed this from +0 to +2
             }else{//its a vertical wall
                 rowOne = wallLocation[1];
                 colOne = wallLocation[0]+1;
@@ -214,11 +212,9 @@ public class MoveServer extends Thread {
      * @param moveBoard the board's current status
      * @return returns an updated board with the new move
      */
-
-
     private Board move(String frago, Board moveBoard){
         //fragmentary order: MOVED P M (R, C) (R, C)
-        int player = frago.charAt(5);
+        int player = (frago.charAt(6) - '0') + 1;
         int[] move = new int[3];
         if(frago.charAt(8)== 'M'){
             move [0] = (frago.charAt(21)-'0')*2;
@@ -230,16 +226,19 @@ public class MoveServer extends Thread {
             System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> We're placing a wall");
             System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> wall rec'd: " + frago);
 
-            if(frago.charAt(14) == frago.charAt(21)){//horizontal wall
+            if(frago.charAt(11) == frago.charAt(18)){//horizontal wall
                 System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its horz");
                 if((frago.charAt(14)-'0') != 0){
-                    move[0] = (frago.charAt(14)-'0')-1;
+                    move[0] = (frago.charAt(14)-'0');//TODO: removed -1, might be able to do away with whole if/else
                 }else{
                     move[0] = (frago.charAt(14)-'0');
                 }
-                move[1] = (frago.charAt(11)-'0');
-                move[2] = 1;
+                move[1] = (frago.charAt(11)-'0') -1;
+                move[2] = 0;
+                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
                 moveBoard.placeWallBoard(move, player);
+                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> moveboard.placewall works");
+
             }else{//vertical wall
                 System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its vert");
                 move[0] = (frago.charAt(14)-'0');
@@ -248,8 +247,10 @@ public class MoveServer extends Thread {
                 }else{
                     move[1] = (frago.charAt(11)-'0'); 
                 }
-                move[2] = 0;
+                move[2] = 1;
+                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
                 moveBoard.placeWallBoard(move, player);
+                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> moveboard.placewall works");
             }
 
         }

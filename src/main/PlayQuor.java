@@ -208,17 +208,18 @@ public class PlayQuor{
                         //TODO: CHECK IF WALL MOVEMENT IS LEGAL
                         if(networkMove.charAt(8) == networkMove.charAt(15)){//horizontal wall
                             if((networkMove.charAt(11)-'0') != 0){
-                                System.out.println("charat15 is " + networkMove.charAt(14));
-                                move[0] = (networkMove.charAt(11)-'0')-1;
+                                System.out.println("charat15 is " + networkMove.charAt(15));
+                                move[0] = (networkMove.charAt(11)-'0');
                                 System.out.println("i move0 is:" + move[0]);
                             }else{
                                 move[0] = (networkMove.charAt(11)-'0');
                                 System.out.println("e move0 is:" + move[0]);
                             }
-                            move[1] = (networkMove.charAt(8)-'0');
-                            move[2] = 1;
+                            move[1] = (networkMove.charAt(8)-'0') -1;
+                            move[2] = 0;
                             System.out.println("Printing horz wall coords: "+ move[0] + " " + move[1]);
-                            b.placeWallBoard(move, turn);
+                            placeWallPQ(b, move);
+                            //b.placeWallBoard(move, turn);
                             network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
                         }else{//vertical wall
                             move[0] = (networkMove.charAt(11)-'0');
@@ -227,10 +228,10 @@ public class PlayQuor{
                             }else{
                                 move[1] = (networkMove.charAt(8)-'0'); 
                             }
-                            move[2] = 0;
+                            move[2] = 1;
                             System.out.println("Printing vert wall coords: "+ move[0] + " " + move[1]);
-
-                            b.placeWallBoard(move, turn);
+                            placeWallPQ(b, move);
+                            //b.placeWallBoard(move, turn);
                             network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
                         }
                         System.err.println(b.toString());
@@ -279,13 +280,20 @@ public class PlayQuor{
                             break;
                     }
                     // tests win conditions and updates exit variable accordingly
-                    if (b.haveWon())
-                        breaker = 1;
+                    //if (b.haveWon())
+                      //  breaker = 1;
                     //System.out.println(b);
                 }
+                if (b.haveWon())
+                    breaker = 1;
                 // if somebody won, say so
                 if (breaker == 1)
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
+                if (breaker == 1 && networkGame){
+                    JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
+                    network.broadcast("WINNER " + (turn-1));
+                    network.kill();
+                }
             }
         }
 
