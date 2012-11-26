@@ -7,7 +7,6 @@ public class AI{
 	   int[] move = new int[5];
 	   Board AIboard;
 	   public int truePlayer;
-	   private int[] playerWalls;
 	   boolean panic = false;
 	   Board lastMove;
 
@@ -222,7 +221,7 @@ public class AI{
 			return 200;
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
-		int walls = 2*b.playerWalls[turn-1];
+		//int walls = 2*b.playerWalls[turn-1];
 		return enemyMoves-playerMoves;
 	}
 		
