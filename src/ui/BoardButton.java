@@ -3,15 +3,12 @@ package src.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 import src.main.PlayQuor;
 /* Draws the game tiles. Has a map from Button name to Button.*/
+@SuppressWarnings("serial")
 public class BoardButton extends JButton implements ActionListener {
 
 	// Map from button name to button itself. Allows other classes
@@ -41,8 +38,8 @@ public class BoardButton extends JButton implements ActionListener {
 
 		BoardButton button = (BoardButton) me;
 		button.setRolloverEnabled(false);
-		PlayQuor.clicked = true;
-		PlayQuor.nextMove = button.name;
+		PlayQuor.setClicked(true);
+		PlayQuor.setNextMove(button.name);
 	}
 
 	/* Seems unused. Commented out for now. public void rolloverTests(){
@@ -60,7 +57,8 @@ public class BoardButton extends JButton implements ActionListener {
 	}*/
 
 	public static void setPlayerPresent(boolean setting, int col, int row){
-		map.get("B"+col+row).playerPresent = setting;
+		map.get("B"+col+row);
+        BoardButton.playerPresent = setting;
 	}
 
 	/* Creates each button. Sets it to not contain a player. Sets default icon.

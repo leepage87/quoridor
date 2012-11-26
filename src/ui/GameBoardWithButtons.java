@@ -216,7 +216,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	    			"Restart the game and lose all progress?","Are you sure?",
 	    			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 	    	if (n == 0)
-	    		PlayQuor.breaker = 2;
+	    		PlayQuor.setBreaker(2);
 
 	    }
 	}

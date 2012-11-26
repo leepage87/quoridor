@@ -64,8 +64,8 @@ public class BoardWall extends JButton implements ActionListener {
 		if (next != null)
 			/* Informs PlayQuor that a click was registered, and passes information on the (wall) button. */
 			if ((!wall.wallPresent) && (!next.wallPresent)) {
-				PlayQuor.nextMove = wall.name;
-				PlayQuor.clicked = true;
+				PlayQuor.setNextMove(wall.name);
+				PlayQuor.setClicked(true);
 			}
 
 	}

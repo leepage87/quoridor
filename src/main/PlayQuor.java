@@ -10,10 +10,7 @@ package src.main;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-
 import src.network.NetworkClient;
 import src.ui.BoardButton;
 import src.ui.BoardWall;
@@ -21,14 +18,13 @@ import src.ui.GameBoardWithButtons;
 
 public class PlayQuor{
 
-    public static boolean clicked = false; // When set true by the GUI, executes method takeTurn
-    public static String nextMove = ""; // Receives data from GUI on next human player move
-    public static String oldMove = ""; // location data on player before move executed
-    public static int turn; // tracks which player's turn it is
+    private static boolean clicked = false; // When set true by the GUI, executes method takeTurn
+    private static String nextMove = ""; // Receives data from GUI on next human player move
+    private static int turn; // tracks which player's turn it is
     private static int[] pieceHolder = new int[3]; // Used to correctly update GUI during a "double move"
-    public static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
+    private static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
     // or 2 (new game started with File -> New Game)
-    public static int[] isAI = new int[4];
+    private static int[] isAI = new int[4];
     private static boolean networkGame = false;
     private static int[][] legalMovesArray = new int[9][9]; // used for tracking which squares get the legal move icon
     /*
@@ -37,243 +33,52 @@ public class PlayQuor{
      * */
 
     public static void main(String[] args) throws InterruptedException, IOException{
-
         GameBoardWithButtons gui = null; // instantiates GUI
-
         while (true){
-            /* Gets user's preference for number of players and sets numPlay to reflect that. 
-             * Also gives player opportunity to quit before starting a new game.*/
-            String[] options = {"Two player game", "Four player game","Quit"};
-            int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
-                    "How many players want to play today?","Welcome to Quoridor!",
-                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-            int numPlay = 0;
-            if (n == 0)
-                numPlay = 2;
-            else if (n == 1)
-                numPlay = 4;
-            else if (n == 2)
+            int numPlay = getNumPlay();
+            if (numPlay == 0)
                 System.exit(0);
-
-
             //get network information, initiate network
-            options [0] = "Local Game";
-            options [1] = "Network Game";
-            options [2] = "Quit";
-            n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
-                    "Play local or remote opponent?","Network Game?",
-                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-            NetworkClient network = new NetworkClient();
-            if (n == 1 && numPlay == 2){
-                String address = JOptionPane.showInputDialog("Input addresses for two move servers separated by spaces:", "ex. hostname1:port hostname2:port");
-                if (address != null){
-                    Scanner addressScanner = new Scanner(address);
-                    String player1Address = addressScanner.next(); 
-                    String player2Address = addressScanner.next(); 
-                    network = new NetworkClient(player1Address, player2Address);
-                    networkGame = true;
-                }
-            }
-            else if (n == 1 && numPlay == 4 ){
-
-                String address = JOptionPane.showInputDialog("Input addreses for four move servers separated by spaces", "ex. hostname1:port hostname2:port");
-                if (address != null){
-                    Scanner addressScanner = new Scanner(address);
-                    String player1Address = addressScanner.next(); 
-                    String player2Address = addressScanner.next(); 
-                    String player3Address = addressScanner.next(); 
-                    String player4Address = addressScanner.next(); 
-                    network = new NetworkClient(player1Address, player2Address, player3Address, player4Address);
-                    networkGame = true;
-                }
-            }
-            else if (n == 2)
-                System.exit(0);
-
+            NetworkClient network = getNetworkInfo(numPlay);
             if(!networkGame) 
-            {
-                for (int i = 1; i <= numPlay; i++)
-                {
-                    String[] HumanOrAi = {"Human","AI"};
-                    n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
-                            "Player " + i + ": Human or AI?", 
-                            "YOU MUST CHOOSE",JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
-                    isAI[i-1] = n; 
+                for (int i = 1; i <= numPlay; i++){
+                    isAI[i-1] = getHumanOrAI(i);
+                    System.out.println(isAI[i]);
                 }
-            }
-
             // create a new back end board with desired number of players
             Board b = new Board(numPlay);
-
             // Give each player the appropriate number of walls
             for(int i = 0; i < numPlay; i++)
                 b.playerWalls[i] = 20/numPlay;
             // if GUI is not null, a game has just ended and its data must be thrown out.
             if (gui != null)
                 gui.dispose();
-
             // Create brand new gui with board and number of players
             gui = new GameBoardWithButtons(b, numPlay);
-
             // set/reset control variables breaker, won, and turn
             breaker = 0;
             turn = 0;
-
             // Loop containing each game. If breaker becomes 1 or 2, the game has ended.
             while(breaker == 0){
-                /*Resets the legal move icons to default icons*/
-                for (int i = 0; i < 17; i+=2) 
-                    for (int j = 0; j < 17; j+=2) 
-                        if (b.grid[i][j] == 0) 
-                            BoardButton.getButton("B" + i/2 + j/2).setIcon(src.ui.GameBoardWithButtons.defaultIcon);
-
-                /*Resets the legal move array*/
-                for (int i = 0; i < 9; i++)
-                    for (int j = 0; j < 9; j++)
-                        legalMovesArray[i][j] = 0;
-
+                resetIcons(b);
+                resetLegalMoves();
                 turn = (turn%numPlay) + 1; // update turn
 
-                /*If it is a human player's turn, calls method to set legal move array as appropriate*/
-                /*Then reads legal move array and draws icons where a player can legally move*/
                 if (isAI[turn-1] == 0) {
                     setLegalMoves(b.playerPlace(turn), b);
-                    for (int i = 0; i < 9; i++)
-                        for (int j = 0; j < 9; j++)
-                            if (legalMovesArray[i][j] == 1) 
-                                BoardButton.getButton("B" + i + j).setIcon(GameBoardWithButtons.legalMove);
+                    setLMIcons();
                 }
                 // initialize GUI button indicating turn
                 GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
-
                 // initialize GUI buttons indicating how many walls each player has left
                 for (int i = 0; i < numPlay; i++)
                     GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
-
-
-                /*
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 * NETWORK STUFF
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 */
-                if(networkGame){
-                    String networkMove = network.getMove(turn);
-                    System.out.println("Turn: " + turn + " Move: " +networkMove);
-                    setLegalMoves(b.playerPlace(turn), b);
-                    int move[] = new int[3];
-                    if(networkMove.charAt(5)== 'M'){//player movement
-                        int oldX = networkMove.charAt(11) - '0';
-                        int oldY = networkMove.charAt(8) - '0';
-                        int newX= networkMove.charAt(18) - '0';
-                        int newY = networkMove.charAt(15) - '0';
-                        if (legalMovesArray[newX][newY] == 1){
-                            //the move is legal
-
-                            //broadcast the move to all players
-                            network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
-
-
-                            //make the move
-                            BoardButton.map.get("B"+newX+newY).setIcon(Board.map.get(turn));
-                            System.out.println("oldx " + oldX + "oldY " + oldY);
-                            BoardButton.map.get("B"+oldX+oldY).setIcon(Board.map.get(0));
-
-                            move [0] = (networkMove.charAt(18)-'0')*2;
-                            move [1] = (networkMove.charAt(15)-'0')*2;
-                            b.playerPlace(turn);
-                            System.out.println("Move[] " + move[0] + move[1]);
-                            b.quickMove(move, turn);
-                        }else{//the move is not legal, kick player
-                            network.removePlayer(turn);
-                            int[] location = b.playerPlace(turn);
-                            b.grid[location[0]] [location[1]] = 0;
-                            System.out.println("KICKING PLAYER " + turn + " because of: " +networkMove);
-                            //TODO: FIX TURN TO NOT CALL KICKED PLAYERS
-                        }
-                        System.err.println("Player has been moved, printing board");
-                        System.err.println(b.toString());
-
-                    }else{//wall movement
-                        //TODO: CHECK IF WALL MOVEMENT IS LEGAL
-                        if(networkMove.charAt(8) == networkMove.charAt(15)){//horizontal wall
-                            if((networkMove.charAt(11)-'0') != 0){
-                                System.out.println("charat15 is " + networkMove.charAt(15));
-                                move[0] = (networkMove.charAt(11)-'0');
-                                System.out.println("i move0 is:" + move[0]);
-                            }else{
-                                move[0] = (networkMove.charAt(11)-'0');
-                                System.out.println("e move0 is:" + move[0]);
-                            }
-                            move[1] = (networkMove.charAt(8)-'0') -1;
-                            move[2] = 0;
-                            System.out.println("Printing horz wall coords: "+ move[0] + " " + move[1]);
-                            placeWallPQ(b, move);
-                            //b.placeWallBoard(move, turn);
-                            network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
-                        }else{//vertical wall
-
-                            move[0] = (networkMove.charAt(11)-'0') - 1;
-
-                            //if((networkMove.charAt(8)-'0') >= 2){
-                                move[1] = (networkMove.charAt(8)-'0');//just edited removed +1
-                            //}else{
-                             //   move[1] = (networkMove.charAt(8)-'0'); 
-                            //}
-                            move[2] = 1;
-                            System.out.println("Printing vert wall coords: "+ move[0] + " " + move[1]);
-                            placeWallPQ(b, move);
-                            //b.placeWallBoard(move, turn);
-                            network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
-                        }
-                        System.err.println(b.toString());
-
-                    }
-
-
-                    //decode the  move
-
-                }else{
-                    if(isAI[turn-1] == 1){
-                        AI a = new AI(b);
-                        int[] startPlace = b.playerPlace(turn);
-                        Board tempB = a.aiMove(turn, 1);
-                        int[] endPlace = tempB.playerPlace(turn);
-                        if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
-                            boolean getOut = false;
-                            for(int col = 0; col < 17; col++){
-                                for(int row = 0; row < 17; row++){		
-                                    if(b.grid[col][row] != tempB.grid[col][row]){
-                                        int[] aiWall = new int[3];
-                                        aiWall[0] = col/2;
-                                        aiWall[1] = row/2;
-                                        if(tempB.grid[col][row+1]==5)
-                                            aiWall[2] = 1;
-                                        placeWallPQ(b, aiWall);
-                                        getOut = true;
-                                    }
-                                    if(getOut)
-                                        break;
-                                }
-                                if(getOut)
-                                    break;
-                            }
-                        }else{ // Move, not Wall
-                            BoardButton.map.get("B"+endPlace[0]/2+endPlace[1]/2).setIcon(Board.map.get(turn));
-                            BoardButton.map.get("B"+startPlace[0]/2+startPlace[1]/2).setIcon(Board.map.get(0));
-                            b = tempB;
-                        }
-                    }else {
+                if(networkGame)
+                    networkTurn(network, b);
+                else {
+                    if(isAI[turn-1] == 1)
+                        b = makeAIMove(b);
+                    else {
                         boolean fairMove = false;
                         while(!fairMove)
                             fairMove = takeTurn(b, false);
@@ -293,15 +98,194 @@ public class PlayQuor{
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
                 if (breaker == 1 && networkGame){
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
-                    network.broadcast("WINNER " + (turn-1));
+                    NetworkClient.broadcast("WINNER " + (turn-1));
                     network.kill();
                     networkGame = false;
                 }
             }
         }
+    }
+    
+    public static void setClicked(boolean tf) {
+        clicked = tf;
+    }
+    
+    public static void setNextMove (String name) {
+        nextMove = name;
+    }
+    
+    public static void setBreaker(int i) {
+        breaker = i;
+    }
 
-    }	
+    private static Board makeAIMove(Board b) {
+        AI a = new AI(b);
+        int[] startPlace = b.playerPlace(turn);
+        Board tempB = a.aiMove(turn, 1);
+        int[] endPlace = tempB.playerPlace(turn);
+        if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
+            boolean getOut = false;
+            for(int col = 0; col < 17; col++){
+                for(int row = 0; row < 17; row++){      
+                    if(b.grid[col][row] != tempB.grid[col][row]){
+                        int[] aiWall = new int[3];
+                        aiWall[0] = col/2;
+                        aiWall[1] = row/2;
+                        if(tempB.grid[col][row+1]==5)
+                            aiWall[2] = 1;
+                        placeWallPQ(b, aiWall);
+                        getOut = true;
+                    }
+                    if(getOut)
+                        break;
+                }
+                if(getOut)
+                    break;
+            }
+        }else{ // Move, not Wall
+            BoardButton.map.get("B"+endPlace[0]/2+endPlace[1]/2).setIcon(Board.map.get(turn));
+            BoardButton.map.get("B"+startPlace[0]/2+startPlace[1]/2).setIcon(Board.map.get(0));
+            b = tempB;
+        }
+        return b;
+    }
 
+
+    private static void networkTurn(NetworkClient network, Board b) throws IOException {
+        String networkMove = NetworkClient.getMove(turn);
+        System.out.println("Turn: " + turn + " Move: " +networkMove);
+        setLegalMoves(b.playerPlace(turn), b);
+        int move[] = new int[3];
+        if(networkMove.charAt(5)== 'M'){//player movement
+            int oldX = networkMove.charAt(11) - '0';
+            int oldY = networkMove.charAt(8) - '0';
+            int newX= networkMove.charAt(18) - '0';
+            int newY = networkMove.charAt(15) - '0';
+            if (legalMovesArray[newX][newY] == 1){
+                //the move is legal
+
+                //broadcast the move to all players
+                NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
+
+                //make the move
+                BoardButton.map.get("B"+newX+newY).setIcon(Board.map.get(turn));
+                System.out.println("oldx " + oldX + "oldY " + oldY);
+                BoardButton.map.get("B"+oldX+oldY).setIcon(Board.map.get(0));
+
+                move [0] = (networkMove.charAt(18)-'0')*2;
+                move [1] = (networkMove.charAt(15)-'0')*2;
+                b.playerPlace(turn);
+                System.out.println("Move[] " + move[0] + move[1]);
+                b.quickMove(move, turn);
+            }else{//the move is not legal, kick player
+                NetworkClient.removePlayer(turn);
+                int[] location = b.playerPlace(turn);
+                b.grid[location[0]] [location[1]] = 0;
+                System.out.println("KICKING PLAYER " + turn + " because of: " +networkMove);
+                //TODO: FIX TURN TO NOT CALL KICKED PLAYERS
+            }
+            System.err.println("Player has been moved, printing board");
+            System.err.println(b.toString());
+
+        }else{//wall movement
+            if(networkMove.charAt(8) == networkMove.charAt(15)){//horizontal wall
+                if((networkMove.charAt(11)-'0') != 0){
+                    System.out.println("charat15 is " + networkMove.charAt(15));
+                    move[0] = (networkMove.charAt(11)-'0');
+                    System.out.println("i move0 is:" + move[0]);
+                }else{
+                    move[0] = (networkMove.charAt(11)-'0');
+                    System.out.println("e move0 is:" + move[0]);
+                }
+                move[1] = (networkMove.charAt(8)-'0') -1;
+                move[2] = 0;
+                System.out.println("Printing horz wall coords: "+ move[0] + " " + move[1]);
+                placeWallPQ(b, move);
+                NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
+            }else{//vertical wall
+                move[0] = (networkMove.charAt(11)-'0') - 1;
+                move[1] = (networkMove.charAt(8)-'0');//just edited removed +1
+                move[2] = 1;
+                System.out.println("Printing vert wall coords: "+ move[0] + " " + move[1]);
+                placeWallPQ(b, move);
+                NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
+            }
+            System.err.println(b.toString());
+        }
+    }
+
+
+
+    private static void setLMIcons() {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                if (legalMovesArray[i][j] == 1) 
+                    BoardButton.getButton("B" + i + j).setIcon(GameBoardWithButtons.legalMove);
+    }
+
+    private static void resetIcons(Board b) {
+        for (int i = 0; i < 17; i+=2) 
+            for (int j = 0; j < 17; j+=2) 
+                if (b.grid[i][j] == 0) 
+                    BoardButton.getButton("B" + i/2 + j/2).setIcon(src.ui.GameBoardWithButtons.defaultIcon);
+    }
+
+    private static int getHumanOrAI(int i) {
+        String[] HumanOrAi = {"Human","AI"};
+        return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
+                "Player " + i + ": Human or AI?", 
+                "YOU MUST CHOOSE",JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
+    }
+
+    private static NetworkClient getNetworkInfo(int numPlay) throws UnknownHostException, IOException {
+        String[] options = new String[3];
+        options [0] = "Local Game";
+        options [1] = "Network Game";
+        options [2] = "Quit";
+        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                "Play local or remote opponent?","Network Game?",
+                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+        NetworkClient network = new NetworkClient();
+        String address = null;
+        while (address != null) {
+            address = JOptionPane.showInputDialog("Input addresses for " + numPlay + " move servers separated by spaces:", "ex. hostname1:port hostname2:port");
+            if (address != null){
+                Scanner addressScanner = new Scanner(address);
+                String player1Address = addressScanner.next(); 
+                String player2Address = addressScanner.next(); 
+                if (n == 1 && numPlay == 2)
+                {
+                    network = new NetworkClient(player1Address, player2Address);
+                    networkGame = true;
+                }
+                else if (n == 1 && numPlay == 4 ){
+                    String player3Address = addressScanner.next(); 
+                    String player4Address = addressScanner.next(); 
+                    network = new NetworkClient(player1Address, player2Address, player3Address, player4Address);
+                    networkGame = true;
+                }
+            }
+            else if (n == 2)
+                System.exit(0);
+        }
+        return network;
+    }
+
+
+    private static int getNumPlay() {
+        String[] options = {"Two player game", "Four player game","Quit"};
+        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                "How many players want to play today?","Welcome to Quoridor!",
+                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+        if (n == 0)
+            return 2;
+        else if (n == 1)
+            return 4;
+        else if (n == 2)
+            return 0;
+        return 0;
+    }
 
 
     private static void setLegalMoves(int[] playerPlace, Board b) {
@@ -357,8 +341,6 @@ public class PlayQuor{
         }
     }
 
-
-
     public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
         /*
 
@@ -394,6 +376,10 @@ public class PlayQuor{
                 BoardButton.map.get("B" + nextMove.charAt(1) +
                         nextMove.charAt(2)).setIcon(Board.map.get(turn));
             }
+            else {
+                clicked = false;
+                return false;
+            }
         }else if (!extraMove){//it's a wall (rules out double jump with boolean extraMove)
             int gridCol = (int)(nextMove.charAt(0) - '0')-1;
             int gridRow = (int)(nextMove.charAt(1) - '0')-1;
@@ -425,21 +411,6 @@ public class PlayQuor{
 
     }
 
-    /* Returns the cardinal direction of player move IF moving to adjacent square.
-     * Otherwise, returns invalid character 'X.' */
-    private static char getDirection(int oldCol, int oldRow, int newCol,
-            int newRow) {
-        char direction = 'X';
-        if(newCol == oldCol -2 && oldRow == newRow)
-            direction = 'W';
-        else if(newCol == oldCol +2 && oldRow == newRow)
-            direction = 'E';
-        else if(oldCol == newCol && newRow == oldRow -2)
-            direction = 'N';
-        else if(oldCol == newCol && newRow == oldRow +2)
-            direction = 'S';
-        return direction;
-    }
 
     /* Parameters: the board, the player whose turn it is, the direction
      * that the player chose to move
