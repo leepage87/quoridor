@@ -7,7 +7,6 @@ public class AI{
 	   int[] move = new int[5];
 	   Board AIboard;
 	   public int truePlayer;
-	   private int[] playerWalls;
 	   boolean panic = false;
 	   Board lastMove;
 
@@ -222,7 +221,7 @@ public class AI{
 			return 200;
 		int enemyMoves = b.doSearch(enemy)[2];
 		int playerMoves = b.doSearch(turn)[2];
-		int walls = 2*b.playerWalls[turn-1];
+		//int walls = 2*b.playerWalls[turn-1];
 		return enemyMoves-playerMoves;
 	}
 		
@@ -271,19 +270,17 @@ public class AI{
 		}return posMoves;
 	}
 	//Testing purposes
-	public Board placeWall(){
-        int [] placement = new int[3];
-        placement[0] = 1;
-        placement[1] = 1;
+	public Board placeWall(int [] placement){
         AIboard.placeWallBoard(placement, 1);
-        return AIboard;
+        Board temp = new Board(AIboard);
+		return temp;
 }       
 
 
 	//Testing purposes
 		public Board move(int [] placement, int player){
+			AIboard.quickMove(placement, player);
 			Board temp = new Board(AIboard);
-			temp.quickMove(placement, 1);
 			return temp;
 		}	
 		
