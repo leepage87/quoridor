@@ -19,7 +19,9 @@ public class AiTest {
 		AI AIboard; 
 		AI temp;
 	
-		//Initializes the AI for testing creating a board, and an AI, and a temporary board
+		/**
+		*Initializes the AI for testing creating a board, and an AI, and a temporary board
+		*/
 		@Before
 		public void initialize(){
 			b = new Board(2);
@@ -27,15 +29,18 @@ public class AiTest {
 			temp = new AI(b);
 		}
 
-		//Tests the boardValue method to make sure the starting position board value is 0
+		/**
+		*Tests the boardValue method to make sure the starting position board value is 0
+		*/
 		@Test
 		public void boardValueTest(){
 			int given;
 			given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 0);
 		}
-		
-		//Tests the aiMove method
+		/**
+		*Tests the aiMove method
+		*/
 		@Test
 		public void aiMoveTest(){
 			int [] placement = new int[2];
@@ -49,8 +54,9 @@ public class AiTest {
 			moved = AIboard.playerPlacee(1);
 			Assert.assertArrayEquals(method, moved);
 		}
-		
-		//Tests the aiWall method for a vertical wall
+		/**
+		*Tests the aiWall method for a vertical wall
+		*/
 		@Test
 		public void aiWallTestV(){
 			int [] placement = new int[3];
@@ -72,8 +78,9 @@ public class AiTest {
 			Assert.assertArrayEquals(actual, result);
 			
 		}
-		
-		//Tests the aiWall method for a horizontal wall
+		/**
+		*Tests the aiWall method for a horizontal wall
+		*/
 		@Test
 		public void aiWallTestH(){
 			int [] placement = new int[3];
@@ -94,8 +101,9 @@ public class AiTest {
 			Assert.assertArrayEquals(actual, result);
 			
 		}
-		
-		//Tests the boardValue method after moving a player to make sure it increments the boardValue
+		/**
+		*Tests the boardValue method after moving a player to make sure it increments the boardValue
+		*/
 		@Test
 		public void boardMoveValueTest(){
 			int given;
@@ -106,8 +114,9 @@ public class AiTest {
 			given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 1);
 		}
-		
-		//Tests the boardValue method after moving the first player, then the second, then the first again
+		/**
+		*Tests the boardValue method after moving the first player, then the second, then the first again
+		*/
 		@Test
 		public void boardMoveValueTest2(){
 			int given;
@@ -124,8 +133,9 @@ public class AiTest {
 			given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 1);
 		}
-		
-		//Tests the board value after a wall is placed
+		/**
+		*Tests the board value after a wall is placed
+		*/
 		@Test
 		public void boardMoveValueTestWall(){
 			int given;
@@ -136,8 +146,9 @@ public class AiTest {
 			given = AIboard.boardValue(1, 2, b);
 			Assert.assertTrue(given == 0);
 		}
-		
-		//Tests the board value after a move is taken and a wall is placed
+		/**
+		*Tests the board value after a move is taken and a wall is placed
+		*/
 		@Test
 		public void boardMoveValueTestWall2(){
 			int given;
@@ -155,8 +166,9 @@ public class AiTest {
 			given = AIboard.boardValue(2, 1, b);
 			Assert.assertTrue(given == 0);
 		}
-		
-		//Tests the findEnemy method to make sure it finds the correct enemy by using its location
+		/**
+		*Tests the findEnemy method to make sure it finds the correct enemy by using its location
+		*/
 		@Test
 		public void findEnemyTest(){
 			int test=0;
@@ -167,8 +179,9 @@ public class AiTest {
 			AIboard.playerPlacee(test);
 			Assert.assertArrayEquals(given, actual);
 		}
-		
-		//Tests the eachStep method by moving the temp board to where it should go and checking the locations of both
+		/**
+		*Tests the eachStep method by moving the temp board to where it should go and checking the locations of both
+		*/
 		@Test
 		public void eachStepTest(){
 			int [] dest = new int[2];
@@ -185,9 +198,10 @@ public class AiTest {
 			moved = temp.playerPlacee(1);
 			Assert.assertArrayEquals(method, moved);
 		}
-
-		//Tests the wallPlacementSearch to make sure it comes up with 
-		//the correct amount of different boards where the walls can be placed
+		/**
+		*Tests the wallPlacementSearch to make sure it comes up with 
+		*the correct amount of different boards where the walls can be placed
+		*/
 		@Test
 		public void wallPlacementSearchTest(){
 			ArrayList<Board> testMoves = new ArrayList<Board>();
@@ -196,7 +210,9 @@ public class AiTest {
 			Assert.assertTrue(sizeArray==128);
 			
 		}
-		//Tests if the AI places a wall
+		/**
+		*Tests if the AI places a wall
+		*/
 		@Test
 		public void placeWallTest(){
 			int [] placement = new int[3];
@@ -210,7 +226,9 @@ public class AiTest {
 			
 		
 		}
-		//Tests if true player works
+		/**
+		*Tests if true player works
+		*/
 		@Test
 		public void aiMoveBTest(){
 			b = new Board(2);

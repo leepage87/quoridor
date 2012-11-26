@@ -1,3 +1,8 @@
+/**
+ * Tim Simmons
+ * teamOrangeBeard
+ */
+
 package src.main;
 import java.util.ArrayList;
 
@@ -15,9 +20,10 @@ public class AI{
          lastMove = b;
 	 }
 
-	
-    // Paramters: the player, the board before moving, the board after moving
-    // Returns: where the player placed a wall
+	/**
+    * @param player the board before moving, the board after moving
+    * @return where the player placed a wall
+    */
 	public int[] aiWall(int player, Board old, Board current){
 		int[] startPlace = old.playerPlace(player);
 		int[] endPlace = current.playerPlace(player);
@@ -43,8 +49,11 @@ public class AI{
 		return aiWall;
 	}
 	
-	// Parameters: the player
-	// Returns: the board after moving
+	/**
+	 * @param player
+	 * @param rounds
+	 * @return Board after moving
+	 */
 	public Board aiMove(int player, int rounds){
 		truePlayer = player;
 		int[] answer = new int[3];
@@ -93,10 +102,17 @@ public class AI{
 		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
 		return moves.get(whichBoard);
 	}
+
+	/**
+	 * answer: int [] array of the current value + the alpha + the beta, 
+	 * the player, a board, and the number of rounds to look ahead
+	 * @param answer
+	 * @param player
+	 * @param b the board
+	 * @param numRounds
+	 * @return the same array, or the same array with either the alpha or beta changed
+	 */
 	
-	// Parameters: an array of the current value + the alpha + the beta,
-	//    the player, a board, and the number of rounds to look ahead
-	// Returns: the same array, or the same array with either the alpha or beta changed
 	public int[] search(int[] answer, int player, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMoves(player, b);
 		if(numRounds < 1)
@@ -127,12 +143,15 @@ public class AI{
 		int[] newAnswer = {worst, answer[1], answer[2]};
 		return newAnswer;
 	}
-	
-	
-	// Parameters: an array of the current value + the alpha + the beta,
-	//    the player, and an ArrayList of possible boards
-	// Returns: an array of the best move, or a move that is lower than the beta, or a
-	//    move that is higher than the alpha + the alpha + the beta
+	/**
+	 * answer: ay of the current value + the alpha + the beta,
+	 *    the player, and an ArrayList of possible boards
+	 * @param answer
+	 * @param player
+	 * @param allMoves
+	 * @return an array of the best move, or a move that is lower than the beta, or a
+	 *   move that is higher than the alpha + the alpha + the beta
+	 */
 	public int[] baseCase(int[] answer, int player, ArrayList<Board> allMoves){
 		if(player == truePlayer){
 			int best = -201;
@@ -163,8 +182,11 @@ public class AI{
 		return newAnswer;
 	}
 	
-	// Parameters: the player, the enemy, and the current board
-	// Returns: an Array of all possible moves
+	/**
+	* @param turn
+	* @param b
+	* @return an Array of all possible moves
+	*/
 	public ArrayList<Board> findMoves(int turn, Board b){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		if(b.playerWalls[turn-1] != 0)
@@ -181,11 +203,13 @@ public class AI{
 		}
 		return posMoves;
 	}
-
-	// Parameters: the next move
-	// Returns: if the board is trying to move back to its
-	//    old location despite no walls being placed
-	// PostCondition: board is set to panic
+	
+	/**
+	 * PostCondition: board is set to panic
+	 * @param b containing the next move
+	 * @return if the board is trying to move back to its
+	 * old location despite no walls being placed
+	 */
 	public boolean splitMove(Board b){
 		// No new walls
 		if(wallPlaced(lastMove, b))
@@ -198,9 +222,12 @@ public class AI{
 		panic = true;
 		return true;
 	}
-	
-	// Parameters: a board
-	// Returns: if a wall has been placed in the last turn
+
+	/**
+	 * @param b1
+	 * @param b2
+	 * @return if a wall has been placed in the last turn
+	 */
 	public boolean wallPlaced(Board b1, Board b2){
 		int oldWalls = 0;
 		int newWalls = 0;
@@ -211,11 +238,14 @@ public class AI{
 		return oldWalls != newWalls;
 	}
 	
-	// Parameters: the player whose turn it is, the enemy closest
-	//   to winning, and the board being examined
-	// Returns: number of moves it will take the enemy to win minus
-	//   the number of moves it will take the player to win
-	//   plus 2*the number of remaining walls
+	/**
+	* @param turn
+	* @param enemy closest to winning 
+	* @param b that is being examined
+	* @return number of moves it will take the enemy to win minus
+	*   the number of moves it will take the player to win
+	*   plus 2*the number of remaining walls
+	*/
 	public int boardValue(int turn, int enemy, Board b){
 		if(b.haveWon())
 			return 200;
@@ -224,9 +254,12 @@ public class AI{
 		//int walls = 2*b.playerWalls[turn-1];
 		return enemyMoves-playerMoves;
 	}
-		
-	// Parameters: the player
-	// Returns: the enemy who is closest to winning
+	
+	/**
+	* @param turn
+	* @param b
+	* @return the enemy who is closest to winning
+	*/
 	public int findEnemy(int turn, Board b){
 		if(b.NUMPLAY == 2)
 			return (turn%2)+1;
@@ -237,8 +270,12 @@ public class AI{
 		return enemy;
 	}
 	
-	// Parameters: the player and an int representing a direction
-	// Returns: the board after moving the player in the chosen direction, if possible
+	/**
+	* @param turn 
+	* @param destination
+	* @param b
+	* @return the board after moving the player in the chosen direction, if possible
+	*/
 	public Board eachStep(int turn, int[] destination, Board b){	
 		Board temp = new Board(b);
 		if(temp.aiCanMove(destination, turn))
@@ -246,7 +283,11 @@ public class AI{
 		return temp;
 	}
 	
-	// Returns: an ArrayList of one board for every possible wall placement
+	/**
+	 * @param b 
+	 * @param player
+	 * @return an ArrayList of one board for every possible wall placement
+	*/
 	public ArrayList<Board> wallPlacementSearch(Board b, int player){
 		ArrayList<Board> posMoves = new ArrayList<Board>();
 		for(int i = 0; i < 8; i++){
@@ -269,27 +310,38 @@ public class AI{
 			}	
 		}return posMoves;
 	}
-	//Testing purposes
+	
+	/**
+	 *  Places a wall at a designated spot.
+	 *  @param placement
+	 *  @return the board with the wall
+	 */
 	public Board placeWall(int [] placement){
         AIboard.placeWallBoard(placement, 1);
         Board temp = new Board(AIboard);
 		return temp;
-}       
+	}       
 
-
-	//Testing purposes
+	/**
+	 * @param placement 
+	 * @param player 
+	 * @return the board with the moved player
+	*/
 		public Board move(int [] placement, int player){
 			AIboard.quickMove(placement, player);
 			Board temp = new Board(AIboard);
 			return temp;
 		}	
 		
-		//Testing purposes
-		public int[] playerPlacee(int player){
-			int [] place = new int[2];
-			place = AIboard.playerPlace(player);
-			return place;
-		}
+	/**
+	* @param player
+	* @return the player's board placement
+	*/
+	public int[] playerPlacee(int player){
+		int [] place = new int[2];
+		place = AIboard.playerPlace(player);
+		return place;
+	}
 }
 	
 

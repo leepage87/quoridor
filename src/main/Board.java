@@ -11,8 +11,9 @@ import javax.swing.Icon;
 
 import src.ui.BoardButton;
 import src.ui.GameBoardWithButtons;
-/* The back end. Contains a grid for the contents of the game board (both walls and tokens)
- * and methods for testing the board's possibilities. */
+/** The back end. Contains a grid for the contents of the game board (both walls and tokens)
+ * and methods for testing the board's possibilities. 
+ * */
 public class Board {
 
 	public final int NUMPLAY; // number of players
@@ -20,9 +21,10 @@ public class Board {
 	final int WALL = 5; // how a wall is denoted on the grid
 	public int[][] grid; // the board array
 	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
-
-	// Parameters: the number of players (2 or 4)
-	// Creates: a board object
+	/**
+	* @param the number of players (2 or 4)
+	* @return a board object
+	*/
 	public Board(int players){
 		this.grid = new int[17][17];
 		setBoard(players);
@@ -42,8 +44,9 @@ public class Board {
 	public int[] getPlayerWalls(){
 		return playerWalls;
 	}
-	// Parameters: a board
-	// Creates: a board object that is a duplicate of the board given
+	/**
+	* @param a board object that is a duplicate of the board given
+	*/
 	public Board(Board b){
 		int[][] tempGrid = new int[17][17];
 		for(int i = 0; i < 17; i++){
@@ -57,9 +60,10 @@ public class Board {
 			this.playerWalls[i] = b.playerWalls[i];
 		mapIcons();
 	}
-
-	// Parameters: the number of players (2 or 4)
-	// PostCondition: the board is empty and two or four players exist
+	/**
+	 * PostCondition: the board is empty and two or four players exist
+	 * @param number of players (2 or 4) 
+	 */
 	public void setBoard(int players){
 		for(int i = 0; i < 17; i++){
 			for(int j = 0; j < 17; j++){
@@ -73,9 +77,10 @@ public class Board {
 			grid[16][8] = 4;
 		}
 	}
-
-	// Parameters: a board
-	// Returns: if this board is identical to the other board
+	/**
+	* @param board
+	* @return if this board is identical to the other board
+	*/
 	public boolean equals(Board b){
 		boolean check = true;
 		for(int i = 0; i < 17; i++){
@@ -87,7 +92,9 @@ public class Board {
 		return check;
 	}
 
-	// Returns: the board in String form
+	/**
+	 * @return the board in String form
+	 */
 	public String toString(){
 		String s = "";
 		for(int i = 0; i < 17; i++){
@@ -99,8 +106,10 @@ public class Board {
 		return s;
 	}
 		
-	// Parameters: the player being searched for
-	// Returns: the x/y location of the Player
+	/**
+	 * @param player being searched for
+	 * @return the x/y location of the Player
+	 */
 	public int[] playerPlace(int Player){
 		int[] location = new int[2];
 		location[0] = -1;
@@ -116,17 +125,20 @@ public class Board {
 		}
 		return location;
 	}
-
-	// Parameters: character to represent the direction moved and an int
-	//    to show which player is moving
-	// PostCondition: the piece is moved if it was possible
+	/**
+	 * PostCondition: the piece is moved if it was possible
+	 * @param character to represent the direction moved and an int
+	 *    to show which player is moving
+	 */
 	public void movePieceBoard(char direction, int Player){
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
 		
-		/* For each direction, updates the grid and GUI appropriately. 
-		 * Move legality tested before this method is called. */
+		/** 
+		 * For each direction, updates the grid and GUI appropriately. 
+		 * Move legality tested before this method is called. 
+		*/
 		if(direction == 'N'){
 			grid[col][row] = 0;
 			grid[col][row-2] = Player;
@@ -160,17 +172,18 @@ public class Board {
 			BoardButton.map.get("B" + (col -2)/2 + row/2).setPlayerPresent(true, (col-2)/2, (row)/2);
 		}
 	}
-
-	// Parameters: character to represent the direction moved and an int
-	//    to show which player is moving
-	// Returns: if the move is legal
+	/**
+	* @param character to represent the direction moved and an int
+	*    to show which player is moving
+	* @return if the move is legal
+	* */
 	public boolean canMovePiece(char direction, int Player){
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
 		if(direction == 'X') // This is passed if a non-adjacent pawn move is attempted
 			return false;
-		/* For each direction, tests if a wall blocks the path. Returns false if so. */
+		/* For each direction, tests if a wall blocks the path. @return false if so. */
 		if(direction == 'N'){
 			if((here[1] == 0) || (grid[col][row-1] == 5))
 				return false;
@@ -190,17 +203,19 @@ public class Board {
 		return true; // legal move; return true.
 	}
 
-
-	// Parameters: character to represent the direction moved and an int
-	//    to show which player is moving
-	// Returns: if moving that direction causes a collision with a player
+	/**
+	* @param character to represent the direction moved and an int
+	*    to show which player is moving
+	* @return if moving that direction causes a collision with a player
+	*/
 	public boolean pieceCollision(char direction, int Player){
 		int[] place = playerPlace(Player);
 		return pieceCollision(direction, place);
 	}
-	
-	// Parameters: character representing the direction moved and a location
-	// Returns: if moving that direction from the location causes a collision with a player
+	/**
+	* @param character representing the direction moved and a location
+	* @return if moving that direction from the location causes a collision with a player
+	*/
 	private boolean pieceCollision(char direction, int[] place) {
 		int col = place[0];
 		int row = place[1];
@@ -214,18 +229,20 @@ public class Board {
 			return true;
 		return false;
 	}
-
-	// Parameters: the location the AI wants to move to and the Player
-	// Returns: if that movement is legal
+	/**
+	* @param location the AI wants to move to and the Player
+	* @return if that movement is legal
+	*/
 	public boolean aiCanMove(int[] dest, int Player){
 		if(grid[dest[0]][dest[1]] != 0)
 			return false;
 		ArrayList<int[]> history = new ArrayList<int[]>();
 		return aiCanMove(dest, Player, history);
 	}
-
-	// Parameters: a location on the board, the player, and a list of locations already searched
-	// Returns: if it is possible for the Player to move to the given location
+	/**
+	* @param location on the board, the player, and a list of locations already searched
+	* @return if it is possible for the Player to move to the given location
+	*/
 	public boolean aiCanMove(int[] place, int Player, ArrayList<int[]> history){
 		int[] home = playerPlace(Player);
 		if((home[0] == place[0]-2) && (home[1] == place[1]) && (grid[place[0]-1][place[1]] != 5))
@@ -238,9 +255,10 @@ public class Board {
 			return true;
 		return aiDoubleMove(place, Player, history);	
 	}
-		
-	// Parameters: a location on the board, the player, and a list of locations already searched
-	// Returns: if it is possible for the Player to move to the given location
+	/**
+	* @param location on the board, the player, and a list of locations already searched
+	* @return if it is possible for the Player to move to the given location
+	*/
 	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
 		int col = place[0];
 		int row = place[1];
@@ -283,9 +301,10 @@ public class Board {
 		}
 		return false;
 	}
-
-	// Parameters: a list of locations that have been searched, and a location
-	// Returns: if the location has already been searched
+	/**
+	* @param list of locations that have been searched, and a location
+	* @return if the location has already been searched
+	*/
 	private boolean hasBeen(ArrayList<int[]> history, int[] newPlace) {
 		boolean seen = false;
 		for(int i = 0; i < history.size(); i++){
@@ -297,9 +316,10 @@ public class Board {
 		}
 		return seen;
 	}
-
-	// Parameters: the location the AI wants to move to and the Player
-	// PostCondition: the Player is moved to the destination
+	/**
+	 * PostCondition: the Player is moved to the destination
+	 * @param location the AI wants to move to and the Player
+	 */
 	public void quickMove(int[] dest, int Player){
 		int dCol = dest[0];
 		int dRow = dest[1];
@@ -315,11 +335,12 @@ public class Board {
 		BoardButton.map.get("B" + hCol/2 + (hRow/2)).setPlayerPresent(false, hCol/2, hRow/2);
 		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setPlayerPresent(true, dCol/2, (dRow)/2);*/
 	}
-	
-	// Parameters: an int[3] where the first and second numbers give the
-	//    center of the new wall and the third number gives the
-	//    direction the wall will face
-	// PostCondition: a new wall is placed
+	/**
+	 * PostCondition: a new wall is placed
+	 * @param int[3] where the first and second numbers give the
+	 *    center of the new wall and the third number gives the
+	 *    direction the wall will face
+	 */
 	public void placeWallBoard(int[] theWall, int player){
 		int col = 2*theWall[0] + 1;
 		int row = 2*theWall[1] + 1;
@@ -334,11 +355,12 @@ public class Board {
 		}
 		playerWalls[player-1]--;
 	}
-
-	// Parameters: an int[3] where the first and second numbers give the
-	//    center of the new wall and the third number gives the
-	//    direction the wall will face
-	// Returns: if the wall can be placed there
+	/**
+	* @param int[3] where the first and second numbers give the
+	*    center of the new wall and the third number gives the
+	*    direction the wall will face
+	* @return if the wall can be placed there
+	*/
 	public boolean canPlaceWall(int[] theWall, int player){
 		if(playerWalls[player-1] == 0)
 			return false;
@@ -356,8 +378,9 @@ public class Board {
 		    return false;
 		return true;
 	}
-
-	// Returns: if each player can still reach their winning col
+	/**
+	* @return if each player can still reach their winning col
+	*/
 	public boolean canWin(){
 		for(int i = 1; i < NUMPLAY + 1; i++){
 			int[] nextMove = doSearch(i);
@@ -366,8 +389,9 @@ public class Board {
 		}
 		return true;
 	}
-
-	// Returns: if any player is in their winning col
+	/**
+	* @return if any player is in their winning col
+	*/
 	public boolean haveWon(){
 		for(int i = 1; i < NUMPLAY + 1; i++){
 			int[] place = playerPlace(i);
@@ -376,10 +400,11 @@ public class Board {
 		}
 		return false;
 	}
-
-	// Parameters: an int representing a player and an int[] to show
-	//    where on the board the player is
-	// Returns: if the player is in their winning col/row
+	/**
+	* @param int representing a player and an int[] to show
+	*    where on the board the player is
+	* @return if the player is in their winning col/row
+	*/
 	public boolean winCheck(int Player, int[] place){
 		int col = place[0];
 		int row = place[1];
@@ -393,15 +418,17 @@ public class Board {
 			return true;
 		return false;
 	}
-
-	// Parameters: an int representing a player
-	// Returns: the best position to move to next
+	/**
+	* @param int representing a player
+	* @return the best position to move to next
+	*/
 	public int[] bestMove(int Player){
 		return doSearch(Player);
 	}
-
-	// Parameters: an int representing a player
-	// Returns: the best move, or -1/-1 if winning is impossible
+	/**
+	* @param int representing a player
+	* @return the best move, or -1/-1 if winning is impossible
+	*/
 	public int[] doSearch(int Player){
 		ArrayList<int[]> checked = new ArrayList<int[]>();
 		int[] location = new int[5];
@@ -443,11 +470,12 @@ public class Board {
 		answer[2] = location[4];
 		return answer;
 	}
-
-	// Parameters: the starting location, the queue of places to search,
-	//    and the ArrayList of locations checked
-	// PostConditions: up to four children are created, each of which
-	//    has a record of the first move made
+	/**
+	 * PostConditions: up to four children are created, each of which
+	 *    has a record of the first move made
+	 * @param starting location, the queue of places to search,
+	 *    and the ArrayList of locations checked
+	 */
 	public ArrayList<int[]> getFirstChildren(int[] location){
 		ArrayList<int[]> children = new ArrayList<int[]>();
 		int col = location[0];
@@ -491,9 +519,10 @@ public class Board {
 
 		return children;
 	}
-
-	// Parameters: a location on the board
-	// Returns: all adjacent locations that are not blocked by walls
+	/**
+	* @param location on the board
+	* @return all adjacent locations that are not blocked by walls
+	*/
 	public ArrayList<int[]> getChildren(int[] place){
 
 		ArrayList<int[]> children = new ArrayList<int[]>();
@@ -537,9 +566,10 @@ public class Board {
 		}
 		return children;
 	}
-
-	// Parameters: a list of all locations checked, the current location
-	// Returns: if the current location has already been checked
+	/**
+	* @param list of all locations checked, the current location
+	* @return if the current location has already been checked
+	*/
 	public boolean hasSeen(ArrayList<int[]> checked, int[] child){
 		for(int i = checked.size()-1; i > 0; i--){
 			int[] next = checked.get(i);
@@ -559,16 +589,24 @@ public class Board {
 		map.put(4, GameBoardWithButtons.playerFour);
 		map.put(5, GameBoardWithButtons.legalMove);
 	}
-
-	//Testing purposes only
+	/**
+	*Testing Purposes Only
+	*/
 	public void setWall(){
 		grid[1][8]=5;
 	}
 
+	/**
+	 * Testing Purposes Only
+	 */
 	public void placePiece(){
 		grid[2][8] = 2;
 	}
 
+	/**
+	 * Testing Purposes Only
+	 * @param player
+	 */
 	public void moveToWin(int player){
 		if(player == 1){
 			grid[8][16] = 1;
@@ -587,6 +625,9 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Testing Purposes Only
+	 */
 	public void placeTestWall(){
 		grid[1][9] = 5;
 	}

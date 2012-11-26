@@ -20,18 +20,26 @@ public class BoardTester {
     char direction;
     final int WALL = 5;
 
+    /**
+     * Initializes the Board
+     */
     @Before
     public void initialize(){
         grid = new int[17][17];
     }
 
+    /**
+     * Tests to make sure the board is created
+     */
     @Test
     public void checkBoardCreation(){
         x.setBoard(2);
         Assert.assertNotNull(grid);
     }
 
-    
+    /**
+     * Tests if a player moves north when told    
+     */
     @Test
     public void checkNorth(){
         x.setBoard(4);
@@ -40,10 +48,12 @@ public class BoardTester {
         int[] expected = new int[2];
         expected[0]=16;
         expected[1]=6;
-        testResults(x.playerPlace(4), expected);
+        Assert.assertArrayEquals(x.playerPlace(4), expected);
     }
     
-    
+    /**
+     * Tests if a player moves south when told
+     */
     @Test
     public void checkSouth(){
         x.setBoard(4);
@@ -52,10 +62,12 @@ public class BoardTester {
         int[] expected = new int[2];
         expected[0]=8;
         expected[1]=2;
-        testResults(x.playerPlace(1), expected);
+        Assert.assertArrayEquals(x.playerPlace(1), expected);
     }
     
-   
+   /**
+    * Tests if a player moves east when told
+    */
     @Test
     public void checkEast(){
         x.setBoard(4);
@@ -64,10 +76,12 @@ public class BoardTester {
         int[] expected = new int[2];
         expected[0]=10;
         expected[1]=0;
-        testResults(x.playerPlace(1), expected);
+        Assert.assertArrayEquals(x.playerPlace(1), expected);
     }
     
-   
+   /**
+    * Tests if a player moves west when told
+    */
     @Test
     public void checkWest(){
         x.setBoard(4);
@@ -76,20 +90,21 @@ public class BoardTester {
         int[] expected = new int[2];
         expected[0]=6;
         expected[1]=0;
-        testResults(x.playerPlace(1), expected);
+        Assert.assertArrayEquals(x.playerPlace(1), expected);
     }
 
-    //	@Test
-    public void testResults(int[] actual, int[] expected){
-        Assert.assertArrayEquals(expected, actual);
-    }
-
+    /**
+     * Tests to make sure win check does not go to win when it shouldn't
+     */
     @Test
     public void falseCheckWin(){
         x.setBoard(2);
         Assert.assertFalse("Wins when not true",x.winCheck(2, x.playerPlace(2)));
     }
 
+    /**
+     * Tests to make sure win check says win when it should
+     */
     @Test
     public void trueCheckWin(){
         x.setBoard(4);
@@ -99,7 +114,9 @@ public class BoardTester {
 
     }
 
-
+    /**
+     * Tests if the method canPlaceWall works
+     */
     @Test
     public void ableToPlaceWall(){
         int [] testWall = new int[3] ;
@@ -109,6 +126,9 @@ public class BoardTester {
         Assert.assertTrue("Wall was not placed", x.canPlaceWall(testWall, 1));
     }
 
+    /**
+     * Tests if the method canPlaceWall breaks when it can't place a wall
+     */
     @Test
     public void notAbleToPlaceWall(){
         x.placeTestWall();
@@ -119,6 +139,9 @@ public class BoardTester {
         Assert.assertFalse("Wall not found", x.canPlaceWall(testWall, 1));
     }
 
+    /**
+     * Tests if a wall is placed when told
+     */
     @Test
     public void actuallyPlacesWall(){
         x.setBoard(2);
@@ -130,6 +153,9 @@ public class BoardTester {
         Assert.assertFalse("Wall not Placed", x.canPlaceWall(testWall, 1));
     }
     
+    /**
+     * Tests the doSearch method for the best move
+     */
 	@Test
 	public void searchTest(){
 		int [] actual = new int[3];
@@ -138,7 +164,7 @@ public class BoardTester {
 		expected[0] = 8;
 		expected[1] = 2;
 		expected[2] = 8;
-		testResults(actual, expected);
+		Assert.assertArrayEquals(actual, expected);
 	}
      
 }
