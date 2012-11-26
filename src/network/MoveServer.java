@@ -78,7 +78,7 @@ public class MoveServer extends Thread {
                 if(fromGameClient.contains("WINNER")){
                     System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
                     connection.close();
-                    System.exit(0);
+                    //System.exit(0);
                 }
                 if (fromGameClient.contains("MOVE?")){
 
@@ -241,12 +241,12 @@ public class MoveServer extends Thread {
 
             }else{//vertical wall
                 System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its vert");
-                move[0] = (frago.charAt(14)-'0');
-                if((frago.charAt(11)-'0') != 0){
-                    move[1] = (frago.charAt(11)-'0')-1;
-                }else{
-                    move[1] = (frago.charAt(11)-'0'); 
-                }
+                move[0] = (frago.charAt(14)-'0') -1;
+                //if((frago.charAt(11)-'0') >= 2){
+                    move[1] = (frago.charAt(11)-'0');//just edited removed +1
+                //}else{
+                 //   move[1] = (frago.charAt(11)-'0'); 
+                //}
                 move[2] = 1;
                 System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
                 moveBoard.placeWallBoard(move, player);

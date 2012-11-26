@@ -222,12 +222,14 @@ public class PlayQuor{
                             //b.placeWallBoard(move, turn);
                             network.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
                         }else{//vertical wall
-                            move[0] = (networkMove.charAt(11)-'0');
-                            if((networkMove.charAt(8)-'0') != 0){
-                                move[1] = (networkMove.charAt(8)-'0')-1;
-                            }else{
-                                move[1] = (networkMove.charAt(8)-'0'); 
-                            }
+
+                            move[0] = (networkMove.charAt(11)-'0') - 1;
+
+                            //if((networkMove.charAt(8)-'0') >= 2){
+                                move[1] = (networkMove.charAt(8)-'0');//just edited removed +1
+                            //}else{
+                             //   move[1] = (networkMove.charAt(8)-'0'); 
+                            //}
                             move[2] = 1;
                             System.out.println("Printing vert wall coords: "+ move[0] + " " + move[1]);
                             placeWallPQ(b, move);
@@ -281,18 +283,19 @@ public class PlayQuor{
                     }
                     // tests win conditions and updates exit variable accordingly
                     //if (b.haveWon())
-                      //  breaker = 1;
+                    //  breaker = 1;
                     //System.out.println(b);
                 }
                 if (b.haveWon())
                     breaker = 1;
                 // if somebody won, say so
-                if (breaker == 1)
+                if (breaker == 1 && !networkGame)
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
                 if (breaker == 1 && networkGame){
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
                     network.broadcast("WINNER " + (turn-1));
                     network.kill();
+                    networkGame = false;
                 }
             }
         }
