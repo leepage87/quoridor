@@ -271,19 +271,17 @@ public class AI{
 		}return posMoves;
 	}
 	//Testing purposes
-	public Board placeWall(){
-        int [] placement = new int[3];
-        placement[0] = 1;
-        placement[1] = 1;
+	public Board placeWall(int [] placement){
         AIboard.placeWallBoard(placement, 1);
-        return AIboard;
+        Board temp = new Board(AIboard);
+		return temp;
 }       
 
 
 	//Testing purposes
 		public Board move(int [] placement, int player){
+			AIboard.quickMove(placement, player);
 			Board temp = new Board(AIboard);
-			temp.quickMove(placement, 1);
 			return temp;
 		}	
 		
