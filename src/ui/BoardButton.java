@@ -3,9 +3,12 @@ package src.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
+import src.main.Board;
 import src.main.PlayQuor;
 /* Draws the game tiles. Has a map from Button name to Button.*/
 @SuppressWarnings("serial")
@@ -73,5 +76,14 @@ public class BoardButton extends JButton implements ActionListener {
 		//this.setRolloverIcon(GameBoardWithButtons.legalMove);
 		addActionListener(this);
 	}
+
+    public static void changeIcons(int[] endPlace, int[] startPlace, int turn) {
+        map.get("B"+endPlace[0]/2+ "" + endPlace[1]/2).setIcon(Board.map.get(turn));
+        map.get("B"+startPlace[0]/2+startPlace[1]/2).setIcon(GameBoardWithButtons.defaultIcon);
+    }
+    
+    public static void changeIcon(int i, int j, Icon icon) {
+        getButton("B" + i + j).setIcon(icon);
+    }
 }
 

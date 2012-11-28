@@ -21,7 +21,7 @@ public class PlayQuor{
     private static boolean clicked = false; // When set true by the GUI, executes method takeTurn
     private static String nextMove = ""; // Receives data from GUI on next human player move
     private static int turn; // tracks which player's turn it is
-    private static int[] pieceHolder = new int[3]; // Used to correctly update GUI during a "double move"
+    // private static int[] pieceHolder = new int[3]; // Used to correctly update GUI during a "double move" No longer used
     private static int breaker = 0; // primary loop in main exits when this is 1 (somebody won)
     // or 2 (new game started with File -> New Game)
     private static int[] isAI = new int[4];
@@ -35,11 +35,24 @@ public class PlayQuor{
     public static void main(String[] args) throws InterruptedException, IOException{
         GameBoardWithButtons gui = null; // instantiates GUI
         while (true){
+            NetworkClient network = null;
             int numPlay = getNumPlay();
             if (numPlay == 0)
                 System.exit(0);
             //get network information, initiate network
-            NetworkClient network = getNetworkInfo(numPlay);
+            
+            String[] options = new String[3];
+            options [0] = "Local Game";
+            options [1] = "Network Game";
+            options [2] = "Quit";
+            int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                    "Play local or remote opponent?","Network Game?",
+                    JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+            
+            if (n == 1){
+                network = getNetworkInfo(numPlay);
+
+            }
             if(!networkGame) 
                 for (int i = 1; i <= numPlay; i++){
                     isAI[i-1] = getHumanOrAI(i);
@@ -81,7 +94,7 @@ public class PlayQuor{
                     else {
                         boolean fairMove = false;
                         while(!fairMove)
-                            fairMove = takeTurn(b, false);
+                            fairMove = takeTurn(b);
                         // Indicates player has elected to start a new game; exits the loop
                         if (breaker == 2)
                             break;
@@ -105,15 +118,15 @@ public class PlayQuor{
             }
         }
     }
-    
+
     public static void setClicked(boolean tf) {
         clicked = tf;
     }
-    
+
     public static void setNextMove (String name) {
         nextMove = name;
     }
-    
+
     public static void setBreaker(int i) {
         breaker = i;
     }
@@ -143,8 +156,7 @@ public class PlayQuor{
                     break;
             }
         }else{ // Move, not Wall
-            BoardButton.map.get("B"+endPlace[0]/2+endPlace[1]/2).setIcon(Board.map.get(turn));
-            BoardButton.map.get("B"+startPlace[0]/2+startPlace[1]/2).setIcon(Board.map.get(0));
+            BoardButton.changeIcons(endPlace, startPlace, turn);
             b = tempB;
         }
         return b;
@@ -157,20 +169,17 @@ public class PlayQuor{
         setLegalMoves(b.playerPlace(turn), b);
         int move[] = new int[3];
         if(networkMove.charAt(5)== 'M'){//player movement
-            int oldX = networkMove.charAt(11) - '0';
-            int oldY = networkMove.charAt(8) - '0';
-            int newX= networkMove.charAt(18) - '0';
-            int newY = networkMove.charAt(15) - '0';
-            if (legalMovesArray[newX][newY] == 1){
+            int[] oldPlace = {(networkMove.charAt(11) - '0')*2, (networkMove.charAt(8)  - '0')*2};
+            int[] newPlace = {(networkMove.charAt(18) - '0')*2, (networkMove.charAt(15) - '0')*2};
+            if (legalMovesArray[newPlace[0]/2][newPlace[1]/2] == 1){
                 //the move is legal
 
                 //broadcast the move to all players
                 NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
 
                 //make the move
-                BoardButton.map.get("B"+newX+newY).setIcon(Board.map.get(turn));
-                System.out.println("oldx " + oldX + "oldY " + oldY);
-                BoardButton.map.get("B"+oldX+oldY).setIcon(Board.map.get(0));
+                System.out.println("TURN: " + turn);
+                BoardButton.changeIcons(newPlace,oldPlace, turn);
 
                 move [0] = (networkMove.charAt(18)-'0')*2;
                 move [1] = (networkMove.charAt(15)-'0')*2;
@@ -220,14 +229,14 @@ public class PlayQuor{
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
                 if (legalMovesArray[i][j] == 1) 
-                    BoardButton.getButton("B" + i + j).setIcon(GameBoardWithButtons.legalMove);
+                    BoardButton.changeIcon(i,j,GameBoardWithButtons.legalMove);
     }
 
     private static void resetIcons(Board b) {
         for (int i = 0; i < 17; i+=2) 
             for (int j = 0; j < 17; j+=2) 
-                if (b.grid[i][j] == 0) 
-                    BoardButton.getButton("B" + i/2 + j/2).setIcon(src.ui.GameBoardWithButtons.defaultIcon);
+                if (b.grid[i][j] == 0)
+                    BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
     }
 
     private static int getHumanOrAI(int i) {
@@ -239,26 +248,22 @@ public class PlayQuor{
     }
 
     private static NetworkClient getNetworkInfo(int numPlay) throws UnknownHostException, IOException {
-        String[] options = new String[3];
-        options [0] = "Local Game";
-        options [1] = "Network Game";
-        options [2] = "Quit";
-        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
-                "Play local or remote opponent?","Network Game?",
-                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+        
         NetworkClient network = new NetworkClient();
         String address = null;
-        while (address != null) {
-            address = JOptionPane.showInputDialog("Input addresses for " + numPlay + " move servers separated by spaces:", "ex. hostname1:port hostname2:port");
-            if (address != null){
+        //while (address == null) {
+            //address = JOptionPane.showInputDialog("Input addresses for " + numPlay + " move servers separated by spaces:", "ex. hostname1:port hostname2:port");
+            /*if (address != null){
                 Scanner addressScanner = new Scanner(address);
                 String player1Address = addressScanner.next(); 
                 String player2Address = addressScanner.next(); 
                 if (n == 1 && numPlay == 2)
-                {
-                    network = new NetworkClient(player1Address, player2Address);
-                    networkGame = true;
-                }
+                {*/
+            //network = new NetworkClient(player1Address, player2Address);
+            network = new NetworkClient("localhost:4050", "localhost:4050");
+
+            networkGame = true;
+            /* }
                 else if (n == 1 && numPlay == 4 ){
                     String player3Address = addressScanner.next(); 
                     String player4Address = addressScanner.next(); 
@@ -267,8 +272,8 @@ public class PlayQuor{
                 }
             }
             else if (n == 2)
-                System.exit(0);
-        }
+                System.exit(0);*/
+        //}
         return network;
     }
 
@@ -341,7 +346,7 @@ public class PlayQuor{
         }
     }
 
-    public static boolean takeTurn(Board b, boolean extraMove) throws InterruptedException{
+    public static boolean takeTurn(Board b) throws InterruptedException{
         /*
 
 	  Get placeWall/movePiece from Player/AI, in int[] form
@@ -369,18 +374,16 @@ public class PlayQuor{
                                 ][(int)(nextMove.charAt(2)-'0')] == 1)
             {
                 b.grid[playerPlace[0]][playerPlace[1]] = 0;
-                b.grid[2*(int)(nextMove.charAt(1) -
-                '0')][2*(int)(nextMove.charAt(2) - '0')] = turn;
-                BoardButton.map.get("B" + playerPlace[0]/2 +
-                        playerPlace[1]/2).setIcon(GameBoardWithButtons.defaultIcon);
-                BoardButton.map.get("B" + nextMove.charAt(1) +
-                        nextMove.charAt(2)).setIcon(Board.map.get(turn));
+                b.grid[2*(int)(nextMove.charAt(1) -'0')][2*(int)(nextMove.charAt(2) - '0')] = turn;
+                int[] newPlace = {(nextMove.charAt(1)-'0')*2, (nextMove.charAt(2)-'0')*2};
+                BoardButton.changeIcons(newPlace,playerPlace,turn);
+
             }
             else {
                 clicked = false;
                 return false;
             }
-        }else if (!extraMove){//it's a wall (rules out double jump with boolean extraMove)
+        }else {
             int gridCol = (int)(nextMove.charAt(0) - '0')-1;
             int gridRow = (int)(nextMove.charAt(1) - '0')-1;
 
@@ -414,8 +417,9 @@ public class PlayQuor{
 
     /* Parameters: the board, the player whose turn it is, the direction
      * that the player chose to move
-     * PostCondition: the player's piece is moved, if it was legal */
-    public static boolean movePiecePQ(Board b, char direction, boolean extraMove) throws InterruptedException{
+     * PostCondition: the player's piece is moved, if it was legal 
+     * Appears unused; commented.*/
+    /* public static boolean movePiecePQ(Board b, char direction, boolean extraMove) throws InterruptedException{
         if(b.canMovePiece(direction, turn)){ // calls the back end method to test move legality in re: walls
             if(!b.pieceCollision(direction, turn)){ // calls back end method to test for piece collision
                 b.movePieceBoard(direction, turn); // if it's legal and doesn't hit another pawn, make the move!
@@ -429,7 +433,7 @@ public class PlayQuor{
             //JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Move");
             return false; //return false for illegal move
         }
-    }
+    }*/
 
     /* Parameters: the board, the player whose turn it is, and an
      * int[] containing the center location of a new wall and
@@ -454,14 +458,15 @@ public class PlayQuor{
             return true; // wall placed successfully
         }
         else // else if there are no more walls to play or if the back end has a problem with it ..
-            return false; // return false for not a legal move
+            return false; // return false for not a legal move*/
 
     }
 
     // Parameters: the board, the player whose turn it is, the direction
     //    that the player chose to move (which is onto another player)
     // PostCondition: the player's piece is moved and he moves again
-    public static boolean doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
+    // Appears to be unused now; thus, commented.
+    /*  public static boolean doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
         int[] startSpot = b.playerPlace(turn);
         int col = startSpot[0];
         int row = startSpot[1];
@@ -490,7 +495,7 @@ public class PlayQuor{
             return false;
         return true;
     }
-
+     */
     private static void resetLegalMoves(){
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
