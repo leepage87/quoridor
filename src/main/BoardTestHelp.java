@@ -16,11 +16,11 @@ import src.ui.GameBoardWithButtons;
  * */
 public class BoardTestHelp {
 
-	public final int NUMPLAY; // number of players
-	public int[] playerWalls = new int[4]; // tracks players per wall
-	final int WALL = 5; // how a wall is denoted on the grid
-	public int[][] grid; // the board array
-	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); // determines which icon to paint when a tile is updated
+	public final int NUMPLAY; /** number of players*/
+	public int[] playerWalls = new int[4]; /** tracks players per wall*/
+	final int WALL = 5; /** how a wall is denoted on the grid*/
+	public int[][] grid; /** the board array*/
+	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); /** determines which icon to paint when a tile is updated*/
 	/**
 	* @param the number of players (2 or 4)
 	* @return a board object
@@ -189,9 +189,9 @@ public class BoardTestHelp {
 		int[] here = playerPlace(Player);
 		int col = here[0];
 		int row = here[1];
-		if(direction == 'X') // This is passed if a non-adjacent pawn move is attempted
+		if(direction == 'X') /** This is passed if a non-adjacent pawn move is attempted*/
 			return false;
-		/* For each direction, tests if a wall blocks the path. @return false if so. */
+		/** For each direction, tests if a wall blocks the path. @return false if so. */
 		if(direction == 'N'){
 			if((here[1] == 0) || (grid[col][row-1] == 5))
 				return false;
@@ -208,7 +208,7 @@ public class BoardTestHelp {
 			if((here[0] == 0) || (grid[col-1][row] == 5))
 				return false;
 		}
-		return true; // legal move; return true.
+		return true; /** legal move; return true.*/
 	}
 
 	/**
@@ -588,7 +588,7 @@ public class BoardTestHelp {
 	}
 	
 	public void mapIcons(){
-		/* Adds the icons from GBWB to the map. Allows direct translation
+		/** Adds the icons from GBWB to the map. Allows direct translation
 		 * of turn number to icon. */
 		map.put(0, GameBoardWithButtons.defaultIcon);
 		map.put(1, GameBoardWithButtons.playerOne);

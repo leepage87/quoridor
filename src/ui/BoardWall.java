@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import src.main.PlayQuor;
 
 import java.util.*;
-/* Creates each wall button. Contains a map from button name to button. */
+/** Creates each wall button. Contains a map from button name to button. */
 public class BoardWall extends JButton implements ActionListener {
 
 	public static HashMap<String, BoardWall> map = new HashMap<String, BoardWall>();
@@ -27,7 +27,7 @@ public class BoardWall extends JButton implements ActionListener {
 
 	private JComponent me;
 
-	/* Gets the wall to the south or east of the current wall.
+	/** Gets the wall to the south or east of the current wall.
 	 * Used when previewing/drawing two-unit lines. */
 	public BoardWall nextWall () 
 	{
@@ -35,11 +35,11 @@ public class BoardWall extends JButton implements ActionListener {
 		String oldname = name;
 		int temp;
 		String newname;
-		if (oldname.charAt(2) == 'V'){ // it's a vertical wall
+		if (oldname.charAt(2) == 'V'){ /** it's a vertical wall*/
 			temp = (int)(oldname.charAt(1)-'0')+1;
 			newname = oldname.charAt(0) + Integer.toString(temp) + oldname.charAt(2);
 			returnwall = getWall(newname);
-		}else{ // it's a horizontal wall
+		}else{ /** it's a horizontal wall*/
 			temp = (int)(oldname.charAt(0)-'0')+1;
 			newname = Integer.toString(temp) + oldname.charAt(1) + oldname.charAt(2);
 			returnwall = getWall(newname);
@@ -47,22 +47,24 @@ public class BoardWall extends JButton implements ActionListener {
 		return returnwall;
 	}
 
-	/* When a wall is clicked, this runs. */
+	/** When a wall is clicked, this runs. 
+	 * @param e an ActionEvent
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		BoardWall wall = (BoardWall) me;
 		BoardWall next;
-		/* Since walls are exclusively drawn down and to the right, the bottommost vertical
+		/** Since walls are exclusively drawn down and to the right, the bottommost vertical
 		 * and rightmost horizontal walls are excluded. */
 		if (wall.name.charAt(1) != '9') 
 			next = wall.nextWall();
 		else
 			next = null;
 
-		/* Only performs these actions if a legal (nonbottom nonright wall) was clicked. */
+		/** Only performs these actions if a legal (nonbottom nonright wall) was clicked. */
 		if (next != null)
-			/* Informs PlayQuor that a click was registered, and passes information on the (wall) button. */
+			/** Informs PlayQuor that a click was registered, and passes information on the (wall) button. */
 			if ((!wall.wallPresent) && (!next.wallPresent)) {
 				PlayQuor.setNextMove(wall.name);
 				PlayQuor.setClicked(true);
@@ -70,20 +72,20 @@ public class BoardWall extends JButton implements ActionListener {
 
 	}
 
-	/* Returns the wall with the name same as the string passed. */
+	/** Returns the wall with the name same as the string passed. */
 	public BoardWall getWall (String str) {
 		BoardWall returnwall = map.get(str);
 		return returnwall;
 	}
 
-	/* When Board determines a wall placement legal, it sets the wall clicked
+	/** When Board determines a wall placement legal, it sets the wall clicked
 	 * and the next wall with this method. */
 	public void setWall() {
 		setBackground(Color.ORANGE);
 		wallPresent = true;
 	}
 
-	/* Handles mouseovers. */
+	/** Handles mouse overs. */
 	public void rolloverTests(){
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -129,8 +131,8 @@ public class BoardWall extends JButton implements ActionListener {
 		this.wallPresent = setting;
 	}
 
-	/* Constructor for the wall buttons. Sets rollover only if not in bottom row of vert walls
-	 * or right column of horz walls*/
+	/** Constructor for the wall buttons. Sets roll over only if not in bottom row of vertical walls
+	 * or right column of horizontal walls*/
 	BoardWall(String name) {
 		wallPresent = false;
 		setBackground(Color.BLACK);

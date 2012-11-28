@@ -15,12 +15,12 @@ import src.main.PlayQuor;
 
 @SuppressWarnings("serial")
 
-/* The GUI. Creates the game board - more specifically, creates the buttons for tiles and walls;
+/** The GUI. Creates the game board - more specifically, creates the buttons for tiles and walls;
  * creates the tile icons; creates the menu bar. */
 public class GameBoardWithButtons extends JFrame implements ActionListener
 {
 	
-	/* The icons for the tiles. Used across multiple classes. */
+	/** The icons for the tiles. Used across multiple classes. */
 	
 	public static Icon playerOne = new ImageIcon(GameBoardWithButtons.class.getResource("player1.png"));
 	public static Icon playerTwo = new ImageIcon(GameBoardWithButtons.class.getResource("player2.png"));
@@ -34,13 +34,13 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	public static JLabel whoseTurn;
 	public static ArrayList<JLabel> pWalls = new ArrayList<JLabel>();
 	
-	final int SIZE = 630; // width/height of game board
-	final int DOWNOFFSET = 20; // distance to draw board from top of window
-	final int RIGHTOFFSET = 20; // distance to draw board from left side of window
+	final int SIZE = 630; /** width/height of game board*/
+	final int DOWNOFFSET = 20; /** distance to draw board from top of window*/
+	final int RIGHTOFFSET = 20; /** distance to draw board from left side of window*/
 	final int WALLLENGTH = SIZE * 2/21;
 	final int WALLWIDTH = SIZE/9 - WALLLENGTH;
 
-	/* Takes the back end board and number of players. Paints the game board appropriately. */
+	/** Takes the back end board and number of players. Paints the game board appropriately. */
 	public GameBoardWithButtons(Board b, int numPlay)  {
 		super();
 		JMenuBar menu = makeMenuBar();
@@ -50,13 +50,13 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 		setTitle(MAIN_WINDOW_TITLE);
 		setSize(SIZE + 2*RIGHTOFFSET, SIZE + 2*DOWNOFFSET+50);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setLayout(null); // uses absolute layout
+		this.setLayout(null); /** uses absolute layout*/
 		
 		whoseTurn = new JLabel();
 		whoseTurn.setBounds(30, 640, 150, 40);
-		add(whoseTurn); // text supplied by PlayQuor
+		add(whoseTurn); /** text supplied by PlayQuor*/
 		
-		/* Displays number of walls left for each player. Text supplied by PlayQuor. */
+		/** Displays number of walls left for each player. Text supplied by PlayQuor. */
 		for (int i = 0; i < 4; i++){
 			JLabel wallEntry = new JLabel();
 			wallEntry.setBounds(180 + 100*i, 640, 100, 40);
@@ -67,7 +67,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 			add(pWalls.get(i));
 		
 		
-		/* Creates the 81 tiles. Adds them to map in BoardButton so they can be accessed by name.*/
+		/** Creates the 81 tiles. Adds them to map in BoardButton so they can be accessed by name.*/
 		JButton[][] tokenSquares = new JButton[9][9];
 		for (int across = 0; across < 9; across++)	{
 			for (int down = 0; down < 9; down++)	{
@@ -78,7 +78,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 				tokenSquares[across][down].setName("B"+across + "" +down);
 				BoardButton.map.put("B"+ across + down, (BoardButton)tokenSquares[across][down]);
 				
-				/* Sets icons in appropriate places for a new game. */
+				/** Sets icons in appropriate places for a new game. */
 				if (b.grid[across*2][down*2] == 1)
 					tokenSquares[across][down].setIcon(playerOne);
 				else if (b.grid[across*2][down*2] == 2)
@@ -90,7 +90,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 			}
 		}
 		
-		/* Draws vertical walls. Adds to map in BoardWall. */
+		/** Draws vertical walls. Adds to map in BoardWall. */
 		JButton[][] vertwalls = new JButton[10][10];
 		for (int across = 1; across < 9; across++)	{
 			for (int down = 1; down < 10; down++)	{
@@ -104,7 +104,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 			}
 		}
 		
-		/* Draws horizontal walls. Adds to map in BoardWall. */ 
+		/** Draws horizontal walls. Adds to map in BoardWall. */ 
 		JButton[][] horzwalls = new BoardWall[10][10];
 		for (int across = 1; across < 10; across++) {
 			for (int down = 1; down < 9; down++) {
@@ -117,7 +117,7 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 				horzwalls[across][down].setName("H" + across + down);
 			}
 		}
-		// make it all visible
+		/** make it all visible*/
 		setVisible(true);
 		
 	}
@@ -127,51 +127,51 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 		JMenu fileMenu;
 		JMenuItem menuItem;
 		
-		//Making the menu bar
+		/**Making the menu bar*/
 		menuBar = new JMenuBar();
 		
-		//Adding the "File" menu to menuBar
+		/**Adding the "File" menu to menuBar*/
 		fileMenu = new JMenu("File");
 		
-		//ALT+F selects File menu
+		/**ALT+F selects File menu*/
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		
 		menuBar.add(fileMenu);
 		menuBar.setName("MenuBar");
 		
-		//add "New Game" feature to File menu
+		/**add "New Game" feature to File menu*/
 		menuItem = new JMenuItem("New Game",
                 KeyEvent.VK_N);
 	    menuItem.setActionCommand("New");  
 	    menuItem.addActionListener(this);
 		fileMenu.add(menuItem);
 		
-		//add "Quit" feature to file menu, action command "Quit"
+		/**add "Quit" feature to file menu, action command "Quit"*/
 		menuItem = new JMenuItem("Quit", KeyEvent.VK_Q);
 	    menuItem.setActionCommand("Quit");
 	    
-	    //ActionEvent x = new ActionEvent();
+	    /**ActionEvent x = new ActionEvent();*/
 	    menuItem.addActionListener(this);
 		fileMenu.add(menuItem);
 		
-		//make a help menu, 
+		/**make a help menu*/ 
 		fileMenu = new JMenu("Help");
 		fileMenu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(fileMenu);
 		
-		//add how to play menu item, action command "Instructions"
+		/**add how to play menu item, action command "Instructions"*/
 		menuItem = new JMenuItem("How to Play", KeyEvent.VK_P);
 		menuItem.setActionCommand("Instructions");
 		menuItem.addActionListener(this);
 		fileMenu.add(menuItem);
 		
-		//add about menu item, action command "About"
+		/**add about menu item, action command "About"*/
 		menuItem = new JMenuItem("About", KeyEvent.VK_A);
 		menuItem.setActionCommand("About");
 		menuItem.addActionListener(this);
 		fileMenu.add(menuItem);
 		
-		//add the menu bar to the frame
+		/**add the menu bar to the frame*/
 		setJMenuBar(menuBar);
 		return menuBar;
 	}
@@ -203,9 +203,9 @@ public class GameBoardWithButtons extends JFrame implements ActionListener
 	    		    "How to Play",
 	    		    JOptionPane.YES_NO_OPTION,
 	    		    JOptionPane.QUESTION_MESSAGE,
-	    		    null,     //do not use a custom Icon
-	    		    options,  //the titles of buttons
-	    		    options[0]); //default button title
+	    		    null,     /**do not use a custom Icon*/
+	    		    options,  /**the titles of buttons*/
+	    		    options[0]); /**default button title*/
 	    	//if (n == JOptionPane.YES_OPTION){
 	    		//OpenBrowser.openURL("http://en.wikipedia.org/wiki/Quoridor#Rules_of_the_game");
 	    	//}
