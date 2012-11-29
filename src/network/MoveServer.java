@@ -153,6 +153,9 @@ public class MoveServer extends Thread {
      * @return the move made in network protocol format
      */
     private String getMove(int PlayerNo, Board b, AI ai){
+        if (playerNo == 1){
+            return ("MOVE M (4, 4) (4, 4)"); 
+        }
         int rowOne, colOne, rowTwo, colTwo;
         char opCode;
 
@@ -160,7 +163,9 @@ public class MoveServer extends Thread {
         //record start location of player
         int[] startLocation = b.playerPlace(playerNo+1);
         //record final location of player
+        System.err.println("CALLING AI.AIMOVE!");
         Board tempNewBoard = ai.aiMove(playerNo+1, 1);
+        System.err.println("AI.AIMOVE SUCCESSFULLY CALLED!");
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
         System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
         System.out.println(tempNewBoard.toString());

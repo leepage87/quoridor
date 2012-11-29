@@ -27,6 +27,10 @@ public class PlayQuor{
     private static int[] isAI = new int[4];
     private static boolean networkGame = false;
     private static int[][] legalMovesArray = new int[9][9]; // used for tracking which squares get the legal move icon
+    private static int[] networkPlayers;
+    private static int playersLeft;
+    private static boolean lastNetworkMoveLegal;
+    
     /*
      * The central game driver. Gets number of players, creates a new back end Board
      * and GUI, and loops until player wins or starts a new game.
@@ -37,6 +41,7 @@ public class PlayQuor{
         while (true){
             NetworkClient network = null;
             int numPlay = getNumPlay();
+            playersLeft = numPlay;
             if (numPlay == 0)
                 System.exit(0);
             //get network information, initiate network
@@ -51,6 +56,11 @@ public class PlayQuor{
             
             if (n == 1){
                 network = getNetworkInfo(numPlay);
+                networkPlayers = new int[numPlay];
+                //poopulate the networkPlayers array with 1s representing players
+                for (int i = 0; i < numPlay; i ++){
+                    networkPlayers[i] = 1;
+                }
 
             }
             if(!networkGame) 
@@ -84,9 +94,10 @@ public class PlayQuor{
                 // initialize GUI buttons indicating how many walls each player has left
                 for (int i = 0; i < numPlay; i++)
                     GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
-                if(networkGame)
-                    networkTurn(network, b);
-                else {
+                if(networkGame){
+                    if (networkPlayers[turn-1] != 0)
+                        networkTurn(network, b);
+                }else {
                     if(isAI[turn-1] > 0)
                         b = makeAIMove(b);
                     else {
@@ -105,6 +116,10 @@ public class PlayQuor{
                 if (b.haveWon())
                     breaker = 1;
                 // if somebody won, say so
+
+                if (playersLeft == 1 && lastNetworkMoveLegal == true)
+                    breaker = 1;
+                
                 if (breaker == 1 && !networkGame)
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
                 if (breaker == 1 && networkGame){
@@ -162,6 +177,7 @@ public class PlayQuor{
 
 
     private static void networkTurn(NetworkClient network, Board b) throws IOException {
+        lastNetworkMoveLegal = true;
         String networkMove = NetworkClient.getMove(turn);
         System.out.println("Turn: " + turn + " Move: " +networkMove);
         setLegalMoves(b.playerPlace(turn), b);
@@ -185,6 +201,10 @@ public class PlayQuor{
                 System.out.println("Move[] " + move[0] + move[1]);
                 b.quickMove(move, turn);
             }else{//the move is not legal, kick player
+                //0 represents the player no longer in the game
+                networkPlayers[turn-1] = 0;
+                playersLeft--;
+                lastNetworkMoveLegal = false;
                 NetworkClient.removePlayer(turn);
                 int[] location = b.playerPlace(turn);
                 b.grid[location[0]] [location[1]] = 0;
@@ -207,14 +227,24 @@ public class PlayQuor{
                 move[1] = (networkMove.charAt(8)-'0') -1;
                 move[2] = 0;
                 System.out.println("Printing horz wall coords: "+ move[0] + " " + move[1]);
-                placeWallPQ(b, move);
+                if (!placeWallPQ(b, move)){
+                    //0 represents the player is no longer in the game
+                    networkPlayers[turn-1] = 0;
+                    playersLeft--;
+                    lastNetworkMoveLegal = false;
+                }
                 NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
             }else{//vertical wall
                 move[0] = (networkMove.charAt(11)-'0') - 1;
                 move[1] = (networkMove.charAt(8)-'0');//just edited removed +1
                 move[2] = 1;
                 System.out.println("Printing vert wall coords: "+ move[0] + " " + move[1]);
-                placeWallPQ(b, move);
+                if (!placeWallPQ(b, move)){
+                    //0 represents the player is no longer in the game
+                    networkPlayers[turn-1] = 0;
+                    playersLeft--;
+                    lastNetworkMoveLegal = false;
+                }
                 NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
             }
             System.err.println(b.toString());

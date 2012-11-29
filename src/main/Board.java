@@ -282,7 +282,9 @@ public class Board {
 	* @return if each player can still reach their winning column
 	*/
 	public boolean canWin(){
-		for(int i = 1; i < NUMPLAY + 1; i++){
+		for(int i = 1; i < 5; i++){
+		    if(playerPlace(i)[0] == -1)
+		        continue;
 			int[] nextMove = doSearch(i);
 			if(nextMove[0] == -1)
 				return false;
