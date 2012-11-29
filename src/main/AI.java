@@ -19,65 +19,6 @@ public class AI{
         AIboard = b;
         lastMove = b;
     }
-
-<<<<<<< HEAD
-	/**
-	 * @param player
-	 * @param rounds
-	 * @return Board after moving
-	 */
-	public Board aiMove(int player, int rounds){
-		truePlayer = player;
-		int[] answer = new int[3];
-		answer[0] = -201;
-		answer[1] = 201;
-		answer[2] = -201;
-		ArrayList<Board> moves = findMoves(player, AIboard);
-		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
-		int enemy = findEnemy(player, AIboard);
-		if(enemy == -1)
-			return moves.get(0);
-		if(rounds == 0 || panic == true){
-			goodMoves.add(0);
-			int value = boardValue(player, enemy, moves.get(0));
-			for(int i = 1; i < moves.size(); i++){
-				int nextValue = boardValue(player, enemy, moves.get(i));
-				if(nextValue > value){
-					value = nextValue;
-					goodMoves = new ArrayList<Integer>();
-					goodMoves.add(i);
-				}else if(nextValue == value)
-					goodMoves.add(i);
-			}
-			int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));
-			if(panic == true && wallPlaced(lastMove, moves.get(whichBoard)))
-				panic = false;
-			return moves.get(whichBoard);
-		}
-		int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
-		answer[0] = next[0];
-		answer[2] = next[0];
-		goodMoves.add(0);
-		for(int i = 1; i < moves.size(); i++){
-			next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(i), rounds-1);
-			if(next[0] > answer[0]){
-				goodMoves = new ArrayList<Integer>();
-				answer[0] = next[0];
-				answer[2] = next[0];
-				goodMoves.add(i);
-			}else if(next[0] == answer[0]){
-				goodMoves.add(i);
-			}
-		}
-		if(splitMove(moves.get(0)))
-			return aiMove(player, 0);
-		lastMove = AIboard;
-		if(goodMoves.size() > 8)
-			return aiMove(player, 0);
-		int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
-		return moves.get(whichBoard);
-	}
-=======
     /**
      * @param player
      * @param rounds
@@ -92,7 +33,6 @@ public class AI{
         ArrayList<Board> moves = findMoves(player, AIboard);
         ArrayList<Integer> goodMoves = new ArrayList<Integer>();
         int enemy = findEnemy(player, AIboard);
-        System.err.println("Enemy is " + enemy);
         if(enemy == -1)
             return moves.get(0);
         if(rounds == 0 || panic == true){
@@ -112,12 +52,12 @@ public class AI{
                 panic = false;
             return moves.get(whichBoard);
         }
-        int[] next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(0), rounds-1);
+        int[] next = search(answer, nextPlayer(AIboard, player), moves.get(0), rounds-1);
         answer[0] = next[0];
         answer[2] = next[0];
         goodMoves.add(0);
         for(int i = 1; i < moves.size(); i++){
-            next = search(answer, (player%AIboard.NUMPLAY)+1, moves.get(i), rounds-1);
+            next = search(answer, nextPlayer(AIboard, player), moves.get(i), rounds-1);
             if(next[0] > answer[0]){
                 goodMoves = new ArrayList<Integer>();
                 answer[0] = next[0];
@@ -135,7 +75,6 @@ public class AI{
         int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
         return moves.get(whichBoard);
     }
->>>>>>> 68b58ce8297b4b5afbab990b05cc205c1c3c657d
 
     /**
      * answer: int [] array of the current value + the alpha + the beta, 
@@ -154,7 +93,7 @@ public class AI{
         if(player == truePlayer){
             int best = -201;
             for(int i = 0; i < allMoves.size(); i++){
-                int[] value = search(nextAnswer, (player%AIboard.NUMPLAY)+1, allMoves.get(i), numRounds-1);
+                int[] value = search(nextAnswer, nextPlayer(b, player), allMoves.get(i), numRounds-1);
                 if(value[0] > nextAnswer[2])
                     nextAnswer[2] = value[0];
                 if(value[0] > nextAnswer[1]){
@@ -166,7 +105,7 @@ public class AI{
         }
         int worst = 201;
         for(int i = 0; i < allMoves.size(); i++){
-            int[] value = search(nextAnswer, (player%AIboard.NUMPLAY)+1, allMoves.get(i), numRounds-1);
+            int[] value = search(nextAnswer, nextPlayer(b, player), allMoves.get(i), numRounds-1);
             if(value[0] < nextAnswer[1])
                 nextAnswer[2] = value[0];
             if(value[0] < nextAnswer[2]){
@@ -255,7 +194,11 @@ public class AI{
         panic = true;
         return true;
     }
-
+    /**
+     * @param a board
+     * @param a player
+     * @return the player who goes next
+     */
     public int nextPlayer(Board b, int player){
         for(int i = (player%AIboard.NUMPLAY)+1; i < (player%AIboard.NUMPLAY)+5; i++){
             if(b.playerPlace(i)[0] == -1)
