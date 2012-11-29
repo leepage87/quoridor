@@ -36,24 +36,14 @@ public class Board {
 			playerWalls[i] = 20/NUMPLAY;
 		mapIcons();
 	}
-
-	public void setPlayerWalls(int[] playerWallss){
-		playerWalls = playerWallss;
-	}
-	
-	public int[] getPlayerWalls(){
-		return playerWalls;
-	}
 	/**
 	* @param b a board object that is a duplicate of the board given
 	*/
 	public Board(Board b){
 		int[][] tempGrid = new int[17][17];
-		for(int i = 0; i < 17; i++){
-			for(int j = 0; j < 17; j++){
+		for(int i = 0; i < 17; i++)
+			for(int j = 0; j < 17; j++)
 				tempGrid[i][j] = b.grid[i][j];
-			}
-		}
 		this.grid = tempGrid;
 		this.NUMPLAY = b.NUMPLAY;
 		for(int i = 0; i < 4; i++)
@@ -65,11 +55,9 @@ public class Board {
 	 * @param players (2 or 4) 
 	 */
 	public void setBoard(int players){
-		for(int i = 0; i < 17; i++){
-			for(int j = 0; j < 17; j++){
+		for(int i = 0; i < 17; i++)
+			for(int j = 0; j < 17; j++)
 				grid[i][j] = 0;
-			}
-		}
 		grid[8][0] = 1;
 		grid[8][16] = 2;
 		if(players == 4){
@@ -91,7 +79,6 @@ public class Board {
 		}
 		return check;
 	}
-
 	/**
 	 * @return the board in String form
 	 */
@@ -105,7 +92,6 @@ public class Board {
 		}
 		return s;
 	}
-		
 	/**
 	 * @param Player the player being searched for
 	 * @return the x/y location of the Player
@@ -125,7 +111,6 @@ public class Board {
 		}
 		return location;
 	}
-
 	/**
 	* @param direstion a character representing the direction moved 
 	* @param place a location
@@ -144,7 +129,6 @@ public class Board {
 			return true;
 		return false;
 	}
-	
 	/**
 	* @param dest the location the AI wants to move to 
 	* @param Player an int representing the player 
@@ -174,7 +158,6 @@ public class Board {
 			return true;
 		return aiDoubleMove(place, Player, history);	
 	}
-	
 	/**
 	* @param place the location on the board
 	* @param Player an int representing the player
@@ -223,7 +206,6 @@ public class Board {
 		}
 		return false;
 	}
-	
 	/**
 	* @param history a list of locations that have been searched
 	* @param newPlace a location
@@ -240,7 +222,6 @@ public class Board {
 		}
 		return seen;
 	}
-	
 	/**
 	 * PostCondition: the Player is moved to the destination
 	 * @param dest a location the AI wants to move to 
@@ -255,7 +236,6 @@ public class Board {
 		grid[dCol][dRow] = Player;
 		grid[hCol][hRow] = 0;
 	}
-	
 	/**
 	 * PostCondition: a new wall is placed
 	 * @param theWall an int[3] where the first and second numbers give the
