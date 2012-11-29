@@ -84,7 +84,6 @@ public class AI{
 	 * @param numRounds
 	 * @return the same array, or the same array with either the alpha or beta changed
 	 */
-	
 	public int[] search(int[] answer, int player, Board b, int numRounds){
 		ArrayList<Board> allMoves = findMoves(player, b);
 		if(numRounds < 1)
@@ -255,22 +254,30 @@ public class AI{
 		//int walls = 2*b.playerWalls[turn-1];
 		return enemyMoves-playerMoves;
 	}
-	
 	/**
 	* @param turn
 	* @param b
 	* @return the enemy who is closest to winning
 	*/
 	public int findEnemy(int turn, Board b){
-		if(b.NUMPLAY == 2)
-			return (turn%2)+1;
-		int enemy = (turn%4)+1;
-		for(int i = 1; i < 5; i++)
-			if((i!= turn) && (b.bestMove(i)[2] < b.bestMove(enemy)[2]))
+		int enemy = -1;
+		int[] players = new int[4];
+		for(int i = 1; i < 5; i++){
+			int[] place = b.playerPlace(i);
+			players[i-1] = place[0];
+		}
+		int best = 200;
+		for(int i = 1; i < 5; i++){
+			if(i==turn || players[i-1]==-1)
+				continue;
+			int movesAway = b.bestMove(i)[2];
+			if(movesAway < best){
+				best = movesAway;
 				enemy = i;
+			}
+		}
 		return enemy;
 	}
-	
 	/**
 	* @param turn 
 	* @param destination

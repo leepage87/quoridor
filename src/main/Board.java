@@ -66,6 +66,19 @@ public class Board {
 		}
 	}
 	/**
+	 * @return the board in String form
+	 */
+	public String toString(){
+		String s = "";
+		for(int i = 0; i < 17; i++){
+			for(int j = 0; j < 17; j++){
+				s += (grid[j][i] + " ");
+			}
+			s += "\n";
+		}
+		return s;
+	}
+	/**
 	* @param b a board
 	* @return if this board is identical to the other board
 	*/
@@ -80,19 +93,6 @@ public class Board {
 		return check;
 	}
 	/**
-	 * @return the board in String form
-	 */
-	public String toString(){
-		String s = "";
-		for(int i = 0; i < 17; i++){
-			for(int j = 0; j < 17; j++){
-				s += (grid[j][i] + " ");
-			}
-			s += "\n";
-		}
-		return s;
-	}
-	/**
 	 * @param Player the player being searched for
 	 * @return the x/y location of the Player
 	 */
@@ -100,15 +100,12 @@ public class Board {
 		int[] location = new int[2];
 		location[0] = -1;
 		location[1] = -1;
-		for(int col = 0; col < 17; col++){
-			for(int row = 0; row < 17; row++){
+		for(int col = 0; col < 17; col++)
+			for(int row = 0; row < 17; row++)
 				if(grid[col][row] == Player){
 					location[0] = col;
 					location[1] = row;
-					break;
 				}
-			}
-		}
 		return location;
 	}
 	/**
