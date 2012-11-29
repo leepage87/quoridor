@@ -34,7 +34,6 @@ public class AI{
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
 		int enemy = findEnemy(player, AIboard);
-		System.err.println("Enemy is " + enemy);
 		if(enemy == -1)
 			return moves.get(0);
 		if(rounds == 0 || panic == true){
