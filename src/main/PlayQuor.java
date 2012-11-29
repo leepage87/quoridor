@@ -89,7 +89,7 @@ public class PlayQuor{
                 if(networkGame)
                     networkTurn(network, b);
                 else {
-                    if(isAI[turn-1] == 1)
+                    if(isAI[turn-1] > 0)
                         b = makeAIMove(b);
                     else {
                         boolean fairMove = false;
@@ -134,7 +134,7 @@ public class PlayQuor{
     private static Board makeAIMove(Board b) {
         AI a = new AI(b);
         int[] startPlace = b.playerPlace(turn);
-        Board tempB = a.aiMove(turn, 1);
+        Board tempB = a.aiMove(turn, isAI[turn-1]-1);
         int[] endPlace = tempB.playerPlace(turn);
         if(startPlace[0]==endPlace[0] && startPlace[1]==endPlace[1]){
             boolean getOut = false;
@@ -240,10 +240,10 @@ public class PlayQuor{
     }
 
     private static int getHumanOrAI(int i) {
-        String[] HumanOrAi = {"Human","AI"};
+        String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
         return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
                 "Player " + i + ": Human or AI?", 
-                "YOU MUST CHOOSE",JOptionPane.YES_NO_OPTION,
+                "YOU MUST CHOOSE",JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
     }
 

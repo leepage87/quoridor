@@ -21,35 +21,6 @@ public class AI{
 	 }
 
 	/**
-    * @param player the board before moving, the board after moving
-    * @return where the player placed a wall
-    */
-	public int[] aiWall(int player, Board old, Board current){
-		int[] startPlace = old.playerPlace(player);
-		int[] endPlace = current.playerPlace(player);
-		if(startPlace[0]!=endPlace[0] || startPlace[1]!=endPlace[1])
-			return null;
-		int[] aiWall = new int[3];
-		boolean getOut = false;
-		for(int col = 1; col < 17; col=col+2){
-			for(int row = 1; row < 17; row=row+2){		
-				if(old.grid[col][row] != current.grid[col][row]){
-					aiWall[0] = col/2;
-					aiWall[1] = row/2;
-					if(current.grid[col][row+1]==5)
-						aiWall[2] = 1;
-					getOut = true;
-				}
-				if(getOut)
-					break;
-			}
-			if(getOut)
-				break;
-		}
-		return aiWall;
-	}
-	
-	/**
 	 * @param player
 	 * @param rounds
 	 * @return Board after moving
@@ -64,6 +35,7 @@ public class AI{
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
 		if(rounds == 0 || panic == true){
 			int enemy = findEnemy(player, AIboard);
+			goodMoves.add(0);
 			int value = boardValue(player, enemy, moves.get(0));
 			for(int i = 1; i < moves.size(); i++){
 				int nextValue = boardValue(player, enemy, moves.get(i));
@@ -223,6 +195,35 @@ public class AI{
 		return true;
 	}
 
+	/**
+    * @param player the board before moving, the board after moving
+    * @return where the player placed a wall
+    */
+	public int[] aiWall(int player, Board old, Board current){
+		int[] startPlace = old.playerPlace(player);
+		int[] endPlace = current.playerPlace(player);
+		if(startPlace[0]!=endPlace[0] || startPlace[1]!=endPlace[1])
+			return null;
+		int[] aiWall = new int[3];
+		boolean getOut = false;
+		for(int col = 1; col < 17; col=col+2){
+			for(int row = 1; row < 17; row=row+2){		
+				if(old.grid[col][row] != current.grid[col][row]){
+					aiWall[0] = col/2;
+					aiWall[1] = row/2;
+					if(current.grid[col][row+1]==5)
+						aiWall[2] = 1;
+					getOut = true;
+				}
+				if(getOut)
+					break;
+			}
+			if(getOut)
+				break;
+		}
+		return aiWall;
+	}
+	
 	/**
 	 * @param b1
 	 * @param b2
