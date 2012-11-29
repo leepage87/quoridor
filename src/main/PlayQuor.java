@@ -27,7 +27,7 @@ public class PlayQuor{
     private static int[] isAI = new int[4];
     private static boolean networkGame = false;
     private static int[][] legalMovesArray = new int[9][9]; // used for tracking which squares get the legal move icon
-    private static int[] networkPlayers;
+    public static int[] networkPlayers;
     private static int playersLeft;
     private static boolean lastNetworkMoveLegal;
     
@@ -288,7 +288,7 @@ public class PlayQuor{
                 if (n == 1 && numPlay == 2)
                 {*/
             //network = new NetworkClient(player1Address, player2Address);
-            network = new NetworkClient("localhost:4050", "localhost:4050");
+            network = new NetworkClient("localhost:4050", "localhost:4050", "localhost:4050", "localhost:4050");
 
             networkGame = true;
             /* }
