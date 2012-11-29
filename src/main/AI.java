@@ -33,8 +33,10 @@ public class AI{
 		answer[2] = -201;
 		ArrayList<Board> moves = findMoves(player, AIboard);
 		ArrayList<Integer> goodMoves = new ArrayList<Integer>();
+		int enemy = findEnemy(player, AIboard);
+		if(enemy == -1)
+			return moves.get(0);
 		if(rounds == 0 || panic == true){
-			int enemy = findEnemy(player, AIboard);
 			goodMoves.add(0);
 			int value = boardValue(player, enemy, moves.get(0));
 			for(int i = 1; i < moves.size(); i++){
