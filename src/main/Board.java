@@ -125,93 +125,7 @@ public class Board {
 		}
 		return location;
 	}
-	/**
-	 * PostCondition: the piece is moved if it was possible
-	 * @param direstion a character to represent the direction moved 
-	 * @param Player an int to show which player is moving
-	 */
-	public void movePieceBoard(char direction, int Player){
-		int[] here = playerPlace(Player);
-		int col = here[0];
-		int row = here[1];
-		
-		/** 
-		 * For each direction, updates the grid and GUI appropriately. 
-		 * Move legality tested before this method is called. 
-		*/
-		if(direction == 'N'){
-			grid[col][row] = 0;
-			grid[col][row-2] = Player;
-			BoardButton.map.get("B" + col/2 + row/2).setIcon(GameBoardWithButtons.defaultIcon);
-			BoardButton.map.get("B" + col/2 + (row-2)/2).setIcon(map.get(Player));
-			BoardButton.map.get("B" + col/2 + (row/2)).setPlayerPresent(false, col/2, row/2);
-			BoardButton.map.get("B" + col/2 + (row-2)/2).setPlayerPresent(true, col/2, (row-2)/2);
-		}
-		if(direction == 'S'){
-			grid[col][row] = 0;
-			grid[col][row+2] = Player;
-			BoardButton.map.get("B" + col/2 + row/2).setIcon(GameBoardWithButtons.defaultIcon);
-			BoardButton.map.get("B" + col/2 + (row+2)/2).setIcon(map.get(Player));
-			BoardButton.map.get("B" + col/2 + (row/2)).setPlayerPresent(false, col/2, row/2);
-			BoardButton.map.get("B" + col/2 + (row+2)/2).setPlayerPresent(true, col/2, (row+2)/2);
-		}
-		if(direction == 'E'){
-			grid[col][row] = 0;
-			grid[col+2][row] = Player;
-			BoardButton.map.get("B" + col/2 + row/2).setIcon(GameBoardWithButtons.defaultIcon);
-			BoardButton.map.get("B" + (col+2)/2 + row/2).setIcon(map.get(Player));
-			BoardButton.map.get("B" + col/2 + (row/2)).setPlayerPresent(false, col/2, row/2);
-			BoardButton.map.get("B" + (col +2)/2 + row/2).setPlayerPresent(true, (col+2)/2, (row)/2);
-		}
-		if(direction == 'W'){
-			grid[col][row] = 0;
-			grid[col-2][row] = Player;
-			BoardButton.map.get("B" + col/2 + row/2).setIcon(GameBoardWithButtons.defaultIcon);
-			BoardButton.map.get("B" + (col-2)/2 + row/2).setIcon(map.get(Player));
-			BoardButton.map.get("B" + col/2 + (row/2)).setPlayerPresent(false, col/2, row/2);
-			BoardButton.map.get("B" + (col -2)/2 + row/2).setPlayerPresent(true, (col-2)/2, (row)/2);
-		}
-	}
-	/**
-	* @param direstion a character to represent the direction moved 
-	* @param Player an int to show which player is moving
-	* @return if the move is legal
-	* */
-	public boolean canMovePiece(char direction, int Player){
-		int[] here = playerPlace(Player);
-		int col = here[0];
-		int row = here[1];
-		if(direction == 'X') /**This is passed if a non-adjacent pawn move is attempted*/
-			return false;
-		/** For each direction, tests if a wall blocks the path. @return false if so. */
-		if(direction == 'N'){
-			if((here[1] == 0) || (grid[col][row-1] == 5))
-				return false;
-		}
-		if(direction == 'S'){
-			if((here[1] == 16) || (grid[col][row+1] == 5))
-				return false;
-		}
-		if(direction == 'E'){
-			if((here[0] == 16) || (grid[col+1][row] == 5))
-				return false;
-		}
-		if(direction == 'W'){
-			if((here[0] == 0) || (grid[col-1][row] == 5))
-				return false;
-		}
-		return true; /** legal move; return true.*/
-	}
 
-	/**
-	* @param direction a character to represent the direction moved 
-	* @param Player an int to show which player is moving
-	* @return if moving that direction causes a collision with a player
-	*/
-	public boolean pieceCollision(char direction, int Player){
-		int[] place = playerPlace(Player);
-		return pieceCollision(direction, place);
-	}
 	/**
 	* @param direstion a character representing the direction moved 
 	* @param place a location
@@ -230,6 +144,7 @@ public class Board {
 			return true;
 		return false;
 	}
+	
 	/**
 	* @param dest the location the AI wants to move to 
 	* @param Player an int representing the player 
@@ -259,6 +174,7 @@ public class Board {
 			return true;
 		return aiDoubleMove(place, Player, history);	
 	}
+	
 	/**
 	* @param place the location on the board
 	* @param Player an int representing the player
@@ -307,6 +223,7 @@ public class Board {
 		}
 		return false;
 	}
+	
 	/**
 	* @param history a list of locations that have been searched
 	* @param newPlace a location
@@ -323,6 +240,7 @@ public class Board {
 		}
 		return seen;
 	}
+	
 	/**
 	 * PostCondition: the Player is moved to the destination
 	 * @param dest a location the AI wants to move to 
@@ -336,13 +254,8 @@ public class Board {
 		int hRow = here[1];
 		grid[dCol][dRow] = Player;
 		grid[hCol][hRow] = 0;
-		// GUI may not work
-	/*	
-		BoardButton.map.get("B" + hCol/2 + hRow/2).setIcon(GameBoardWithButtons.defaultIcon);
-		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setIcon(map.get(Player));
-		BoardButton.map.get("B" + hCol/2 + (hRow/2)).setPlayerPresent(false, hCol/2, hRow/2);
-		BoardButton.map.get("B" + dCol/2 + (dRow)/2).setPlayerPresent(true, dCol/2, (dRow)/2);*/
 	}
+	
 	/**
 	 * PostCondition: a new wall is placed
 	 * @param theWall an int[3] where the first and second numbers give the

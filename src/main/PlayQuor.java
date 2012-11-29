@@ -54,10 +54,8 @@ public class PlayQuor{
 
             }
             if(!networkGame) 
-                for (int i = 1; i <= numPlay; i++){
+                for (int i = 1; i <= numPlay; i++)
                     isAI[i-1] = getHumanOrAI(i);
-                    System.out.println(isAI[i]);
-                }
             // create a new back end board with desired number of players
             Board b = new Board(numPlay);
             // Give each player the appropriate number of walls
