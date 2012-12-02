@@ -18,7 +18,7 @@ public class Board {
 
 	public final int NUMPLAY; /** number of players*/
 	public int[] playerWalls = new int[4]; /** tracks players per wall*/
-	final int WALL = 5; /**how a wall is denoted on the grid*/
+	private final int WALL = 5; /**how a wall is denoted on the grid*/
 	public int[][] grid; /**the board array*/
 	public static HashMap<Integer, Icon> map = new HashMap<Integer, Icon>(); /** determines which icon to paint when a tile is updated*/
 	/**
@@ -54,7 +54,7 @@ public class Board {
 	 * PostCondition: the board is empty and two or four players exist
 	 * @param players (2 or 4) 
 	 */
-	public void setBoard(int players){
+	private void setBoard(int players){
 		for(int i = 0; i < 17; i++)
 			for(int j = 0; j < 17; j++)
 				grid[i][j] = 0;
@@ -143,7 +143,7 @@ public class Board {
 	* @param history a list of locations already searched
 	* @return if it is possible for the Player to move to the given location
 	*/
-	public boolean aiCanMove(int[] place, int Player, ArrayList<int[]> history){
+	private boolean aiCanMove(int[] place, int Player, ArrayList<int[]> history){
 		int[] home = playerPlace(Player);
 		if((home[0] == place[0]-2) && (home[1] == place[1]) && (grid[place[0]-1][place[1]] != 5))
 			return true;
@@ -281,11 +281,11 @@ public class Board {
 	/**
 	* @return if each player can still reach their winning column
 	*/
-	public boolean canWin(){
+	private boolean canWin(){
 		for(int i = 1; i < 5; i++){
 		    if(playerPlace(i)[0] == -1)
 		        continue;
-			int[] nextMove = doSearch(i);
+			int[] nextMove = bestMove(i);
 			if(nextMove[0] == -1)
 				return false;
 		}
@@ -307,7 +307,7 @@ public class Board {
 	* @param place an int[] to show where on the board the player is
 	* @return if the player is in their winning column/row
 	*/
-	public boolean winCheck(int Player, int[] place){
+	private boolean winCheck(int Player, int[] place){
 		int col = place[0];
 		int row = place[1];
 		if(Player==1 && row==16)
@@ -322,16 +322,9 @@ public class Board {
 	}
 	/**
 	* @param Player an int representing a player
-	* @return the best position to move to next
-	*/
-	public int[] bestMove(int Player){
-		return doSearch(Player);
-	}
-	/**
-	* @param Player an int representing a player
 	* @return the best move, or -1/-1 if winning is impossible
 	*/
-	public int[] doSearch(int Player){
+	public int[] bestMove(int Player){
 		ArrayList<int[]> checked = new ArrayList<int[]>();
 		int[] location = new int[5];
 		int[] startPlace = playerPlace(Player);
@@ -378,7 +371,7 @@ public class Board {
 	 * @param location the starting location, the queue of places to search,
 	 *    and the ArrayList of locations checked
 	 */
-	public ArrayList<int[]> getFirstChildren(int[] location){
+	private ArrayList<int[]> getFirstChildren(int[] location){
 		ArrayList<int[]> children = new ArrayList<int[]>();
 		int col = location[0];
 		int row = location[1];
@@ -425,8 +418,7 @@ public class Board {
 	* @param place the location on the board
 	* @return all adjacent locations that are not blocked by walls
 	*/
-	public ArrayList<int[]> getChildren(int[] place){
-
+	private ArrayList<int[]> getChildren(int[] place){
 		ArrayList<int[]> children = new ArrayList<int[]>();
 		int col = place[0];
 		int row = place[1];
@@ -473,7 +465,7 @@ public class Board {
 	* @param child the current location
 	* @return if the current location has already been checked
 	*/
-	public boolean hasSeen(ArrayList<int[]> checked, int[] child){
+	private boolean hasSeen(ArrayList<int[]> checked, int[] child){
 		for(int i = checked.size()-1; i > 0; i--){
 			int[] next = checked.get(i);
 			if(child[0]==next[0] && child[1]==next[1])
@@ -492,6 +484,9 @@ public class Board {
 		map.put(4, GameBoardWithButtons.playerFour);
 		map.put(5, GameBoardWithButtons.legalMove);
 	}
+	
+	/////////////////////////////////////////////////////////////
+	
 	/**
 	*Testing Purposes Only
 	*/

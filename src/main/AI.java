@@ -175,8 +175,8 @@ public class AI{
     private int boardValue(int turn, int enemy, Board b){
         if(b.haveWon())
             return 200;
-        int enemyMoves = b.doSearch(enemy)[2];
-        int playerMoves = b.doSearch(turn)[2];
+        int enemyMoves = b.bestMove(enemy)[2];
+        int playerMoves = b.bestMove(turn)[2];
         //int walls = 2*b.playerWalls[turn-1];
         return enemyMoves-playerMoves;
     }
