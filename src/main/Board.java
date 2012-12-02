@@ -279,19 +279,6 @@ public class Board {
 		return true;
 	}
 	/**
-	* @return if each player can still reach their winning column
-	*/
-	private boolean canWin(){
-		for(int i = 1; i < 5; i++){
-		    if(playerPlace(i)[0] == -1)
-		        continue;
-			int[] nextMove = bestMove(i);
-			if(nextMove[0] == -1)
-				return false;
-		}
-		return true;
-	}
-	/**
 	* @return if any player is in their winning column
 	*/
 	public boolean haveWon(){
@@ -319,6 +306,19 @@ public class Board {
 		if(Player==4 && col==0)
 			return true;
 		return false;
+	}
+	/**
+	* @return if each player can still reach their winning column
+	*/
+	private boolean canWin(){
+		for(int i = 1; i < 5; i++){
+		    if(playerPlace(i)[0] == -1)
+		        continue;
+			int[] nextMove = bestMove(i);
+			if(nextMove[0] == -1)
+				return false;
+		}
+		return true;
 	}
 	/**
 	* @param Player an int representing a player
