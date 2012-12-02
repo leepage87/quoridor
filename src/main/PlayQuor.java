@@ -447,22 +447,19 @@ public class PlayQuor{
      */
     public static boolean placeWallPQ(Board b, int[] theWall){
         String wallName;
-
-        /* if the player has walls left to play, and the back end says a wall can go here ... */
-
+        // If the player can place the wall, then place the wall
         if(b.canPlaceWall(theWall, turn)){
-            b.placeWallBoard(theWall, turn); // place it with the back end (NOT GUI YET)
-
-            /* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */
-            if (theWall[2] == 0)
+            b.placeWallBoard(theWall, turn);
+            // Places the wall in the GUI
+            if(theWall[2] == 0)
                 wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
-            else //its a 1, meaning vertical
+            else
                 wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "V";    
             BoardWall.map.get(wallName).setWall();
             BoardWall.map.get(wallName).nextWall().setWall();
             return true; // wall placed successfully
-        }else // else if there are no more walls to play or if the back end has a problem with it ..
-            return false; // return false for not a legal move*/
+        }else // If wall placement is illegal, return false
+            return false;
     }
 
     private static void resetLegalMoves(){
