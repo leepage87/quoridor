@@ -109,6 +109,97 @@ public class Board {
 		return location;
 	}
 	/**
+	 * PostCondition: the Player is moved to the destination
+	 * @param dest a location the AI wants to move to 
+	 * @param Player an int representing the player
+	 */
+	public void move(int[] dest, int Player){
+		int dCol = dest[0];
+		int dRow = dest[1];
+		int[] here = playerPlace(Player);
+		int hCol = here[0];
+		int hRow = here[1];
+		grid[dCol][dRow] = Player;
+		grid[hCol][hRow] = 0;
+	}
+	/**
+	* @param dest the location the AI wants to move to 
+	* @param Player an int representing the player 
+	* @return if that movement is legal
+	*/
+	public boolean canMove(int[] dest, int Player){
+		if(grid[dest[0]][dest[1]] != 0)
+			return false;
+		ArrayList<int[]> history = new ArrayList<int[]>();
+		return canMove(dest, Player, history);
+	}
+	/**
+	* @param place location on the board
+	* @param Player an int representing the player
+	* @param history a list of locations already searched
+	* @return if it is possible for the Player to move to the given location
+	*/
+	private boolean canMove(int[] place, int Player, ArrayList<int[]> history){
+		int[] home = playerPlace(Player);
+		if((home[0] == place[0]-2) && (home[1] == place[1]) && (grid[place[0]-1][place[1]] != 5))
+			return true;
+		if((home[0] == place[0]+2) && (home[1] == place[1]) && (grid[place[0]+1][place[1]] != 5))
+			return true;
+		if((home[0] == place[0]) && (home[1] == place[1]+2) && (grid[place[0]][place[1]+1] != 5))
+			return true;
+		if((home[0] == place[0]) && (home[1] == place[1]-2) && (grid[place[0]][place[1]-1] != 5))
+			return true;
+		return doubleMove(place, Player, history);	
+	}
+	/**
+	* @param place the location on the board
+	* @param Player an int representing the player
+	* @param history a list of locations already searched
+	* @return if it is possible for the Player to move to the given location
+	*/
+	private boolean doubleMove(int[] place, int Player, ArrayList<int[]> history) {
+		int col = place[0];
+		int row = place[1];
+		if(pieceCollision('N', place) && grid[col][row-1] != 5){
+			int[] newPlace = new int[2];
+			newPlace[0] = col;
+			newPlace[1] = row-2;
+			if(!hasBeen(history, newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return canMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('S', place) && grid[col][row+1] != 5){
+			int[] newPlace = new int[2];
+			newPlace[0] = col;
+			newPlace[1] = row+2;
+			if(!hasBeen(history, newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return canMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('E', place) && grid[col+1][row] != 5){
+			int[] newPlace = new int[2];
+			newPlace[0] = col+2;
+			newPlace[1] = row;
+			if(!hasBeen(history, newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return canMove(newPlace, Player, newHistory);
+			}
+		}else if(pieceCollision('W', place) && grid[col-1][row] != 5){
+			int[] newPlace = new int[2];
+			newPlace[0] = col-2;
+			newPlace[1] = row;
+			if(!hasBeen(history, newPlace)){
+				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
+				newHistory.add(place);
+				return canMove(newPlace, Player, newHistory);
+			}
+		}
+		return false;
+	}
+	/**
 	* @param direstion a character representing the direction moved 
 	* @param place a location
 	* @return if moving that direction from the location causes a collision with a player
@@ -127,83 +218,6 @@ public class Board {
 		return false;
 	}
 	/**
-	* @param dest the location the AI wants to move to 
-	* @param Player an int representing the player 
-	* @return if that movement is legal
-	*/
-	public boolean aiCanMove(int[] dest, int Player){
-		if(grid[dest[0]][dest[1]] != 0)
-			return false;
-		ArrayList<int[]> history = new ArrayList<int[]>();
-		return aiCanMove(dest, Player, history);
-	}
-	/**
-	* @param place location on the board
-	* @param Player an int representing the player
-	* @param history a list of locations already searched
-	* @return if it is possible for the Player to move to the given location
-	*/
-	private boolean aiCanMove(int[] place, int Player, ArrayList<int[]> history){
-		int[] home = playerPlace(Player);
-		if((home[0] == place[0]-2) && (home[1] == place[1]) && (grid[place[0]-1][place[1]] != 5))
-			return true;
-		if((home[0] == place[0]+2) && (home[1] == place[1]) && (grid[place[0]+1][place[1]] != 5))
-			return true;
-		if((home[0] == place[0]) && (home[1] == place[1]+2) && (grid[place[0]][place[1]+1] != 5))
-			return true;
-		if((home[0] == place[0]) && (home[1] == place[1]-2) && (grid[place[0]][place[1]-1] != 5))
-			return true;
-		return aiDoubleMove(place, Player, history);	
-	}
-	/**
-	* @param place the location on the board
-	* @param Player an int representing the player
-	* @param history a list of locations already searched
-	* @return if it is possible for the Player to move to the given location
-	*/
-	private boolean aiDoubleMove(int[] place, int Player, ArrayList<int[]> history) {
-		int col = place[0];
-		int row = place[1];
-		if(pieceCollision('N', place) && grid[col][row-1] != 5){
-			int[] newPlace = new int[2];
-			newPlace[0] = col;
-			newPlace[1] = row-2;
-			if(!hasBeen(history, newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}else if(pieceCollision('S', place) && grid[col][row+1] != 5){
-			int[] newPlace = new int[2];
-			newPlace[0] = col;
-			newPlace[1] = row+2;
-			if(!hasBeen(history, newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}else if(pieceCollision('E', place) && grid[col+1][row] != 5){
-			int[] newPlace = new int[2];
-			newPlace[0] = col+2;
-			newPlace[1] = row;
-			if(!hasBeen(history, newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}else if(pieceCollision('W', place) && grid[col-1][row] != 5){
-			int[] newPlace = new int[2];
-			newPlace[0] = col-2;
-			newPlace[1] = row;
-			if(!hasBeen(history, newPlace)){
-				ArrayList<int[]> newHistory = new ArrayList<int[]>(history);
-				newHistory.add(place);
-				return aiCanMove(newPlace, Player, newHistory);
-			}
-		}
-		return false;
-	}
-	/**
 	* @param history a list of locations that have been searched
 	* @param newPlace a location
 	* @return if the location has already been searched
@@ -218,20 +232,6 @@ public class Board {
 			}
 		}
 		return seen;
-	}
-	/**
-	 * PostCondition: the Player is moved to the destination
-	 * @param dest a location the AI wants to move to 
-	 * @param Player an int representing the player
-	 */
-	public void quickMove(int[] dest, int Player){
-		int dCol = dest[0];
-		int dRow = dest[1];
-		int[] here = playerPlace(Player);
-		int hCol = here[0];
-		int hRow = here[1];
-		grid[dCol][dRow] = Player;
-		grid[hCol][hRow] = 0;
 	}
 	/**
 	 * PostCondition: a new wall is placed

@@ -265,8 +265,8 @@ public class AI{
      */
     private Board eachStep(int turn, int[] destination, Board b){	
         Board temp = new Board(b);
-        if(temp.aiCanMove(destination, turn))
-            temp.quickMove(destination, turn);
+        if(temp.canMove(destination, turn))
+            temp.move(destination, turn);
         return temp;
     }
     /**

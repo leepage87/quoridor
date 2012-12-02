@@ -198,7 +198,7 @@ public class PlayQuor{
                 move [1] = (networkMove.charAt(15)-'0')*2;
                 b.playerPlace(turn);
                 System.out.println("Move[] " + move[0] + move[1]);
-                b.quickMove(move, turn);
+                b.move(move, turn);
             }else{//the move is not legal, kick player
                 //0 represents the player no longer in the game
                 networkPlayers[turn-1] = 0;
