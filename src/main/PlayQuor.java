@@ -174,6 +174,72 @@ public class PlayQuor{
         return b;
     }
 
+    public static boolean takeTurn(Board b) throws InterruptedException{
+        /*
+
+	  Get placeWall/movePiece from Player/AI, in int[] form
+	      movePiece: gives int to get the char from
+	      placeWall: gives int/int/int (row, column, direction)
+
+	      Waits for mouse click (as notified by GUI); receives move data from GUI; 
+	      tests some aspects of move's legality. 
+         */
+
+        /* Waits for click. If while in this loop, player decides to start a new game,
+         * breaker is set and control returns to main. */
+
+        while (!clicked){
+            if (breaker == 2)
+                return true;
+        }
+        Thread.sleep(0);
+
+        /* nextMove is set by GUI upon click. First character determines whether a board or wall is being moved/placed. */
+        if (nextMove.charAt(0) == 'B') { //its a player move
+            int[] playerPlace = b.playerPlace(turn);
+            setLegalMoves(playerPlace, b);
+            if (legalMovesArray[(int)(nextMove.charAt(1)-'0')
+                                ][(int)(nextMove.charAt(2)-'0')] == 1)
+            {
+                b.grid[playerPlace[0]][playerPlace[1]] = 0;
+                b.grid[2*(int)(nextMove.charAt(1) -'0')][2*(int)(nextMove.charAt(2) - '0')] = turn;
+                int[] newPlace = {(nextMove.charAt(1)-'0')*2, (nextMove.charAt(2)-'0')*2};
+                BoardButton.changeIcons(newPlace,playerPlace,turn);
+
+            }
+            else {
+                clicked = false;
+                return false;
+            }
+        }else {
+            int gridCol = (int)(nextMove.charAt(0) - '0')-1;
+            int gridRow = (int)(nextMove.charAt(1) - '0')-1;
+
+            /* Take location of wall, add 0 for horizontal and 1 for vertical.
+             * Send to placeWallPQ */
+            int[] theWall = {gridCol, gridRow, 0};
+            boolean fairWall = false;
+            if (nextMove.charAt(2) == 'H'){
+                fairWall = placeWallPQ(b, theWall);
+            }else{
+                theWall[2] = 1;
+                fairWall = placeWallPQ(b, theWall);
+            }
+
+            // Inform user if wall placement is illegal. Return control to main,
+            // which restarts the takeTurn method
+            if (!fairWall)
+            {
+                JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Wall");
+                clicked = false; // resets clicked so that method not called indefinitely
+                return false; // returns false for move not made yet
+            }
+
+        }
+        clicked = false; // resets clicked so that method not called indefinitely
+        return true; // legal move made; tells main this.
+
+    }
 
     private static void networkTurn(NetworkClient network, Board b) throws IOException {
         lastNetworkMoveLegal = true;
@@ -250,31 +316,6 @@ public class PlayQuor{
         }
     }
 
-    private static void setLMIcons() {
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
-                if (legalMovesArray[i][j] == 1) 
-                    BoardButton.changeIcon(i,j,GameBoardWithButtons.legalMove);
-    }
-
-    private static void resetIcons(Board b) {
-        for (int i = 0; i < 17; i+=2) 
-            for (int j = 0; j < 17; j+=2) 
-                if (b.grid[i][j] == 0)
-                    BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
-    }
-/**
- * @param one of the players
- * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
- */
-    private static int getHumanOrAI(int i) {
-        String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
-        return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
-                "Player " + i + ": Human or AI?", 
-                "YOU MUST CHOOSE",JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
-    }
-
     private static NetworkClient getNetworkInfo(int numPlay) throws UnknownHostException, IOException {
         
         NetworkClient network = new NetworkClient();
@@ -304,21 +345,20 @@ public class PlayQuor{
         //}
         return network;
     }
-    /**
-     * @return the number of players
-     */
-    private static int getNumPlay() {
-        String[] options = {"Two player game", "Four player game","Quit"};
-        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
-                "How many players want to play today?","Welcome to Quoridor!",
-                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-        if(n == 0)
-            return 2;
-        else if(n == 1)
-            return 4;
-        return 0;
+
+    private static void setLMIcons() {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                if (legalMovesArray[i][j] == 1) 
+                    BoardButton.changeIcon(i,j,GameBoardWithButtons.legalMove);
     }
 
+    private static void resetIcons(Board b) {
+        for (int i = 0; i < 17; i+=2) 
+            for (int j = 0; j < 17; j+=2) 
+                if (b.grid[i][j] == 0)
+                    BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
+    }
 
     private static void setLegalMoves(int[] playerPlace, Board b) {
         int currentColumn = playerPlace[0];
@@ -373,71 +413,35 @@ public class PlayQuor{
         }
     }
 
-    public static boolean takeTurn(Board b) throws InterruptedException{
-        /*
-
-	  Get placeWall/movePiece from Player/AI, in int[] form
-	      movePiece: gives int to get the char from
-	      placeWall: gives int/int/int (row, column, direction)
-
-	      Waits for mouse click (as notified by GUI); receives move data from GUI; 
-	      tests some aspects of move's legality. 
-         */
-
-        /* Waits for click. If while in this loop, player decides to start a new game,
-         * breaker is set and control returns to main. */
-
-        while (!clicked){
-            if (breaker == 2)
-                return true;
-        }
-        Thread.sleep(0);
-
-        /* nextMove is set by GUI upon click. First character determines whether a board or wall is being moved/placed. */
-        if (nextMove.charAt(0) == 'B') { //its a player move
-            int[] playerPlace = b.playerPlace(turn);
-            setLegalMoves(playerPlace, b);
-            if (legalMovesArray[(int)(nextMove.charAt(1)-'0')
-                                ][(int)(nextMove.charAt(2)-'0')] == 1)
-            {
-                b.grid[playerPlace[0]][playerPlace[1]] = 0;
-                b.grid[2*(int)(nextMove.charAt(1) -'0')][2*(int)(nextMove.charAt(2) - '0')] = turn;
-                int[] newPlace = {(nextMove.charAt(1)-'0')*2, (nextMove.charAt(2)-'0')*2};
-                BoardButton.changeIcons(newPlace,playerPlace,turn);
-
-            }
-            else {
-                clicked = false;
-                return false;
-            }
-        }else {
-            int gridCol = (int)(nextMove.charAt(0) - '0')-1;
-            int gridRow = (int)(nextMove.charAt(1) - '0')-1;
-
-            /* Take location of wall, add 0 for horizontal and 1 for vertical.
-             * Send to placeWallPQ */
-            int[] theWall = {gridCol, gridRow, 0};
-            boolean fairWall = false;
-            if (nextMove.charAt(2) == 'H'){
-                fairWall = placeWallPQ(b, theWall);
-            }else{
-                theWall[2] = 1;
-                fairWall = placeWallPQ(b, theWall);
-            }
-
-            // Inform user if wall placement is illegal. Return control to main,
-            // which restarts the takeTurn method
-            if (!fairWall)
-            {
-                JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Wall");
-                clicked = false; // resets clicked so that method not called indefinitely
-                return false; // returns false for move not made yet
-            }
-
-        }
-        clicked = false; // resets clicked so that method not called indefinitely
-        return true; // legal move made; tells main this.
-
+    private static void resetLegalMoves(){
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                legalMovesArray[i][j] = 0;
+    }
+    /**
+     * @return the number of players
+     */
+    private static int getNumPlay() {
+        String[] options = {"Two player game", "Four player game","Quit"};
+        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                "How many players want to play today?","Welcome to Quoridor!",
+                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+        if(n == 0)
+            return 2;
+        else if(n == 1)
+            return 4;
+        return 0;
+    }
+/**
+ * @param one of the players
+ * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
+ */
+    private static int getHumanOrAI(int i) {
+        String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
+        return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
+                "Player " + i + ": Human or AI?", 
+                "YOU MUST CHOOSE",JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
     }
     /**
      * @param the board
@@ -450,7 +454,7 @@ public class PlayQuor{
         // If the player can place the wall, then place the wall
         if(b.canPlaceWall(theWall, turn)){
             b.placeWallBoard(theWall, turn);
-            // Places the wall in the GUI
+            // Place the wall in the GUI
             if(theWall[2] == 0)
                 wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
             else
@@ -460,12 +464,6 @@ public class PlayQuor{
             return true; // wall placed successfully
         }else // If wall placement is illegal, return false
             return false;
-    }
-
-    private static void resetLegalMoves(){
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
-                legalMovesArray[i][j] = 0;
     }
 
 }
