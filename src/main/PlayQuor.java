@@ -108,10 +108,6 @@ public class PlayQuor{
                         if (breaker == 2)
                             break;
                     }
-                    // tests win conditions and updates exit variable accordingly
-                    //if (b.haveWon())
-                    //  breaker = 1;
-                    //System.out.println(b);
                 }
                 if (b.haveWon())
                     breaker = 1;
@@ -143,7 +139,10 @@ public class PlayQuor{
     public static void setBreaker(int i) {
         breaker = i;
     }
-
+    /**
+     * @param the board
+     * @return the board after the AI moves
+     */
     private static Board makeAIMove(Board b) {
         AI a = new AI(b);
         int[] startPlace = b.playerPlace(turn);
@@ -251,8 +250,6 @@ public class PlayQuor{
         }
     }
 
-
-
     private static void setLMIcons() {
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
@@ -266,7 +263,10 @@ public class PlayQuor{
                 if (b.grid[i][j] == 0)
                     BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
     }
-
+/**
+ * @param one of the players
+ * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
+ */
     private static int getHumanOrAI(int i) {
         String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
         return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
@@ -304,19 +304,18 @@ public class PlayQuor{
         //}
         return network;
     }
-
-
+    /**
+     * @return the number of players
+     */
     private static int getNumPlay() {
         String[] options = {"Two player game", "Four player game","Quit"};
         int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
                 "How many players want to play today?","Welcome to Quoridor!",
                 JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-        if (n == 0)
+        if(n == 0)
             return 2;
-        else if (n == 1)
+        else if(n == 1)
             return 4;
-        else if (n == 2)
-            return 0;
         return 0;
     }
 
@@ -436,44 +435,22 @@ public class PlayQuor{
             }
 
         }
-        //System.out.println(b);
         clicked = false; // resets clicked so that method not called indefinitely
         return true; // legal move made; tells main this.
 
     }
-
-
-    /* Parameters: the board, the player whose turn it is, the direction
-     * that the player chose to move
-     * PostCondition: the player's piece is moved, if it was legal 
-     * Appears unused; commented.*/
-    /* public static boolean movePiecePQ(Board b, char direction, boolean extraMove) throws InterruptedException{
-        if(b.canMovePiece(direction, turn)){ // calls the back end method to test move legality in re: walls
-            if(!b.pieceCollision(direction, turn)){ // calls back end method to test for piece collision
-                b.movePieceBoard(direction, turn); // if it's legal and doesn't hit another pawn, make the move!
-                // handled by back end, which informs GUI 
-            }else{ // if pawn collision after otherwise legal move, call doubleMove to sort out particulars
-                return doubleMove(b, direction, extraMove);
-            }
-            return true; // return true for legal move
-        }
-        else {
-            //JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Illegal Move");
-            return false; //return false for illegal move
-        }
-    }*/
-
-    /* Parameters: the board, the player whose turn it is, and an
-     * int[] containing the center location of a new wall and
-     * an int determining if it is horizontal or vertical	
-     * PostCondition: the wall is placed, if it was legal*/
+    /**
+     * @param the board
+     * @param an int[] representing the wall
+     * @postcondition the wall is placed if it was legal
+     * @return if the move was legal
+     */
     public static boolean placeWallPQ(Board b, int[] theWall){
         String wallName;
 
         /* if the player has walls left to play, and the back end says a wall can go here ... */
 
-        if (b.canPlaceWall(theWall, turn)) 
-        {
+        if(b.canPlaceWall(theWall, turn)){
             b.placeWallBoard(theWall, turn); // place it with the back end (NOT GUI YET)
 
             /* Sets the wall name as found in the map in BoardWall. Sets that wall and the wall next to it. */
@@ -484,46 +461,10 @@ public class PlayQuor{
             BoardWall.map.get(wallName).setWall();
             BoardWall.map.get(wallName).nextWall().setWall();
             return true; // wall placed successfully
-        }
-        else // else if there are no more walls to play or if the back end has a problem with it ..
+        }else // else if there are no more walls to play or if the back end has a problem with it ..
             return false; // return false for not a legal move*/
-
     }
 
-    // Parameters: the board, the player whose turn it is, the direction
-    //    that the player chose to move (which is onto another player)
-    // PostCondition: the player's piece is moved and he moves again
-    // Appears to be unused now; thus, commented.
-    /*  public static boolean doubleMove(Board b, char direction, boolean extraMove) throws InterruptedException{
-        int[] startSpot = b.playerPlace(turn);
-        int col = startSpot[0];
-        int row = startSpot[1];
-        int otherPlayer;
-        if(direction == 'N')
-            otherPlayer = b.grid[col][row-2];
-        else if(direction == 'S')
-            otherPlayer = b.grid[col][row+2];
-        else if(direction == 'E')
-            otherPlayer = b.grid[col+2][row];
-        else otherPlayer = b.grid[col-2][row];
-        int[] spot = b.playerPlace(otherPlayer);
-        b.movePieceBoard(direction, turn);
-        if(extraMove){
-            BoardButton.map.get("B"+pieceHolder[0]/2+pieceHolder[1]/2).setIcon(Board.map.get(pieceHolder[2]));
-            b.grid[pieceHolder[0]][pieceHolder[1]] = pieceHolder[2];
-        }
-        pieceHolder[0] = spot[0];
-        pieceHolder[1] = spot[1];
-        pieceHolder[2] = otherPlayer;
-        while(b.grid[spot[0]][spot[1]] ==  turn)
-            takeTurn(b, true);
-        b.grid[spot[0]][spot[1]] = otherPlayer;
-        BoardButton.map.get("B"+spot[0]/2+spot[1]/2).setIcon(Board.map.get(otherPlayer));
-        if(b.grid[col][row] == turn)
-            return false;
-        return true;
-    }
-     */
     private static void resetLegalMoves(){
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 9; j++)
