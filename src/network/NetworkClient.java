@@ -22,28 +22,13 @@ import src.ui.GameBoardWithButtons;
 public class NetworkClient {
 
     final static int REMOTE_PORT = 4050;
-    public static NetworkPlayer[] players;
+    private static NetworkPlayer[] players;
+    private static NetworkObserver[] observers;
 
     public NetworkClient(){
 
     }
 
-    /**
-     * Creates a NetworkClient object for one local human and one network player
-     * @throws IOException 
-     * @throws UnknownHostException 
-     * 
-     **/
-    public NetworkClient(String player1Address) throws UnknownHostException, IOException{
-        //break playerAddresses into hostnames and port
-        int playerPort = getPort(player1Address);      
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
-        //numberOfPlayers = 2;
-        players = new NetworkPlayer[1];
-        players[0] = one;
-        syncWithPlayers();
-    }
 
     /**
      * Creates a NetworkClient object for two network players
@@ -67,35 +52,6 @@ public class NetworkClient {
 
     }
 
-    /**
-     * Creates a NetworkClient object for one local human and three network players
-     * @throws IOException 
-     * @throws UnknownHostException 
-     * 
-     **/
-    public NetworkClient(String player1Address, String player2Address, String player3Address) throws UnknownHostException, IOException{
-        //break playerAddresses into hostnames and port
-
-        int playerPort = getPort(player1Address);  
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
-
-        playerPort = getPort(player2Address);
-        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
-        NetworkPlayer two = new NetworkPlayer(player2Address, playerPort);
-
-        playerPort = getPort(player1Address);      
-        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
-        NetworkPlayer three = new NetworkPlayer(player1Address, playerPort);
-
-        //numberOfPlayers = 4;
-        players = new NetworkPlayer[4];
-        players[0] = null;
-        players[1] = one;
-        players[2] = two;
-        players[3] = three;
-        syncWithPlayers();
-    }
     /**
      * Creates a NetworkClient object for four players
      * @throws IOException 
@@ -130,7 +86,7 @@ public class NetworkClient {
         //numberOfPlayers = 4;
         syncWithPlayers();
 
-    }//TODO: make player move
+    }
 
     /**
      * sends initial message to each player, waits for a response
@@ -191,7 +147,7 @@ public class NetworkClient {
      * @param message: the message to be broadcast
      */
     public static void broadcast(String message) { 
-        
+
         for (int i = 0; i < players.length; i++){
             System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);
             if(players[i]!= null)
@@ -212,7 +168,6 @@ public class NetworkClient {
         String fromPlayer = players[player-1].inFromPlayer.nextLine();
         System.out.println("NetworkClient> Player " + (player-1) + " has responded with a move: "+
                 fromPlayer);
-        //TODO: figure out where you want to check if this is a legal move, probably in PlayQuor 
         return fromPlayer;
     }
 
@@ -228,11 +183,29 @@ public class NetworkClient {
             }
         }
     }
-/**
- * Gets the port from the given address
- * @param address
- * @return the port associated with the given address
- */
+    /**
+     * adds NetworkObserver objects to an array for reference while playing
+     * @param numObservers number of observers observing
+     * @param addresses the addresses of all the observers
+     */
+    public void addObserver(int numObservers, String addresses){
+        observers = new NetworkObserver[numObservers];
+        Scanner sc = new Scanner(addresses);
+        String addressWithoutPort;
+        int port;
+
+        for (int i = 0; i < numObservers; i++){
+            String tempAddress = sc.next();
+            addressWithoutPort = tempAddress.substring(0, tempAddress.indexOf(':'));
+            port = getPort(tempAddress);
+            observers[i] = new NetworkObserver(addressWithoutPort, port);
+        }
+    }
+    /**
+     * Gets the port from the given address
+     * @param address
+     * @return the port associated with the given address
+     */
     private int getPort(String address){
         return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
     }

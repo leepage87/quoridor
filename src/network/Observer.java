@@ -40,6 +40,7 @@ public class Observer {
         do{
            received = in.nextLine();
            out.println(received);
+           System.out.println(received);
            
             
         }while (!received.contains("WINNER"));
@@ -52,17 +53,14 @@ public class Observer {
         ServerSocket welcomeSocket;
         if(args.length == 0){
             welcomeSocket = new ServerSocket(DEFAULT_SERVER_LISTEN_PORT);
-            System.out.println("MoveServer> Listening on port: " + DEFAULT_SERVER_LISTEN_PORT);
+            System.out.println("Observer> Listening on port: " + DEFAULT_SERVER_LISTEN_PORT);
         }else{
             welcomeSocket = new ServerSocket(Integer.parseInt(args[0]));
-            System.out.println("MoveServer> Listening on port: " + args[0]);
+            System.out.println("Observer> Listening on port: " + args[0]);
         }
-
-
-
         while (true) {
             Socket connectionSocket = welcomeSocket.accept();
-            new MoveServer(connectionSocket).start();
+            new Observer(connectionSocket).run();
         }
     }
 }
