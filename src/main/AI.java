@@ -9,11 +9,10 @@ import java.util.ArrayList;
 
 public class AI{
 
-    int[] move = new int[5];
-    Board AIboard;
-    public int truePlayer;
-    boolean panic = false;
-    Board lastMove;
+    private Board AIboard;
+    private int truePlayer;
+    private boolean panic = false;
+    private Board lastMove;
 
     public AI(Board b){
         AIboard = b;
@@ -75,7 +74,6 @@ public class AI{
         int whichBoard = goodMoves.get((int) (Math.random() * goodMoves.size()));			
         return moves.get(whichBoard);
     }
-
     /**
      * answer: int [] array of the current value + the alpha + the beta, 
      * the player, a board, and the number of rounds to look ahead
@@ -85,7 +83,7 @@ public class AI{
      * @param numRounds
      * @return the same array, or the same array with either the alpha or beta changed
      */
-    public int[] search(int[] answer, int player, Board b, int numRounds){
+    private int[] search(int[] answer, int player, Board b, int numRounds){
         ArrayList<Board> allMoves = findMoves(player, b);
         if(numRounds < 1)
             return baseCase(answer, player, allMoves);
@@ -124,7 +122,7 @@ public class AI{
      * @return an array of the best move, or a move that is lower than the beta, or a
      *   move that is higher than the alpha + the alpha + the beta
      */
-    public int[] baseCase(int[] answer, int player, ArrayList<Board> allMoves){
+    private int[] baseCase(int[] answer, int player, ArrayList<Board> allMoves){
         if(player == truePlayer){
             int best = -201;
             for(int i = 0; i < allMoves.size(); i++){
@@ -153,53 +151,12 @@ public class AI{
         int[] newAnswer = {worst, answer[1], answer[2]};
         return newAnswer;
     }
-
-    /**
-     * @param turn
-     * @param b
-     * @return an Array of all possible moves
-     */
-    public ArrayList<Board> findMoves(int turn, Board b){
-        ArrayList<Board> posMoves = new ArrayList<Board>();
-        if(b.playerWalls[turn-1] != 0)
-            posMoves = wallPlacementSearch(b, turn);
-        for(int row = 0; row < 17; row=row+2){
-            for(int col =0; col < 17; col=col+2){
-                int[] destination = new int[2];
-                destination[0] = col;
-                destination[1] = row;
-                Board nextStep = eachStep(turn, destination, b);
-                if(!nextStep.equals(b))
-                    posMoves.add(nextStep);
-            }
-        }
-        return posMoves;
-    }
-
-    /**
-     * PostCondition: board is set to panic
-     * @param b containing the next move
-     * @return if the board is trying to move back to its
-     * old location despite no walls being placed
-     */
-    public boolean splitMove(Board b){
-        // No new walls
-        if(wallPlaced(lastMove, b))
-            return false;
-        // Moving to old location
-        int[] oldPlace = lastMove.playerPlace(truePlayer);
-        int[] newPlace = b.playerPlace(truePlayer);
-        if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
-            return false;
-        panic = true;
-        return true;
-    }
     /**
      * @param a board
      * @param a player
      * @return the player who goes next
      */
-    public int nextPlayer(Board b, int player){
+    private int nextPlayer(Board b, int player){
         for(int i = (player%AIboard.NUMPLAY)+1; i < (player%AIboard.NUMPLAY)+5; i++){
             if(b.playerPlace(i)[0] == -1)
                 continue;
@@ -208,50 +165,6 @@ public class AI{
         return -1;
     }
     /**
-     * @param player the board before moving, the board after moving
-     * @return where the player placed a wall
-     */
-    public int[] aiWall(int player, Board old, Board current){
-        int[] startPlace = old.playerPlace(player);
-        int[] endPlace = current.playerPlace(player);
-        if(startPlace[0]!=endPlace[0] || startPlace[1]!=endPlace[1])
-            return null;
-        int[] aiWall = new int[3];
-        boolean getOut = false;
-        for(int col = 1; col < 17; col=col+2){
-            for(int row = 1; row < 17; row=row+2){		
-                if(old.grid[col][row] != current.grid[col][row]){
-                    aiWall[0] = col/2;
-                    aiWall[1] = row/2;
-                    if(current.grid[col][row+1]==5)
-                        aiWall[2] = 1;
-                    getOut = true;
-                }
-                if(getOut)
-                    break;
-            }
-            if(getOut)
-                break;
-        }
-        return aiWall;
-    }
-
-    /**
-     * @param b1
-     * @param b2
-     * @return if a wall has been placed in the last turn
-     */
-    public boolean wallPlaced(Board b1, Board b2){
-        int oldWalls = 0;
-        int newWalls = 0;
-        for(int i = 0; i < 4; i++){
-            oldWalls += b1.playerWalls[i];
-            newWalls += b2.playerWalls[i];
-        }
-        return oldWalls != newWalls;
-    }
-
-    /**
      * @param turn
      * @param enemy closest to winning 
      * @param b that is being examined
@@ -259,7 +172,7 @@ public class AI{
      *   the number of moves it will take the player to win
      *   plus 2*the number of remaining walls
      */
-    public int boardValue(int turn, int enemy, Board b){
+    private int boardValue(int turn, int enemy, Board b){
         if(b.haveWon())
             return 200;
         int enemyMoves = b.doSearch(enemy)[2];
@@ -272,7 +185,7 @@ public class AI{
      * @param b
      * @return the enemy who is closest to winning
      */
-    public int findEnemy(int turn, Board b){
+    private int findEnemy(int turn, Board b){
         int enemy = -1;
         int[] players = new int[4];
         for(int i = 1; i < 5; i++){
@@ -292,24 +205,76 @@ public class AI{
         return enemy;
     }
     /**
-     * @param turn 
-     * @param destination
-     * @param b
-     * @return the board after moving the player in the chosen direction, if possible
+     * PostCondition: board is set to panic
+     * @param b containing the next move
+     * @return if the board is trying to move back to its
+     * old location despite no walls being placed
      */
-    public Board eachStep(int turn, int[] destination, Board b){	
+    private boolean splitMove(Board b){
+        // No new walls
+        if(wallPlaced(lastMove, b))
+            return false;
+        // Moving to old location
+        int[] oldPlace = lastMove.playerPlace(truePlayer);
+        int[] newPlace = b.playerPlace(truePlayer);
+        if(oldPlace[0] != newPlace[0] || oldPlace[1] != newPlace[1])
+            return false;
+        panic = true;
+        return true;
+    }
+    /**
+     * @param the previous board
+     * @param the current board
+     * @return if a wall has been placed in the last turn
+     */
+    private boolean wallPlaced(Board b1, Board b2){
+        int oldWalls = 0;
+        int newWalls = 0;
+        for(int i = 0; i < 4; i++){
+            oldWalls += b1.playerWalls[i];
+            newWalls += b2.playerWalls[i];
+        }
+        return oldWalls != newWalls;
+    }
+    /**
+     * @param whose turn it is
+     * @param a board
+     * @return an Array of all possible moves
+     */
+    private ArrayList<Board> findMoves(int turn, Board b){
+        ArrayList<Board> posMoves = new ArrayList<Board>();
+        if(b.playerWalls[turn-1] != 0)
+            posMoves = wallPlacementSearch(b, turn);
+        for(int row = 0; row < 17; row=row+2){
+            for(int col =0; col < 17; col=col+2){
+                int[] destination = new int[2];
+                destination[0] = col;
+                destination[1] = row;
+                Board nextStep = eachStep(turn, destination, b);
+                if(!nextStep.equals(b))
+                    posMoves.add(nextStep);
+            }
+        }
+        return posMoves;
+    }
+    /**
+     * @param whose turn it is
+     * @param a location on the board
+     * @param a board
+     * @return the board after moving the player to the destination, if possible
+     */
+    private Board eachStep(int turn, int[] destination, Board b){	
         Board temp = new Board(b);
         if(temp.aiCanMove(destination, turn))
             temp.quickMove(destination, turn);
         return temp;
     }
-
     /**
-     * @param b 
-     * @param player
+     * @param the board 
+     * @param the current player
      * @return an ArrayList of one board for every possible wall placement
      */
-    public ArrayList<Board> wallPlacementSearch(Board b, int player){
+    private ArrayList<Board> wallPlacementSearch(Board b, int player){
         ArrayList<Board> posMoves = new ArrayList<Board>();
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -333,37 +298,6 @@ public class AI{
         return posMoves;
     }
 
-    /**
-     *  Places a wall at a designated spot.
-     *  @param placement
-     *  @return the board with the wall
-     */
-    public Board placeWall(int [] placement){
-        AIboard.placeWallBoard(placement, 1);
-        Board temp = new Board(AIboard);
-        return temp;
-    }       
-
-    /**
-     * @param placement 
-     * @param player 
-     * @return the board with the moved player
-     */
-    public Board move(int [] placement, int player){
-        AIboard.quickMove(placement, player);
-        Board temp = new Board(AIboard);
-        return temp;
-    }	
-
-    /**
-     * @param player
-     * @return the player's board placement
-     */
-    public int[] playerPlacee(int player){
-        int [] place = new int[2];
-        place = AIboard.playerPlace(player);
-        return place;
-    }
 }
 
 
