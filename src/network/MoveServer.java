@@ -83,7 +83,7 @@ public class MoveServer extends Thread {
                 if (fromGameClient.contains("MOVE?")){
 
                     System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
-                            "> Received 'MOVE?' from client, issuing move");
+                    "> Received 'MOVE?' from client, issuing move");
                     //get move, send to client
                     nextMove = getMove(playerNo, b, ai);
                     outToClient.println(nextMove);
@@ -248,9 +248,9 @@ public class MoveServer extends Thread {
                 System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its vert");
                 move[0] = (frago.charAt(14)-'0') -1;
                 //if((frago.charAt(11)-'0') >= 2){
-                    move[1] = (frago.charAt(11)-'0');//just edited removed +1
+                move[1] = (frago.charAt(11)-'0');//just edited removed +1
                 //}else{
-                 //   move[1] = (frago.charAt(11)-'0'); 
+                //   move[1] = (frago.charAt(11)-'0'); 
                 //}
                 move[2] = 1;
                 System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
@@ -281,9 +281,9 @@ public class MoveServer extends Thread {
         System.err.println(kickBoard.toString());
         return kickBoard;
     }
-    
-    
-    
+
+
+
     /**
      * @param player
      * @param old
@@ -291,10 +291,16 @@ public class MoveServer extends Thread {
      * @return
      */
     public int[] aiWall(int player, Board old, Board current){
+        System.err.println("in aiwall, calling old playerplace on " + player);
         int[] startPlace = old.playerPlace(player);
+        System.err.println("in aiwall, calling new playerplace on " + player);
         int[] endPlace = current.playerPlace(player);
-        if(startPlace[0]!=endPlace[0] && startPlace[1]!=endPlace[1])
+        System.out.println("Playerplaces worked");
+        if(startPlace[0]!=endPlace[0] && startPlace[1]!=endPlace[1]){
+            System.out.println("inside aiwall's first if");
             return null;
+        }
+        System.out.println("aiwall> past 1st if");
         int[] aiWall = new int[3];
         boolean getOut = false;
         for(int col = 0; col < 17; col++){
@@ -305,6 +311,7 @@ public class MoveServer extends Thread {
                     if(current.grid[col][row+1]==5)
                         aiWall[2] = 1;
                     getOut = true;
+                    System.out.println("aiWall is: " + aiWall[0] + " " + aiWall[1] + " " +aiWall[2]);
                 }
                 if(getOut)
                     break;
@@ -312,9 +319,10 @@ public class MoveServer extends Thread {
             if(getOut)
                 break;
         }
+        System.out.println("ai wall> return this method is ok");
         return aiWall;
     }
-    
+
     /**
      * awaits an incoming connection then calls the run method
      * @param args which port to listen on, if none is specified a default of 4050 is used

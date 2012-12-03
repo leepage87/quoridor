@@ -153,7 +153,7 @@ public class NetworkClient {
             if(players[i]!= null)
                 players[i].outToPlayer.print(message+"\n");
         }
-        if(observers.length != 0){
+        if(observers != null){
             for (int i = 0; i < observers.length; i++){
                 System.out.println("NetworkClient> Broadcasting to observer " + i + " " + message);
                 if(players[i]!= null)
