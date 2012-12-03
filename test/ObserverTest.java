@@ -24,7 +24,7 @@ public class ObserverTest {
     public void setUp() throws UnknownHostException, IOException{
         //observer's default port is 4051
         network = new NetworkClient();
-        observer = new NetworkObserver("localhost", 4051);
+        observer = new NetworkObserver("localhost", 4051, //Scanner);
     }
 
 

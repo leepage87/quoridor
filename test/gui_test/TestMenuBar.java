@@ -32,7 +32,7 @@ public class TestMenuBar{
 	@Before
 	public void setUp() throws Exception {
 	//	MenuBarPrototype.main(); // I can call main if I want
-		driver = new JFrameDriver(new GesturePerformer(), new AWTEventQueueProber(), JFrameDriver.named(MAIN_WINDOW_TITLE), JFrameDriver.showingOnScreen());
+		driver = new JFrameDriver(new GesturePerformer(), new AWTEventQueueProber(), JFrameDriver.named("MAIN_WINDOW_TITLE"), JFrameDriver.showingOnScreen());
 	}
 	
 	@After
