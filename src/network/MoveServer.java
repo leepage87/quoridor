@@ -285,10 +285,12 @@ public class MoveServer extends Thread {
 
 
     /**
-     * @param player
-     * @param old
-     * @param current
-     * @return
+     * determines if a player moved or a wall was placed, if a wall
+     * was placed, method returns said wall's location
+     * @param player the player that just moved
+     * @param old the previous state of the board
+     * @param current the new state of the board
+     * @return an array containing wall position
      */
     public int[] aiWall(int player, Board old, Board current){
         System.err.println("in aiwall, calling old playerplace on " + player);
