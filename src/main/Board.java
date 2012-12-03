@@ -65,6 +65,10 @@ public class Board {
 			grid[16][8] = 4;
 		}
 	}
+	public int[][] getSetBoard(int players){
+		setBoard(players);
+		return grid;
+	}
 	/**
 	 * @return the board in String form
 	 */
@@ -306,6 +310,10 @@ public class Board {
 		if(Player==4 && col==0)
 			return true;
 		return false;
+	}
+	
+	public boolean getWinCheck(int player, int[]place){
+		return winCheck(player, place);
 	}
 	/**
 	* @return if each player can still reach their winning column

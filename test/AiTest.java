@@ -35,7 +35,7 @@ public class AiTest {
 		@Test
 		public void boardValueTest(){
 			int given;
-			given = AIboard.boardValue(1, 2, b);
+			given = AIboard.getBoardValue(1, 2, b);
 			Assert.assertTrue(given == 0);
 		}
 		/**
@@ -111,7 +111,7 @@ public class AiTest {
 			placement[0] = 8;
 			placement[1] = 2;
 			this.b = AIboard.move(placement, 1);
-			given = AIboard.boardValue(1, 2, b);
+			given = AIboard.getBoardValue(1, 2, b);
 			Assert.assertTrue(given == 1);
 		}
 		/**
@@ -130,7 +130,7 @@ public class AiTest {
 			placement[0] = 8;
 			placement[1] = 4;
 			this.b = AIboard.move(placement, 1);
-			given = AIboard.boardValue(1, 2, b);
+			given = AIboard.getBoardValue(1, 2, b);
 			Assert.assertTrue(given == 1);
 		}
 		/**
@@ -143,7 +143,7 @@ public class AiTest {
 	        placement[0] = 3;
 	        placement[1] = 3;
 			AIboard.placeWall(placement);
-			given = AIboard.boardValue(1, 2, b);
+			given = AIboard.getBoardValue(1, 2, b);
 			Assert.assertTrue(given == 0);
 		}
 		/**
@@ -163,7 +163,7 @@ public class AiTest {
 			place[0] = 8;
 			place[1] = 2;
 			this.b = AIboard.move(place, 1);
-			given = AIboard.boardValue(2, 1, b);
+			given = AIboard.getBoardValue(2, 1, b);
 			Assert.assertTrue(given == 0);
 		}
 		/**
@@ -172,7 +172,7 @@ public class AiTest {
 		@Test
 		public void findEnemyTest(){
 			int test=0;
-			test = AIboard.findEnemy(1, b);
+			test = AIboard.getFindEnemy(1, b);
 			int[] actual = new int[2];
 			int [] given = new int[2];
 			AIboard.playerPlacee(2);
@@ -187,7 +187,7 @@ public class AiTest {
 			int [] dest = new int[2];
 			dest[0] = 8;
 			dest[1] = 2;
-			AIboard.eachStep(1, dest, b);
+			AIboard.getEachStep(1, dest, b);
 			int [] placement = new int[2];
 			placement[0] = 8;
 			placement[1] = 2;
@@ -205,7 +205,7 @@ public class AiTest {
 		@Test
 		public void wallPlacementSearchTest(){
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = AIboard.wallPlacementSearch(b, 1);
+			testMoves = AIboard.getWallPlacementSearch(b, 1);
 			int sizeArray = testMoves.size();
 			Assert.assertTrue(sizeArray==128);
 			
@@ -220,7 +220,7 @@ public class AiTest {
 	        placement[1] = 3;
 			AIboard.placeWall(placement);
 			ArrayList<Board> testMoves = new ArrayList<Board>();
-			testMoves = AIboard.wallPlacementSearch(b, 1);
+			testMoves = AIboard.getWallPlacementSearch(b, 1);
 			int sizeArray = testMoves.size();
 			Assert.assertTrue(sizeArray==124);
 			
@@ -233,7 +233,7 @@ public class AiTest {
 		public void aiMoveBTest(){
 			b = new Board(2);
 			AI a = new AI(b);
-			a.truePlayer = 1;
+			a.setTruePlayer(1);
 
 		}
 		

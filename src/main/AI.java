@@ -180,6 +180,17 @@ public class AI{
         //int walls = 2*b.playerWalls[turn-1];
         return enemyMoves-playerMoves;
     }
+    
+    /**
+     * @param turn
+     * @param enemy
+     * @param b
+     * @return private method boardValue
+     */
+    public int getBoardValue(int turn, int enemy, Board b){
+    	return boardValue(turn, enemy, b);
+    }
+    
     /**
      * @param turn
      * @param b
@@ -204,6 +215,16 @@ public class AI{
         }
         return enemy;
     }
+    
+    /**
+     * @param turn
+     * @param b
+     * @return private method findEnemy
+     */
+    public int getFindEnemy(int turn, Board b){
+    	return findEnemy(turn, b);
+    }
+    
     /**
      * PostCondition: board is set to panic
      * @param b containing the next move
@@ -299,6 +320,16 @@ public class AI{
             temp.move(destination, turn);
         return temp;
     }
+    
+    /**
+     * @param turn
+     * @param destination
+     * @param b
+     * @return the private method eachStep
+     */
+    public Board getEachStep(int turn, int[] destination, Board b){
+    	return eachStep(turn, destination, b);
+    }
     /**
      * @param the board 
      * @param the current player
@@ -328,6 +359,34 @@ public class AI{
         return posMoves;
     }
 
+    /**
+     * @param b
+     * @param player
+     * @return private method wallPlacementSearch
+     */
+    public ArrayList<Board> getWallPlacementSearch(Board b, int player){
+    	return wallPlacementSearch(b, player);
+    }
+    
+    public Board move(int[] placement, int player){
+    	AIboard.move(placement, player);
+    	return AIboard;
+    }
+    
+    public Board placeWall(int [] placement){
+    	AIboard.placeWallBoard(placement, 1);
+    	return AIboard;
+    }
+    
+    public int[] playerPlacee(int player){
+    	int[] place = new int[2];
+    	place = AIboard.playerPlace(player);
+    	return place;
+    }
+    
+    public void setTruePlayer(int i){
+     truePlayer = i;
+    }
 }
 
 
