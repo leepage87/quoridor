@@ -40,11 +40,11 @@ public class Observer {
         do{
            received = in.nextLine();
            out.println(received);
-           System.out.println(received);
+           System.err.println("OBSOIVAH>" + received);
            
             
         }while (!received.contains("WINNER"));
-        System.out.println("Player " + received.charAt(7) + " has won!");
+        out.close();
         connection.close();
     }
     

@@ -30,7 +30,7 @@ public class PlayQuor{
     public static int[] networkPlayers;
     private static int playersLeft;
     private static boolean lastNetworkMoveLegal;
-    
+
     /*
      * The central game driver. Gets number of players, creates a new back end Board
      * and GUI, and loops until player wins or starts a new game.
@@ -45,7 +45,7 @@ public class PlayQuor{
             if (numPlay == 0)
                 System.exit(0);
             //get network information, initiate network
-            
+
             String[] options = new String[3];
             options [0] = "Local Game";
             options [1] = "Network Game";
@@ -53,7 +53,7 @@ public class PlayQuor{
             int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
                     "Play local or remote opponent?","Network Game?",
                     JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
-            
+
             if (n == 1){
                 network = getNetworkInfo(numPlay);
                 networkPlayers = new int[numPlay];
@@ -62,6 +62,8 @@ public class PlayQuor{
                     networkPlayers[i] = 1;
                 }
 
+            }else if(n == 2){
+                System.exit(0);
             }
             if(!networkGame) 
                 for (int i = 1; i <= numPlay; i++)
@@ -113,13 +115,16 @@ public class PlayQuor{
                     breaker = 1;
                 // if somebody won, say so
 
-                if (playersLeft == 1 && lastNetworkMoveLegal == true)
+                if (playersLeft == 1 && lastNetworkMoveLegal == true){
+                    System.out.println("**** PLAYERS LEFT is 1 : " + playersLeft + "last network move was legal");
+
                     breaker = 1;
-                
+                }
                 if (breaker == 1 && !networkGame)
                     JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
                 if (breaker == 1 && networkGame){
-                    JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " Won!");
+                    System.err.println("********* MADE LAST MOVE AND WON! PLAYERS LEFT: " + playersLeft);
+                    JOptionPane.showMessageDialog(GameBoardWithButtons.contentPane, "Player " + turn + " won!");
                     NetworkClient.broadcast("WINNER " + (turn-1));
                     network.kill();
                     networkGame = false;
@@ -269,6 +274,7 @@ public class PlayQuor{
                 //0 represents the player no longer in the game
                 networkPlayers[turn-1] = 0;
                 playersLeft--;
+                System.out.println("**** PLAYERS LEFT DECREMENTED TO : " + playersLeft + " due to player move");
                 lastNetworkMoveLegal = false;
                 NetworkClient.removePlayer(turn);
                 int[] location = b.playerPlace(turn);
@@ -296,6 +302,9 @@ public class PlayQuor{
                     //0 represents the player is no longer in the game
                     networkPlayers[turn-1] = 0;
                     playersLeft--;
+                    System.out.println("**** PLAYERS LEFT DECREMENTED TO : " + playersLeft + " due to horz wall");
+
+                    
                     lastNetworkMoveLegal = false;
                 }
                 NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
@@ -308,6 +317,8 @@ public class PlayQuor{
                     //0 represents the player is no longer in the game
                     networkPlayers[turn-1] = 0;
                     playersLeft--;
+                    System.out.println("**** PLAYERS LEFT DECREMENTED TO : " + playersLeft + " due to vert wall");
+
                     lastNetworkMoveLegal = false;
                 }
                 NetworkClient.broadcast("MOVED " + (turn-1) + networkMove.substring(4));
@@ -316,33 +327,79 @@ public class PlayQuor{
         }
     }
 
+<<<<<<< HEAD
+    private static void setLMIcons() {
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                if (legalMovesArray[i][j] == 1) 
+                    BoardButton.changeIcon(i,j,GameBoardWithButtons.legalMove);
+    }
+
+    private static void resetIcons(Board b) {
+        for (int i = 0; i < 17; i+=2) 
+            for (int j = 0; j < 17; j+=2) 
+                if (b.grid[i][j] == 0)
+                    BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
+    }
+    /**
+     * @param one of the players
+     * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
+     */
+    private static int getHumanOrAI(int i) {
+        String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
+        return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
+                "Player " + i + ": Human or AI?", 
+                "YOU MUST CHOOSE",JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
+    }
+
+=======
+>>>>>>> d02f050ed84888020bc78eb61d0b36849e5f6c72
     private static NetworkClient getNetworkInfo(int numPlay) throws UnknownHostException, IOException {
-        
+
         NetworkClient network = new NetworkClient();
         String address = null;
-        //while (address == null) {
-            //address = JOptionPane.showInputDialog("Input addresses for " + numPlay + " move servers separated by spaces:", "ex. hostname1:port hostname2:port");
-            /*if (address != null){
+        while (address == null) {
+            address = JOptionPane.showInputDialog("Input addresses for " + numPlay
+                    + " move servers separated by spaces:",
+                    "ex. hostname1:port hostname2:port");
+            if (address != null){
                 Scanner addressScanner = new Scanner(address);
                 String player1Address = addressScanner.next(); 
                 String player2Address = addressScanner.next(); 
-                if (n == 1 && numPlay == 2)
-                {*/
-            //network = new NetworkClient(player1Address, player2Address);
-            network = new NetworkClient("localhost:4050", "localhost:4050", "localhost:4050", "localhost:4050");
+                if (numPlay == 2)
+                {
+                    network = new NetworkClient(player1Address, player2Address);
+                    //network = new NetworkClient("localhost:4050", "localhost:4050", "localhost:4050", "localhost:4050");
 
-            networkGame = true;
-            /* }
-                else if (n == 1 && numPlay == 4 ){
+                    networkGame = true;
+                }
+                else if (numPlay == 4 ){
                     String player3Address = addressScanner.next(); 
                     String player4Address = addressScanner.next(); 
                     network = new NetworkClient(player1Address, player2Address, player3Address, player4Address);
                     networkGame = true;
                 }
             }
-            else if (n == 2)
-                System.exit(0);*/
-        //}
+        }
+        
+        String[] options = new String[2];
+        options [0] = "Yes";
+        options [1] = "No";
+        int n = JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane, 
+                "Allow Observers?","Observers?",
+                JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null, options,options[0]);
+        if (n == 0){
+            String numObservers = JOptionPane.showInputDialog("How many observers?",
+                    "Enter an integer less than 10.");
+            address = JOptionPane.showInputDialog("Input addresses for " + numObservers
+                    + " observers:",
+                    "ex. hostname1:port hostname2:port");
+           network.addObserver(Integer.parseInt(numObservers), address);
+            
+        }
+        
+        
         return network;
     }
 

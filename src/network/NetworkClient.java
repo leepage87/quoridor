@@ -153,6 +153,14 @@ public class NetworkClient {
             if(players[i]!= null)
                 players[i].outToPlayer.print(message+"\n");
         }
+        if(observers.length != 0){
+            for (int i = 0; i < observers.length; i++){
+                System.out.println("NetworkClient> Broadcasting to observer " + i + " " + message);
+                if(players[i]!= null)
+                    observers[i].outToObserver.print(message+"\n");
+            }
+        }
+        
 
     }
 
@@ -187,18 +195,24 @@ public class NetworkClient {
      * adds NetworkObserver objects to an array for reference while playing
      * @param numObservers number of observers observing
      * @param addresses the addresses of all the observers
+     * @throws IOException 
      */
-    public void addObserver(int numObservers, String addresses){
+    public void addObserver(int numObservers, String addresses) throws IOException{
         observers = new NetworkObserver[numObservers];
         Scanner sc = new Scanner(addresses);
         String addressWithoutPort;
         int port;
-
+        Socket tempSock;
+        PrintStream tempPS;
+        Scanner tempScan;
         for (int i = 0; i < numObservers; i++){
             String tempAddress = sc.next();
             addressWithoutPort = tempAddress.substring(0, tempAddress.indexOf(':'));
             port = getPort(tempAddress);
-            observers[i] = new NetworkObserver(addressWithoutPort, port);
+            tempSock = new Socket(addressWithoutPort, port);
+            tempPS = new PrintStream(tempSock.getOutputStream());
+            tempScan = new Scanner(tempSock.getInputStream());
+            observers[i] = new NetworkObserver(tempSock,tempPS,tempScan);
         }
     }
     /**

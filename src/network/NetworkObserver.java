@@ -5,12 +5,10 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class NetworkObserver {
-    public String playerAddress;
-    public int playerPort;
+
     public Socket playerSocket;
-    public PrintStream outToPlayer;
+    public PrintStream outToObserver;
     public Scanner inFromPlayer;
-    public String displayName;
     
     
     /**
@@ -18,8 +16,9 @@ public class NetworkObserver {
      * @param address hostname or IP address of network player
      * @param port port of network player
      */
-    public NetworkObserver(String address, int port){
-        this.playerAddress = address;
-        this.playerPort = port;
+    public NetworkObserver(Socket playerSocket, PrintStream outToObserver, Scanner inFromPlayer){
+        this.playerSocket = playerSocket;
+        this.outToObserver = outToObserver;
+        this.inFromPlayer = inFromPlayer;
     }
 }
