@@ -153,9 +153,9 @@ public class MoveServer extends Thread {
      * @return the move made in network protocol format
      */
     private String getMove(int PlayerNo, Board b, AI ai){
-        /*if (playerNo == 1){
+        if (playerNo == 1){
             return ("MOVE M (4, 4) (4, 4)"); 
-        }*/
+        }
         int rowOne, colOne, rowTwo, colTwo;
         char opCode;
 
@@ -169,7 +169,7 @@ public class MoveServer extends Thread {
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
         System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
         System.out.println(tempNewBoard.toString());
-        int[] wallLocation = ai.aiWall(playerNo, tempOldBoard, tempNewBoard);
+        int[] wallLocation = aiWall(playerNo, tempOldBoard, tempNewBoard);
 
         if(startLocation[0] == endLocation[0] && startLocation[1] == endLocation[1]){//its a wall
 
@@ -281,6 +281,40 @@ public class MoveServer extends Thread {
         System.err.println(kickBoard.toString());
         return kickBoard;
     }
+    
+    
+    
+    /**
+     * @param player
+     * @param old
+     * @param current
+     * @return
+     */
+    public int[] aiWall(int player, Board old, Board current){
+        int[] startPlace = old.playerPlace(player);
+        int[] endPlace = current.playerPlace(player);
+        if(startPlace[0]!=endPlace[0] && startPlace[1]!=endPlace[1])
+            return null;
+        int[] aiWall = new int[3];
+        boolean getOut = false;
+        for(int col = 0; col < 17; col++){
+            for(int row = 0; row < 17; row++){      
+                if(old.grid[col][row] != current.grid[col][row]){
+                    aiWall[0] = col/2;
+                    aiWall[1] = row/2;
+                    if(current.grid[col][row+1]==5)
+                        aiWall[2] = 1;
+                    getOut = true;
+                }
+                if(getOut)
+                    break;
+            }
+            if(getOut)
+                break;
+        }
+        return aiWall;
+    }
+    
     /**
      * awaits an incoming connection then calls the run method
      * @param args which port to listen on, if none is specified a default of 4050 is used

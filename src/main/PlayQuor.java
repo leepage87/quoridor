@@ -85,17 +85,24 @@ public class PlayQuor{
             while(breaker == 0){
                 resetIcons(b);
                 resetLegalMoves();
-                turn = (turn%numPlay) + 1; // update turn
-
-                if (isAI[turn-1] == 0) {
+                turn = (turn%numPlay) + 1; // update turn          
+                
+                
+                //if the turn is for a human
+                if (isAI[turn-1] == 0 && !networkGame) {
+                    
                     setLegalMoves(b.playerPlace(turn), b);
                     setLMIcons();
                 }
                 // initialize GUI button indicating turn
                 GameBoardWithButtons.whoseTurn.setText("It is player " + turn + "'s turn.");
                 // initialize GUI buttons indicating how many walls each player has left
-                for (int i = 0; i < numPlay; i++)
-                    GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
+                for (int i = 0; i < numPlay; i++) {
+                    if (networkGame && networkPlayers[i] == 0)
+                        GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": KICKED");
+                    else
+                        GameBoardWithButtons.pWalls.get(i).setText("P" + (i+1) + ": " + b.playerWalls[i] + " walls");
+                }
                 if(networkGame){
                     if (networkPlayers[turn-1] != 0)
                         networkTurn(network, b);
