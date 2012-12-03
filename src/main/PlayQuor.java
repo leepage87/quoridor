@@ -327,34 +327,6 @@ public class PlayQuor{
         }
     }
 
-<<<<<<< HEAD
-    private static void setLMIcons() {
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
-                if (legalMovesArray[i][j] == 1) 
-                    BoardButton.changeIcon(i,j,GameBoardWithButtons.legalMove);
-    }
-
-    private static void resetIcons(Board b) {
-        for (int i = 0; i < 17; i+=2) 
-            for (int j = 0; j < 17; j+=2) 
-                if (b.grid[i][j] == 0)
-                    BoardButton.changeIcon(i/2,j/2,GameBoardWithButtons.defaultIcon);
-    }
-    /**
-     * @param one of the players
-     * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
-     */
-    private static int getHumanOrAI(int i) {
-        String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
-        return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
-                "Player " + i + ": Human or AI?", 
-                "YOU MUST CHOOSE",JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,null,HumanOrAi,HumanOrAi[0]);
-    }
-
-=======
->>>>>>> d02f050ed84888020bc78eb61d0b36849e5f6c72
     private static NetworkClient getNetworkInfo(int numPlay) throws UnknownHostException, IOException {
 
         NetworkClient network = new NetworkClient();
@@ -489,10 +461,10 @@ public class PlayQuor{
             return 4;
         return 0;
     }
-/**
- * @param one of the players
- * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
- */
+    /**
+     * @param one of the players
+     * @return an int showing if the player is human controlled, an Easy AI, or a Hard AI
+     */
     private static int getHumanOrAI(int i) {
         String[] HumanOrAi = {"Human","Easy AI","Hard AI"};
         return JOptionPane.showOptionDialog(GameBoardWithButtons.contentPane,
