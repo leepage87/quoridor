@@ -226,7 +226,7 @@ public class MoveServer extends Thread {
             move [1] = (frago.charAt(18)-'0')*2;
             moveBoard.playerPlace(frago.charAt(6)-'0');
             System.out.println("Move[] " + move[0] + move[1]);
-            moveBoard.quickMove(move, ((frago.charAt(6)-'0')+1));
+            moveBoard.move(move, ((frago.charAt(6)-'0')+1));
         }else{//its a wall placement
             System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> We're placing a wall");
             System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> wall rec'd: " + frago);
