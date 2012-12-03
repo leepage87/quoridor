@@ -169,7 +169,7 @@ public class MoveServer extends Thread {
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
         System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
         System.out.println(tempNewBoard.toString());
-        int[] wallLocation = aiWall(playerNo, tempOldBoard, tempNewBoard);
+        int[] wallLocation = aiWall(playerNo+1, tempOldBoard, tempNewBoard);
 
         if(startLocation[0] == endLocation[0] && startLocation[1] == endLocation[1]){//its a wall
 
@@ -295,8 +295,8 @@ public class MoveServer extends Thread {
         int[] startPlace = old.playerPlace(player);
         System.err.println("in aiwall, calling new playerplace on " + player);
         int[] endPlace = current.playerPlace(player);
-        System.out.println("Playerplaces worked");
-        if(startPlace[0]!=endPlace[0] && startPlace[1]!=endPlace[1]){
+        System.out.println("Playerplaces worked, old: " + startPlace[0] + " " + startPlace[1] + " new: " + endPlace[0] + endPlace[1]);
+        if(startPlace[0]!=endPlace[0] || startPlace[1]!=endPlace[1]){
             System.out.println("inside aiwall's first if");
             return null;
         }
@@ -306,10 +306,13 @@ public class MoveServer extends Thread {
         for(int col = 0; col < 17; col++){
             for(int row = 0; row < 17; row++){      
                 if(old.grid[col][row] != current.grid[col][row]){
+                    System.err.println("aiwall inside 2nd if");
                     aiWall[0] = col/2;
                     aiWall[1] = row/2;
-                    if(current.grid[col][row+1]==5)
+                    if(current.grid[col][row+1]==5){
+                        System.err.println("aiwall inside 3rd if");
                         aiWall[2] = 1;
+                    }
                     getOut = true;
                     System.out.println("aiWall is: " + aiWall[0] + " " + aiWall[1] + " " +aiWall[2]);
                 }
