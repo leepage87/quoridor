@@ -495,8 +495,8 @@ public class PlayQuor{
                 wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "H";
             else
                 wallName = "" + (theWall[0]+1) + (theWall[1]+1) + "V";    
-            BoardWall.map.get(wallName).setWall();
-            BoardWall.map.get(wallName).nextWall().setWall();
+            BoardWall.map.get(wallName).setWall(turn);
+            BoardWall.map.get(wallName).nextWall().setWall(turn);
             return true; // wall placed successfully
         }else // If wall placement is illegal, return false
             return false;

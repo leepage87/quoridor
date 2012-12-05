@@ -17,9 +17,12 @@ import java.util.*;
 public class BoardWall extends JButton implements ActionListener {
 
 	public static HashMap<String, BoardWall> map = new HashMap<String, BoardWall>();
+	private HashMap<Integer, Color> wallColorMap = new HashMap<Integer,Color>();
+	
 
 	private String name;
 	private boolean wallPresent;
+	
 
 	public String getLocalName() {
 		return name;
@@ -80,8 +83,8 @@ public class BoardWall extends JButton implements ActionListener {
 
 	/** When Board determines a wall placement legal, it sets the wall clicked
 	 * and the next wall with this method. */
-	public void setWall() {
-		setBackground(Color.ORANGE);
+	public void setWall(int player) {
+		setBackground(wallColorMap.get(player));
 		wallPresent = true;
 	}
 
@@ -134,6 +137,12 @@ public class BoardWall extends JButton implements ActionListener {
 	/** Constructor for the wall buttons. Sets roll over only if not in bottom row of vertical walls
 	 * or right column of horizontal walls*/
 	BoardWall(String name) {
+		wallColorMap.put(1,Color.ORANGE);
+		wallColorMap.put(2,Color.GREEN);
+		wallColorMap.put(3,new Color(255,0,255));
+		wallColorMap.put(4, Color.BLUE);
+		
+		
 		wallPresent = false;
 		setBackground(Color.BLACK);
 		this.name = name;
