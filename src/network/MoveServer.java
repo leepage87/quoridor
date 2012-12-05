@@ -153,10 +153,10 @@ public class MoveServer extends Thread {
      * @return the move made in network protocol format
      */
     private String getMove(int PlayerNo, Board b, AI ai){
-        
+      /*  
         if(true){
             return "MOVE M (4, 4) (4, 4)";
-        }
+        }*/
         int rowOne, colOne, rowTwo, colTwo;
         char opCode;
 
