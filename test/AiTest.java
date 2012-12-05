@@ -57,6 +57,7 @@ public class AiTest {
 		/**
 		*Tests the aiWall method for a vertical wall
 		*/
+		/*
 		@Test
 		public void aiWallTestV(){
 			int [] placement = new int[3];
@@ -81,6 +82,7 @@ public class AiTest {
 		/**
 		*Tests the aiWall method for a horizontal wall
 		*/
+		/*
 		@Test
 		public void aiWallTestH(){
 			int [] placement = new int[3];

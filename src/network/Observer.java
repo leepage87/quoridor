@@ -6,24 +6,6 @@ import java.net.Socket;
 import java.util.Scanner;
 
 
-
-/**
- * 
- * 
- * 
- * 
- * TODO: IMPLEMENT "DRAW" ENDING IN PLAYQUOR AND MOVESERVERS
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- *
- */
 public class Observer {
     private static int DEFAULT_SERVER_LISTEN_PORT = 4051;
     Socket connection;
@@ -31,19 +13,22 @@ public class Observer {
     public Observer(Socket conn) {
         this.connection = conn;
     }
-    
+    /**
+     * Waits for lines from a game of quoridor until WINNER or DRAW is received
+     * prints each line to ObserverLog.txt and standard output
+     * @throws IOException
+     */
     public void run() throws IOException{
         Scanner in = new Scanner(connection.getInputStream());
         String received = "";
         PrintStream out = new PrintStream(new File("ObserverLog.txt"));
         
         do{
+           System.out.println("TOP OF LOOP");
            received = in.nextLine();
            out.println(received);
-           System.err.println("OBSOIVAH>" + received);
-           
-            
-        }while (!received.contains("WINNER"));
+           System.out.println("OBSERVER> " + received);
+        }while (!received.contains("WINNER") && !received.contains("DRAW"));
         out.close();
         connection.close();
     }

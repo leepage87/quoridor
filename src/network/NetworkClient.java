@@ -149,14 +149,16 @@ public class NetworkClient {
     public static void broadcast(String message) { 
 
         for (int i = 0; i < players.length; i++){
-            System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);
-            if(players[i]!= null)
+            if(players[i]!= null){
+                System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);
                 players[i].outToPlayer.print(message+"\n");
+            }
         }
         if(observers != null){
             for (int i = 0; i < observers.length; i++){
-                System.out.println("NetworkClient> Broadcasting to observer " + i + " " + message);
-                if(players[i]!= null)
+                
+                if(observers[i]!= null)
+                    System.out.println("NetworkClient> Broadcasting to observer " + i + " " + message);
                     observers[i].outToObserver.print(message+"\n");
             }
         }
@@ -222,6 +224,10 @@ public class NetworkClient {
      */
     private int getPort(String address){
         return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
+    }
+    
+    public static String getName(int turn){
+        return players[turn-1].displayName;
     }
 
 }

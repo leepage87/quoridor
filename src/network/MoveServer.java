@@ -61,7 +61,7 @@ public class MoveServer extends Thread {
                 numberOfPlayers = fromGameClientScanner.nextInt();
                 playerNo = fromGameClientScanner.nextInt();
                 // Acknowledge connection from gameDisplay
-                outToClient.println("READY " + playerNo);
+                outToClient.println("READY " + "OrangeBeard"+(playerNo+1));
 
                 b = new Board(numberOfPlayers);
                 ai = new AI (b);
@@ -153,8 +153,9 @@ public class MoveServer extends Thread {
      * @return the move made in network protocol format
      */
     private String getMove(int PlayerNo, Board b, AI ai){
-        if (playerNo == 1){
-            return ("MOVE M (4, 4) (4, 4)"); 
+        
+        if(true){
+            return "MOVE M (4, 4) (4, 4)";
         }
         int rowOne, colOne, rowTwo, colTwo;
         char opCode;
