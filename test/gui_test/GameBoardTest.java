@@ -61,7 +61,7 @@ public class GameBoardTest {
 	@Test
 	public void playerOneMovementTest() {
 
-			String buttonName = "Button"+ 4 + "" +1;
+			String buttonName = "B"+ 4 + "" +1;
 			JButtonDriver button = button(buttonName);
 			button.click();
 			
@@ -72,29 +72,29 @@ public class GameBoardTest {
 	public void windowContainsButtons() {
 		for (int i = 0; i < 9; ++i) {
 			for (int j = 0; j < 9; j++)	{
-			String buttonName = "Button"+ i + "" +j;
+			String buttonName = "B"+ i + "" +j;
 			JButtonDriver button = button(buttonName);
 			button.click();
 			}
 		}
 	}
 	 */
-	/*@Test
+	@Test
 	public void windowContainsVerticalWalls() {
 		for (int i = 1; i < 9; i++)	{
 			for (int j = 1 + i%2; j < 9; j+=2)	{
-				String wallName = "VertWall" + i + "" + j;
+				String wallName = "V" + i + "" + j;
 				JButtonDriver button = button(wallName);
 				button.click();
 			}
 		}
-	}*/
+	}
 /*
 	@Test
 	public void windowContainsHorizontalWalls() {
 		for (int i = 1; i < 9; i++) {
 			for (int j = 1 + i%2; j < 9; j+=2) {
-				String wallName = "HorzWall" + i + "" + j;
+				String wallName = "H" + i + "" + j;
 				JButtonDriver button = button(wallName);
 				button.click();
 			}

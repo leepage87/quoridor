@@ -1,15 +1,24 @@
+/** 
+ * @author: Lee Page
+ * teamOrangeBeard
+ * Observer
+ * CIS 405 Software Engineering 
+ * Quoridor Project
+ **/
+
 package src.network;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class Observer {
     private static int DEFAULT_SERVER_LISTEN_PORT = 4051;
     Socket connection;
-    
+
     public Observer(Socket conn) {
         this.connection = conn;
     }
@@ -22,18 +31,26 @@ public class Observer {
         Scanner in = new Scanner(connection.getInputStream());
         String received = "";
         PrintStream out = new PrintStream(new File("ObserverLog.txt"));
-        
-        do{
-           System.out.println("TOP OF LOOP");
-           received = in.nextLine();
-           out.println(received);
-           System.out.println("OBSERVER> " + received);
-        }while (!received.contains("WINNER") && !received.contains("DRAW"));
+        try{
+            do{
+                received = in.nextLine();
+                out.println("["+new Timestamp(System.currentTimeMillis()) + "] " + received);
+                System.out.println("["+new Timestamp(System.currentTimeMillis()) + "] " + received);
+            }while (!received.contains("WINNER") && !received.contains("DRAW"));
+        }catch(Exception e){
+            System.err.println("ERROR: Next line not found!");
+        }
         out.close();
+        in.close();
         connection.close();
     }
-    
-    
+
+    /**
+     * This is a multi-threaded observer server, it will never stop
+     * running until the process is killed
+     * @param args specify which port to run on, if none is specified, the default port of 4051 is used
+     * @throws Exception
+     */
     public static void main(String [] args) throws Exception {
         ServerSocket welcomeSocket;
         if(args.length == 0){

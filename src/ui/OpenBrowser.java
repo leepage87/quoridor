@@ -2,10 +2,12 @@ package src.ui;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
-/** Help menu offers options to view Quoridor rules online.
- * This enables the opening of the a browser to do so. */
+/**
+ * Allows opening of a browser from the help menu
+*/
 public class OpenBrowser {
 	/**
+	 * Opens the browser on the parameter URL
 	 * @param url a string
 	 */
     public static void openURL(String url) {

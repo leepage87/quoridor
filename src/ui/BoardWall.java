@@ -21,7 +21,7 @@ public class BoardWall extends JButton implements ActionListener {
     private String name;
     private boolean wallPresent;
     private JComponent me;
-    
+
     /**
      * Constructor for the wall buttons. Sets roll over only if not in bottom row of vertical walls
      * or right column of horizontal walls
@@ -49,6 +49,7 @@ public class BoardWall extends JButton implements ActionListener {
     }
     /**
      * returns the name of the button
+     * @return the name of the button
      */
     public String getLocalName() {
         return name;
@@ -103,6 +104,7 @@ public class BoardWall extends JButton implements ActionListener {
 
     /**
      * Returns the wall with the name same as the string passed.
+     * @return the BoardWall object
      */
     public BoardWall getWall (String str) {
         BoardWall returnwall = map.get(str);
@@ -162,7 +164,10 @@ public class BoardWall extends JButton implements ActionListener {
             }
         });
     }
-
+    /**
+     * sets this wall as present or placed
+     * @param setting true if a wall is present, false if not
+     */
     public void setWallPresent(boolean setting){
         this.wallPresent = setting;
     }

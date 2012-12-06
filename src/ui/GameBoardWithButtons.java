@@ -28,17 +28,16 @@ public class GameBoardWithButtons extends JFrame implements ActionListener{
     public static Icon playerFour = new ImageIcon(GameBoardWithButtons.class.getResource("player4.png"));
     public static Icon legalMove = new ImageIcon(GameBoardWithButtons.class.getResource("legalMove.png"));
     public static Icon defaultIcon = new ImageIcon(GameBoardWithButtons.class.getResource("default.gif"));
-
-    public final static String MAIN_WINDOW_TITLE = "Quoridor";
     public static JPanel contentPane;
     public static JLabel whoseTurn;
     public static ArrayList<JLabel> pWalls = new ArrayList<JLabel>();
-
-    final int SIZE = 630; /*width/height of game board*/
-    final int DOWNOFFSET = 20; /*distance to draw board from top of window*/
-    final int RIGHTOFFSET = 20; /*distance to draw board from left side of window*/
-    final int WALLLENGTH = SIZE * 2/21;
-    final int WALLWIDTH = SIZE/9 - WALLLENGTH;
+    public final static String MAIN_WINDOW_TITLE = "Quoridor";
+    
+    private final int SIZE = 630; /*width/height of game board*/
+    private final int DOWNOFFSET = 20; /*distance to draw board from top of window*/
+    private final int RIGHTOFFSET = 20; /*distance to draw board from left side of window*/
+    private final int WALLLENGTH = SIZE * 2/21;
+    private final int WALLWIDTH = SIZE/9 - WALLLENGTH;
 
     /**
      * Takes the back end board and number of players. Paints the game board appropriately.

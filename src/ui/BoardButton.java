@@ -10,11 +10,12 @@ import javax.swing.JComponent;
 
 import src.main.Board;
 import src.main.PlayQuor;
-/* Draws the game tiles. Has a map from Button name to Button.*/
+
 @SuppressWarnings("serial")
 public class BoardButton extends JButton implements ActionListener {
     // Map from button name to button itself. Allows other classes
     // to access a button using its name.
+ 
     public static HashMap<String, BoardButton> map = new HashMap<String, BoardButton>();
     private String name; // name of each button
     private JComponent me;
@@ -42,6 +43,7 @@ public class BoardButton extends JButton implements ActionListener {
         return returnButton;
     }
     /**
+     * Returns the name of this button
      * @return the name of the button
      */
     public String getLocalName() {

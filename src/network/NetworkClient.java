@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 
 import src.main.Board;
+import src.main.PlayQuor;
 import src.ui.BoardButton;
 import src.ui.GameBoardWithButtons;
 
@@ -25,176 +26,59 @@ public class NetworkClient {
     private static NetworkPlayer[] players;
     private static NetworkObserver[] observers;
 
+    /**
+     * default constructor
+     */
     public NetworkClient(){
 
     }
 
-
     /**
-     * Creates a NetworkClient object for two network players
-     * @throws IOException 
-     * @throws UnknownHostException 
-     * 
-     **/
-    public NetworkClient(String player0Address, String player1Address) throws UnknownHostException, IOException{
-        //break playerAddresses into host names and port
-        int playerPort = getPort(player0Address);      
-        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
-        NetworkPlayer zero = new NetworkPlayer(player0Address, playerPort);
-        playerPort = getPort(player1Address);  
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
-        //numberOfPlayers = 2;
-        players = new NetworkPlayer[2];
-        players[0] = zero;
-        players[1] = one;
-        syncWithPlayers();
-
-    }
-
-    /**
-     * Creates a NetworkClient object for four players
-     * @throws IOException 
-     * @throws UnknownHostException 
-     * 
-     **/
-    public NetworkClient(String player0Address, String player1Address, String player2Address, String player3Address) throws UnknownHostException, IOException{
-        //break playerAddresses into hostnames and port
-
-        String tempPort = player0Address.substring(player0Address.indexOf(':')+1, player0Address.length());
-        int playerPort = getPort(player0Address);       
-        player0Address = player0Address.substring(0, player0Address.indexOf(':'));
-        NetworkPlayer zero = new NetworkPlayer(player0Address, playerPort);
-
-        playerPort = getPort(player1Address); ;   
-        player1Address = player1Address.substring(0, player1Address.indexOf(':'));
-        NetworkPlayer one = new NetworkPlayer(player1Address, playerPort);
-
-        playerPort = getPort(player2Address);       
-        player2Address = player2Address.substring(0, player2Address.indexOf(':'));
-        NetworkPlayer two = new NetworkPlayer (player2Address, playerPort);
-
-        playerPort = getPort(player3Address);        
-        player3Address = player3Address.substring(0, player3Address.indexOf(':'));
-        NetworkPlayer three = new NetworkPlayer(player3Address, playerPort);
-
-        players = new NetworkPlayer[4];
-        players[0] = zero;
-        players[1] = one;
-        players[2] = two;
-        players[3] = three;
-        //numberOfPlayers = 4;
-        syncWithPlayers();
-
-    }
-
-    /**
-     * sends initial message to each player, waits for a response
-     * @throws UnknownHostException
+     * Constructs a network client object then adds the required players and observers
+     * @param players the number of network players
+     * @param moveAddresses the addresses of the move servers
+     * @param numObservers the number of observers
+     * @param observerAddress the addresses of the observers
      * @throws IOException
      */
-    public void syncWithPlayers() throws UnknownHostException, IOException {
-        //get input and output streams for all players' sockets, assign them to their respective fields
-        for (int i = 0; i< players.length; i++){
-            if(players[i] != null){
-                players[i].playerSocket = new Socket(players[i].playerAddress, players[i].playerPort);
-                players[i].outToPlayer = new PrintStream(players[i].playerSocket.getOutputStream());
-                players[i].inFromPlayer = new Scanner(players[i].playerSocket.getInputStream());
-            }
-        }
-        //initiate first contact
-        for (int i = 0; i < players.length; i++){
-            System.out.println("players.length: " + players.length + "loop i value: " + i);
-            if(players[i] != null){
-                players[i].outToPlayer.print("QUORIDOR " + players.length + " " + i +"\n");
-                System.out.println("QUORIDOR " + players.length + " " + i +"\n");
-            }
-        }
-
-        //listen for acknowledgment, get player name
-        for (int i = 0; i < players.length; i++){
-            if(players[i] != null){
-                String fromPlayer = players[i].inFromPlayer.nextLine();
-                if (!fromPlayer.contains("READY")){
-                    System.err.println("Unexpected response from player " + i);
-                }else{
-                    players[i].displayName = fromPlayer.substring(6);
-                    System.out.println("Player " + i + " says: " + fromPlayer);
-                }
-            }
-        }
-
-
-
-
-    }
-
-    /**
-     * tells a player that it has been kicked from the game
-     * if that player has made an illegal move
-     * @param playerID
-     * @throws IOException 
-     */
-    public static void removePlayer(int playerID) throws IOException{
-        broadcast("REMOVED " + (playerID-1));
-        players[playerID-1].playerSocket.close();
-        players[playerID-1] = null;
-
-    }
-
-    /**
-     * broadcasts a message to all players
-     * @param message: the message to be broadcast
-     */
-    public static void broadcast(String message) { 
-
-        for (int i = 0; i < players.length; i++){
-            if(players[i]!= null){
-                System.out.println("NetworkClient> Broadcasting to player " + i + " " + message);
-                players[i].outToPlayer.print(message+"\n");
-            }
-        }
-        if(observers != null){
-            for (int i = 0; i < observers.length; i++){
-                
-                if(observers[i]!= null)
-                    System.out.println("NetworkClient> Broadcasting to observer " + i + " " + message);
-                    observers[i].outToObserver.print(message+"\n");
-            }
+    public NetworkClient(int players, String moveAddresses, int numObservers, String observerAddress) throws IOException{
+        addPlayers(players, moveAddresses);
+        syncWithPlayers();
+        if(numObservers > 0){
+            addObserver(numObservers, observerAddress);
+            observerBroadcast("WATCH " + players);
         }
         
-
-    }
-
-
-    /**
-     * gets a move from the player whose turn it is
-     * @return: returns the move taken from the player
-     */
-    public static String getMove(int player){
-        System.out.println("NetworkClient> asking player " + (player-1) + " for a move");
-        players[player-1].outToPlayer.print("MOVE?\n");
-        System.out.println("NetworkClient> request sent, waiting for response");
-        String fromPlayer = players[player-1].inFromPlayer.nextLine();
-        System.out.println("NetworkClient> Player " + (player-1) + " has responded with a move: "+
-                fromPlayer);
-        return fromPlayer;
     }
 
     /**
-     * closes all sockets
+     * Creates sockets, printStreams, and scanners for each network player
+     * @param numPlayers
+     * @param addresses
      * @throws IOException
      */
-
-    public void kill() throws IOException{
-        for (int i = 0; i < players.length; i++){
-            if (players[i] != null){
-                players[i].playerSocket.close();
-            }
+    private void addPlayers(int numPlayers, String addresses) throws IOException{
+        players = new NetworkPlayer[numPlayers];
+        Scanner sc = new Scanner(addresses);
+        String addressWithoutPort;
+        int port;
+        Socket tempSock;
+        PrintStream tempPS;
+        Scanner tempScan;
+        for (int i = 0; i < numPlayers; i++){
+            String tempAddress = sc.next();
+            addressWithoutPort = tempAddress.substring(0, tempAddress.indexOf(':'));
+            port = getPort(tempAddress);
+            tempSock = new Socket(addressWithoutPort, port);
+            tempPS = new PrintStream(tempSock.getOutputStream());
+            tempScan = new Scanner(tempSock.getInputStream());
+            players[i] = new NetworkPlayer(tempSock,tempPS,tempScan);
         }
+        sc.close();
     }
+    
     /**
-     * adds NetworkObserver objects to an array for reference while playing
+     * Adds NetworkObserver objects to an array for reference while playing
      * @param numObservers number of observers observing
      * @param addresses the addresses of all the observers
      * @throws IOException 
@@ -206,17 +90,112 @@ public class NetworkClient {
         int port;
         Socket tempSock;
         PrintStream tempPS;
-        Scanner tempScan;
         for (int i = 0; i < numObservers; i++){
             String tempAddress = sc.next();
             addressWithoutPort = tempAddress.substring(0, tempAddress.indexOf(':'));
             port = getPort(tempAddress);
             tempSock = new Socket(addressWithoutPort, port);
             tempPS = new PrintStream(tempSock.getOutputStream());
-            tempScan = new Scanner(tempSock.getInputStream());
-            observers[i] = new NetworkObserver(tempSock,tempPS,tempScan);
+            observers[i] = new NetworkObserver(tempSock,tempPS);
+        }
+        sc.close();
+    }
+
+    /**
+     * Sends initial message to each player, waits for a response
+     * @throws UnknownHostException
+     * @throws IOException
+     */
+    private void syncWithPlayers() throws IOException{
+        for (int i = 0; i< players.length; i++){
+            if(players[i] != null){
+
+                //syn with player
+                players[i].send("QUORIDOR " + players.length + " " + i +"\n");
+
+                //await player ack
+                String fromPlayer = players[i].receive();
+                //if the ack is something out of protocol, kick the player
+                if (!fromPlayer.contains("READY")){
+                    System.err.println("ERROR: Response from player " + i + " does not follow protocol!");
+                    removePlayer(i);
+                    PlayQuor.removeNetworkPlayer(i);
+
+                }else{//protocol has been followed
+                    //set the network player's name
+                    players[i].displayName = fromPlayer.substring(6);
+                }
+            }
         }
     }
+
+    /**
+     * Tells a player that it has been kicked from the game
+     * if that player has made an illegal move
+     * @param playerID
+     * @throws IOException 
+     */
+    public static void removePlayer(int playerID) throws IOException{
+        broadcast("REMOVED " + (playerID-1));
+        players[playerID-1].kill();
+        players[playerID-1] = null;
+
+    }
+
+    /**
+     * Broadcasts a message to all players
+     * @param message the message to be broadcast
+     */
+    public static void broadcast(String message) { 
+        //broadcast the message to players
+        for (int i = 0; i < players.length; i++){
+            if(players[i]!= null){
+                players[i].send(message+"\n");
+            }
+        }
+        //broadcast the message to observers
+       observerBroadcast(message);
+    }
+    /**
+     * Broadcasts a massage to observers
+     * @param message the message to be broadcast
+     */
+    private static void observerBroadcast(String message){
+        if(observers != null){
+            for (int i = 0; i < observers.length; i++){
+                    observers[i].send(message+"\n");
+            }
+        }
+    }
+
+
+    /**
+     * Bets a move from the player whose turn it is
+     * @return returns the move taken from the player
+     */
+    public static String getMove(int player){
+        players[player-1].send("MOVE?\n");
+        return players[player-1].receive();
+    }
+
+    /**
+     * Closes all sockets
+     * @throws IOException
+     */
+    public void kill() throws IOException{
+        for (int i = 0; i < players.length; i++){
+            if (players[i] != null){
+                players[i].kill();
+            }
+        }
+        if(observers != null){
+            for (int i = 0; i < observers.length; i++){
+                if(observers[i]!= null)
+                    observers[i].kill();
+            }
+        }
+    }
+ 
     /**
      * Gets the port from the given address
      * @param address
@@ -226,8 +205,31 @@ public class NetworkClient {
         return (Integer.parseInt(address.substring(address.indexOf(':')+1, address.length())));
     }
     
+    /**
+     * Returns the display name of the network player
+     * @param turn which player to look at
+     * @return the network player's display name
+     */
     public static String getName(int turn){
         return players[turn-1].displayName;
+    }
+    
+    /**
+     * Returns the requested NetworkPlayer object
+     * @param index the index location of the player to be returned
+     * @return the NetworkPlayer
+     */
+    public static NetworkPlayer getNetworkPlayer(int index){
+        return players[index];
+    }
+    
+    /**
+     * Returns the requested Observer object
+     * @param index the index location of the observer to be returned
+     * @return the observer
+     */
+    public static NetworkObserver getObserver(int index){
+        return observers[index];
     }
 
 }

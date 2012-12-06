@@ -9,22 +9,17 @@
 package src.network;
 
 import java.io.*;
-//import src.ui.Board;
-
 import java.net.*;
 import java.util.*;
-
 import src.main.AI;
 import src.main.Board;
 
-
-
 public class MoveServer extends Thread {
-    int playerNo;
-    int numberOfPlayers;
-    final static int DEFAULT_SERVER_LISTEN_PORT = 4050;//if user doesn't input port
-    public Board b;
-    Socket connection;
+    private int playerNo;
+    private int numberOfPlayers;
+    private final static int DEFAULT_SERVER_LISTEN_PORT = 4050;//if user doesn't input port
+    private Board b;
+    private Socket connection;
     private AI ai;
     private String nextMove;
     private long tID;
@@ -42,7 +37,6 @@ public class MoveServer extends Thread {
     public void run() {
 
         tID = Thread.currentThread().getId();
-        System.err.println("ID: "+ tID + " top of run()");
         PrintStream outToClient = null;
         Scanner inFromClient = null;
 
@@ -54,91 +48,55 @@ public class MoveServer extends Thread {
 
             fromGameClient = inFromClient.nextLine();
             Scanner fromGameClientScanner = new Scanner (fromGameClient);
-            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> line rec'd from client " + fromGameClient);
             if (fromGameClientScanner.next().equals("QUORIDOR")){
-                //"QUORIDOR <NumberOfPlayers> <playerNo>"
                 //get playerNo and NumberOfPlayers
                 numberOfPlayers = fromGameClientScanner.nextInt();
                 playerNo = fromGameClientScanner.nextInt();
+                
                 // Acknowledge connection from gameDisplay
                 outToClient.println("READY " + "OrangeBeard"+(playerNo+1));
 
                 b = new Board(numberOfPlayers);
                 ai = new AI (b);
-                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> I am player number: " + playerNo + " and there are " + numberOfPlayers + " playing.");
             }else{
-                System.err.println("ID: "+ tID + " Protocol not followed");
+                System.err.println("MoveServer> ERROR: Protocol not followed, closing connection");
+                connection.close();
             }
 
 
             do {
-                System.err.println("ID: "+ tID + " top of do/while");
-
+                //get a line from the client
                 fromGameClient = inFromClient.nextLine();
                 if(fromGameClient.contains("WINNER")){
                     System.out.println("Player " + fromGameClient.charAt(7) + " has won!");
                     connection.close();
-                    //System.exit(0);
+                    break;
                 }
                 if (fromGameClient.contains("MOVE?")){
-
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
-                    "> Received 'MOVE?' from client, issuing move");
                     //get move, send to client
                     nextMove = getMove(playerNo, b, ai);
                     outToClient.println(nextMove);
 
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
-                            "> Move sent was: " + nextMove);
                     //get response from client
                     fromGameClient = inFromClient.nextLine();
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +
-                            "> rec'd: " + fromGameClient);
 
-
-                    //MOVED <player-id> <op> <location-1> <location-2>
-
-                    if(fromGameClient.contains("MOVED " + playerNo + nextMove.substring(4))){
-                        //move has been accepted, so make teh move
-                        System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo +"> move confirmed, making move:");
+                    //your move has been confirmed by the server, make the move now
+                    if(fromGameClient.contains("MOVED " + playerNo + nextMove.substring(4)))
                         b = move(fromGameClient, b);
 
-                        System.out.println(b.toString());
-
-
-                    }else if (fromGameClient.contains("REMOVED")){
-                        System.out.println("Inside 1st else/if REMOVED");
-                        System.out.println("Player no is: " + playerNo + "vs char: " + fromGameClient.charAt(8));
-                        if(playerNo == (fromGameClient.charAt(8)-'0')){
-                            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Move was illegal, you've been kicked out of game (Player " + (playerNo+1) +")" );
-                            connection.close();
-                            //System.exit(0);
-                        }else{//someone else was kicked
-                            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Someone else made an illegal move (Player " +
-                                    (playerNo+1) +") has been kicked (1st removed test)" );
-                            b = kick((fromGameClient.charAt(8) -'0' +1), b);
-                            System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
-                            System.err.println(b.toString());
-                        }
+                    //the client's response is that you've been kicked
+                    else if (fromGameClient.contains("REMOVED")){
+                        System.out.println("MoveServer> Move was illegal, you've been kicked out of game (Player " + (playerNo+1) +")" );
+                        connection.close();
                     }
                 }else if (fromGameClient.substring(0,5).equals("MOVED")){
                     //server telling you to move a different player's piece 
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> a different player has moved!" );
                     b = move(fromGameClient, b);
-                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " Opponent has just moved");
-                    System.err.println(b.toString());
                 }else if(fromGameClient.contains("REMOVED")){
                     //a different player has been removed  
-                    System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> Someone else made an illegal move");
-                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> remove says kick: " + fromGameClient.charAt(8));
                     b = kick(fromGameClient.charAt(8)-'0' + 1, b);
-                    System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
-                    System.err.println(b.toString());
                 }
-                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + ">at bottom of while loop");
             }while (!fromGameClient.contains("REMOVED " + playerNo));
-            System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "is outside the do/while loop");
-
         }catch (Exception e){
 
         }
@@ -153,10 +111,6 @@ public class MoveServer extends Thread {
      * @return the move made in network protocol format
      */
     private String getMove(int PlayerNo, Board b, AI ai){
-      /*  
-        if(true){
-            return "MOVE M (4, 4) (4, 4)";
-        }*/
         int rowOne, colOne, rowTwo, colTwo;
         char opCode;
 
@@ -164,27 +118,19 @@ public class MoveServer extends Thread {
         //record start location of player
         int[] startLocation = b.playerPlace(playerNo+1);
         //record final location of player
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "CALLING AI.AIMOVE!");
         Board tempNewBoard = ai.aiMove(playerNo+1, 1);
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "AI.AIMOVE SUCCESSFULLY CALLED!");
         int [] endLocation = tempNewBoard.playerPlace(playerNo+1);
-        System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + " getMove returned board: ");
-        System.out.println(tempNewBoard.toString());
         int[] wallLocation = aiWall(playerNo+1, tempOldBoard, tempNewBoard);
 
         if(startLocation[0] == endLocation[0] && startLocation[1] == endLocation[1]){//its a wall
-
             opCode = 'W';
-            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> printing wall center location");
-            System.out.println(wallLocation[0] + " " + wallLocation[1] + " " + wallLocation[2] + "." );
             //a wall movement has been made
-            //this is the center spot
             if (wallLocation[2] == 0){
                 //its a horizontal wall
                 rowOne = wallLocation[1]+1;
                 colOne = wallLocation[0];
-                rowTwo = wallLocation[1]+1;//just changed this from +3 to +1
-                colTwo = wallLocation[0]+2;//changed this from +0 to +2
+                rowTwo = wallLocation[1]+1;
+                colTwo = wallLocation[0]+2;
             }else{//its a vertical wall
                 rowOne = wallLocation[1];
                 colOne = wallLocation[0]+1;
@@ -195,12 +141,6 @@ public class MoveServer extends Thread {
             return ("MOVE "+ opCode + " ("+rowOne+", "
                     +colOne+") " + "("+rowTwo+", "+colTwo+")");
         }else{//its a player move
-
-
-
-            System.out.println("Player has moved, start location: " + startLocation[0] + " " + startLocation[1]);
-            System.out.println("end location: " + endLocation[0] + " " + endLocation[1]);
-
             opCode = 'M';
             rowOne = startLocation[1]/2;
             colOne = startLocation[0]/2;
@@ -226,42 +166,22 @@ public class MoveServer extends Thread {
             move [0] = (frago.charAt(21)-'0')*2;
             move [1] = (frago.charAt(18)-'0')*2;
             moveBoard.playerPlace(frago.charAt(6)-'0');
-            System.out.println("Move[] " + move[0] + move[1]);
             moveBoard.move(move, ((frago.charAt(6)-'0')+1));
         }else{//its a wall placement
-            System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> We're placing a wall");
-            System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> wall rec'd: " + frago);
 
             if(frago.charAt(11) == frago.charAt(18)){//horizontal wall
-                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its horz");
-                if((frago.charAt(14)-'0') != 0){
-                    move[0] = (frago.charAt(14)-'0');//TODO: removed -1, might be able to do away with whole if/else
-                }else{
-                    move[0] = (frago.charAt(14)-'0');
-                }
+                move[0] = (frago.charAt(14)-'0');
                 move[1] = (frago.charAt(11)-'0') -1;
                 move[2] = 0;
-                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
                 moveBoard.placeWallBoard(move, player);
-                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> moveboard.placewall works");
-
             }else{//vertical wall
-                System.out.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> its vert");
                 move[0] = (frago.charAt(14)-'0') -1;
-                //if((frago.charAt(11)-'0') >= 2){
-                move[1] = (frago.charAt(11)-'0');//just edited removed +1
-                //}else{
-                //   move[1] = (frago.charAt(11)-'0'); 
-                //}
+                move[1] = (frago.charAt(11)-'0');
                 move[2] = 1;
-                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> sending move to board " + move[0] + " " + move[1] + " " + move[2] + " player: "+ player);
                 moveBoard.placeWallBoard(move, player);
-                System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> moveboard.placewall works");
             }
-
         }
         return moveBoard;
-
     }
 
     /**
@@ -271,19 +191,11 @@ public class MoveServer extends Thread {
      * @return the board after the player has been removed
      */
     private Board kick(int player, Board kickBoard){
-
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> inside kick, kicking player: " + player);
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
-        System.err.println(kickBoard.toString());
+        System.out.println("MoveServer> Player: " + player + " has been kicked.");
         int[] location = kickBoard.playerPlace(player);
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo + "> player place: " + location[0] + location[1]);
         kickBoard.grid[location[0]] [location[1]] = 0;
-        System.err.println("MoveServer " + "ID " + tID +" p:" +  playerNo);
-        System.err.println(kickBoard.toString());
         return kickBoard;
     }
-
-
 
     /**
      * determines if a player moved or a wall was placed, if a wall
@@ -294,30 +206,22 @@ public class MoveServer extends Thread {
      * @return an array containing wall position
      */
     public int[] aiWall(int player, Board old, Board current){
-        System.err.println("in aiwall, calling old playerplace on " + player);
         int[] startPlace = old.playerPlace(player);
-        System.err.println("in aiwall, calling new playerplace on " + player);
         int[] endPlace = current.playerPlace(player);
-        System.out.println("Playerplaces worked, old: " + startPlace[0] + " " + startPlace[1] + " new: " + endPlace[0] + endPlace[1]);
         if(startPlace[0]!=endPlace[0] || startPlace[1]!=endPlace[1]){
-            System.out.println("inside aiwall's first if");
             return null;
         }
-        System.out.println("aiwall> past 1st if");
         int[] aiWall = new int[3];
         boolean getOut = false;
         for(int col = 0; col < 17; col++){
             for(int row = 0; row < 17; row++){      
                 if(old.grid[col][row] != current.grid[col][row]){
-                    System.err.println("aiwall inside 2nd if");
                     aiWall[0] = col/2;
                     aiWall[1] = row/2;
                     if(current.grid[col][row+1]==5){
-                        System.err.println("aiwall inside 3rd if");
                         aiWall[2] = 1;
                     }
                     getOut = true;
-                    System.out.println("aiWall is: " + aiWall[0] + " " + aiWall[1] + " " +aiWall[2]);
                 }
                 if(getOut)
                     break;
@@ -325,12 +229,21 @@ public class MoveServer extends Thread {
             if(getOut)
                 break;
         }
-        System.out.println("ai wall> return this method is ok");
         return aiWall;
+    }
+    
+    /**
+     * method returns the player number of this MoveServer
+     * @return this MoveServer's player number
+     */
+    public int getPlayerNo(){
+        return playerNo;
     }
 
     /**
      * awaits an incoming connection then calls the run method
+     * this is a multi-threaded server, it never stops running unless
+     * the process is killed
      * @param args which port to listen on, if none is specified a default of 4050 is used
      * @throws Exception
      */
@@ -343,9 +256,6 @@ public class MoveServer extends Thread {
             welcomeSocket = new ServerSocket(Integer.parseInt(args[0]));
             System.out.println("MoveServer> Listening on port: " + args[0]);
         }
-
-
-
         while (true) {
             Socket connectionSocket = welcomeSocket.accept();
             new MoveServer(connectionSocket).start();
