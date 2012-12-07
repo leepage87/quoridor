@@ -13,7 +13,9 @@ import java.net.*;
 import java.util.*;
 import src.main.AI;
 import src.main.Board;
-
+/**
+ * Multi-threaded server, listens on default port 4050 or args[0] and dishes out AI moves
+ */
 public class MoveServer extends Thread {
     private int playerNo;
     private int numberOfPlayers;

@@ -14,7 +14,11 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.sql.Timestamp;
 import java.util.Date;
-
+/**
+ * 
+ * Multi-threaded server, listens on default port 4051 or args[0] and
+ * records the progress of a game of Quoridor
+ */
 public class Observer {
     private static int DEFAULT_SERVER_LISTEN_PORT = 4051;
     Socket connection;

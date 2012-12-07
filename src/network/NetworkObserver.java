@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
-
+/**
+ * Creates an object to hold socket, printStream, information for each observer
+ */
 public class NetworkObserver {
 
     private Socket playerSocket;

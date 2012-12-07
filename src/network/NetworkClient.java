@@ -13,13 +13,14 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-
 import src.main.Board;
 import src.main.PlayQuor;
 import src.ui.BoardButton;
 import src.ui.GameBoardWithButtons;
 
-
+/**
+ * Facilitates communication between PlayQuor and MoveServers
+ */
 public class NetworkClient {
 
     final static int REMOTE_PORT = 4050;
